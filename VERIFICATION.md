@@ -14,7 +14,7 @@ npm run check
 | 命令 | 当前含义 |
 | --- | --- |
 | npm run typecheck | tsc 严格类型检查，不生成产物 |
-| npm run build | 编译 src 到 dist 并生成类型声明；不是站点打包 |
+| npm run build | 编译 src 到 dist 并生成类型声明；随后 scripts/build-sw.mjs 解析入口模块的 import 闭包、计算资源版本哈希并生成 web/sw.js（构建产物，不提交，gitignore）；任一清单文件缺失即构建失败 |
 | npm test | 先编译，再以 node --test 执行 tests/*.test.mjs |
 | npm run check | typecheck 后执行 test |
 | npm run serve | 先执行 build，再用 Node 内置 http 启动本地静态服务（默认 http://127.0.0.1:4173/，`npm run serve -- 端口号` 可改端口），提供 M3 数字消除原型页面 |
@@ -31,10 +31,11 @@ npm run check
 | 游戏规则（rules.ts） | npm run check（tests/number-puzzle.test.mjs 覆盖状态转换、可完成局次、重复输入与计分、无解局面排除、随机源确定性）；`npm run serve` 后完整浏览器流程 |
 | 浏览器界面与输入（web/、render.ts、main.ts） | 实际浏览器截图或录屏、关键流程结果核对；手机尺寸与触摸操作的完整验收按 M4 执行，设备与模拟结果分开 |
 | 本地记录与恢复（storage.ts、main.ts 接线、web/） | npm run check（tests/storage.test.mjs 覆盖损坏数据、版本不兼容、重复写入与中断恢复一致性）；`npm run serve` 后浏览器验证：设置与成绩刷新后仍可读取、中断局次恢复一致且不重复计分、内容版本不兼容安全放弃且不误删历史、存储不可用仍可玩并提示、清除记录有确认。离线（M6）：缓存完成后断网重开并完成一局 |
+| 离线资源与版本更新（web/sw.source.js、scripts/build-sw.mjs、offline.ts、main.ts 离线接线、web/） | npm run check（tests/offline.test.mjs 覆盖旧缓存清理决策、更新采用时机与执行决策 planAdoptionExecution（waiting 被浏览器跳过时的刷新/收敛防御）、离线状态文案、预缓存清单与真实 dist 产物及生成的 web/sw.js 的一致性）；`npm run serve` 后浏览器验证：缓存就绪提示带版本标记、断网重开完成整局并保存记录、离线刷新与重复启动、选择屏更新自动生效并清理旧缓存、单局中途更新被推迟且局次不受影响、预缓存失败与资源缺失有可理解提示、离线且缓存缺失回退兜底页（证据 docs/evidence/m6/）；waiting 直通激活的时序差异需浏览器复验（复核第 1 轮已修复并复验，见 docs/evidence/m6/README.md「独立复核第 1 轮修复复验」）；部署环境需支持 Service Worker（localhost/127.0.0.1 即安全上下文），真实设备与部署环境属 M7 汇总 |
 
 ## 现有测试基准
 
-M1 的测试覆盖教材槽位、主单元编号、草稿隔离、全部 63 种非空年级组合、学科和游戏过滤、审核 fixture、关联错误以及数学判题与样本范围。M2 扩充单年级正式集合核对、档位数域与答案范围。M3 新增 tests/number-puzzle.test.mjs：实现常量与档位、随机源消耗顺序（洗牌 → 初始棋盘 → 补块）、同种子复现、答错不消除不扣分并锁输入、反馈窗口与消除窗口内点击忽略且不重复计分、整局可完成与计分（10/5 分、一次通过、题数不足取可用数）、多种子无死局与同值上限、保证规则及兜底分支、四场景可用性文案与正式/预览口径（自定义 catalog 构造无 approved 与不足阈值场景）。M4 新增 tests/session.test.mjs：会话生命周期严格转移（idle/running/paused/finished）、暂停冻结剩余时长（暂停期间真实时间不推进计时器）、visibilitychange 自动暂停仅 running 生效且恢复前台不自动继续、pause/resume 幂等、到点计时器剩余钳制为 0、弃局（含结算后弃局）清空计时器可再开局、非法时长拒绝；M5 扩充 restoreRound（按保存的剩余时长恢复到 running/paused、仅 idle 可恢复、非法剩余拒绝）。M5 新增 tests/storage.test.mjs（纯逻辑存储层，注入式 KV）：存储键与结构版本字段、设置损坏/外版本按首次使用、设置经 GameStorage 往返、成绩 blob 损坏重置且单条非法仅丢弃该条、同 recordId 重复写入只留一条且超上限裁剪最旧、内容指纹确定性/顺序无关/内容敏感、中断快照经真实对局构建后解析重建与不间断参考局完全一致（含 resolving 中的计时器剩余与 RNG 内部状态恢复）、暂停快照恢复冻结计时器、终局快照重建成绩且同 recordId 幂等、约 20 类字段非法快照被拒、内容版本或游戏不匹配只放弃中断局次（历史成绩与设置不动）、存储不可用与写入失败时读取退回默认且游戏流程安全。
+M1 的测试覆盖教材槽位、主单元编号、草稿隔离、全部 63 种非空年级组合、学科和游戏过滤、审核 fixture、关联错误以及数学判题与样本范围。M2 扩充单年级正式集合核对、档位数域与答案范围。M3 新增 tests/number-puzzle.test.mjs：实现常量与档位、随机源消耗顺序（洗牌 → 初始棋盘 → 补块）、同种子复现、答错不消除不扣分并锁输入、反馈窗口与消除窗口内点击忽略且不重复计分、整局可完成与计分（10/5 分、一次通过、题数不足取可用数）、多种子无死局与同值上限、保证规则及兜底分支、四场景可用性文案与正式/预览口径（自定义 catalog 构造无 approved 与不足阈值场景）。M4 新增 tests/session.test.mjs：会话生命周期严格转移（idle/running/paused/finished）、暂停冻结剩余时长（暂停期间真实时间不推进计时器）、visibilitychange 自动暂停仅 running 生效且恢复前台不自动继续、pause/resume 幂等、到点计时器剩余钳制为 0、弃局（含结算后弃局）清空计时器可再开局、非法时长拒绝；M5 扩充 restoreRound（按保存的剩余时长恢复到 running/paused、仅 idle 可恢复、非法剩余拒绝）。M5 新增 tests/storage.test.mjs（纯逻辑存储层，注入式 KV）：存储键与结构版本字段、设置损坏/外版本按首次使用、设置经 GameStorage 往返、成绩 blob 损坏重置且单条非法仅丢弃该条、同 recordId 重复写入只留一条且超上限裁剪最旧、内容指纹确定性/顺序无关/内容敏感、中断快照经真实对局构建后解析重建与不间断参考局完全一致（含 resolving 中的计时器剩余与 RNG 内部状态恢复）、暂停快照恢复冻结计时器、终局快照重建成绩且同 recordId 幂等、约 20 类字段非法快照被拒、内容版本或游戏不匹配只放弃中断局次（历史成绩与设置不动）、存储不可用与写入失败时读取退回默认且游戏流程安全。M6 新增 tests/offline.test.mjs：缓存名与版本标记格式（前缀 + assets-v1-<12 位十六进制>）、旧版本缓存清理决策（staleCacheNames 只清本应用前缀下非当前版本且排序确定）、更新采用时机（decideUpdateAdoption：选择屏且无进行中局次才 adopt，单局 running/paused 或非选择屏 defer）、采用动作执行决策（planAdoptionExecution：waiting 存在发 skip-waiting；waiting 缺失且新版本已接管则直接刷新——waiting 可被浏览器跳过直通激活，独立复核第 1 轮实测；waiting 缺失且 controller 未变则收敛防刷新循环）、离线状态文案（preparing/ready/failed/unsupported 与离线、受控组合下的承诺口径，更新提示优先）、import 提取（注释与字符串内 // 不误报）、dist import 闭包覆盖关键模块、预缓存 URL 全部同源且文件真实存在、版本哈希确定性/内容敏感/模板敏感、生成的 web/sw.js 与页面侧缓存名前缀及重算清单一致；测试从 scripts/build-sw.mjs 导入函数并与真实 dist 产物核对（npm test 先 build 后测试）。
 
 测试中的 approved 记录用于构造测试场景；静态题库的审核状态以 src/content/exercises.ts 和审核记录文档为准。首批 18 道练习已按 docs/content-review-first-batch.md 晋级 approved（含点阵呈现重审后晋级的 3 道乘法练习）；正式取题只返回 approved 内容，针对其余年级组合为空属预期结果。
 
@@ -43,6 +44,8 @@ M1 的测试覆盖教材槽位、主单元编号、草稿隔离、全部 63 种�
 ## 浏览器验收路径
 
 M3 已建立运行入口：`npm run serve` 后访问 http://127.0.0.1:4173/（候选预览入口为 `/?preview=candidate`，仅维护者使用）。需验证：选年级、无内容提示、开始、正确与错误作答、结算、重开与返回。M4 增加暂停和手机交互，M5 增加记录恢复，M6 增加离线与更新。
+
+M6 已执行的浏览器验收路径（代理驱动，证据与离线口径见 docs/evidence/m6/README.md，含实现者轮、验收员第 1 轮与独立复核第 1 轮修复复验）：首次在线访问缓存就绪提示带版本标记、Cache Storage 恰一个带前缀缓存（18 条资源）；断网（源站请求全部失败或浏览器级离线仿真）重开后完整游玩 6 题局到结算并离线保存成绩、离线刷新与重复启动设置记录可读；选择屏版本更新自动生效并清理旧缓存；单局中途更新被推迟（提示明示局次不受影响），整局继续到结算、返回选择屏后自动生效且成绩完整（含刷新→恢复上局续打不重复计分）；预缓存失败（404）显示失败提示且无 active SW、恢复后自愈；源站真实死亡 + 缓存缺失回退 SW 兜底页、服务器恢复后缓存回填 18 条自愈；主模块缺失时 index.html 内联脚本提示且不进入可玩状态。waiting 语义不可依赖（可被浏览器跳过直通激活）经独立复核发现，已由 planAdoptionExecution 修复并复验两种时序均收敛（waiting 存在走 skip-waiting、缺失且已接管自动刷新、无卡死且不刷新循环）。「正在准备离线缓存」中间态因本地安装过快未截到，文案由单元测试覆盖（preparing→failed 转换已浏览器实测）。真实设备（iOS Safari / Android Chrome）与真实部署环境仍未测，属 M7 汇总缺口。
 
 M5 已执行的浏览器验收路径（代理驱动，证据见 docs/evidence/m5/README.md）：设置（年级勾选、音效开关）与练习记录在刷新后仍可读取；中断局次刷新后提供「继续上局/放弃上局」，恢复后题目、分数与阶段一致且续局结算只记一条成绩；存储键被改坏（非 JSON）时按首次使用处理、页面保持可游玩；中断快照的内容版本被改旧时提示已安全放弃且历史成绩与设置不受影响；用浏览器覆盖 localStorage 使其不可用时游戏照常可玩并显示无法持久保存提示；清除本地记录两击确认后回到首次使用状态。真实设备（iOS Safari / Android Chrome）仍未测，属 M7 汇总缺口。
 

@@ -1,2 +1,5 @@
 node_modules/
 dist/
+
+# 离线 Service Worker 生成物（scripts/build-sw.mjs 产物）
+web/sw.js

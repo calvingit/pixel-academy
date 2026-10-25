@@ -228,6 +228,9 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 /* M5：本地记录与恢复。 */
 .storage-notice { margin: 0 0 10px; }
 
+/* M6：离线缓存与版本状态提示。 */
+.offline-notice { margin: 0 0 10px; word-break: break-all; }
+
 .restore-offer {
   margin-top: 16px;
   padding: 12px;

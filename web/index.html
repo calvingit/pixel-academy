@@ -15,6 +15,8 @@
       <p class="app-subtitle">点选与题目答案相同的数字块</p>
     </header>
 
+    <p id="offline-notice" class="status offline-notice" hidden></p>
+
     <p id="storage-notice" class="status status-warning storage-notice" hidden>
       本地存储不可用，练习记录与设置无法保存，游戏仍可正常游玩。
     </p>
@@ -99,5 +101,20 @@
       </div>
     </section>
   </main>
+  <script>
+    // 离线资源缺失兜底（PLAN.md M6）：主模块加载失败（如离线且缓存未完成、
+    // 缓存被部分清理）时 boot 不会执行、启动标记不会被置位；load 事件后仍无
+    // 标记则给出可理解的提示，不承诺离线可玩。
+    window.addEventListener('load', function () {
+      if (window.__pixelAcademyBooted) return;
+      var el = document.getElementById('offline-notice');
+      if (!el) return;
+      el.hidden = false;
+      el.classList.add('status-warning');
+      el.textContent = !navigator.onLine
+        ? '当前处于离线状态，页面资源未完整缓存，无法开始游戏。请联网后打开本页，等待离线缓存完成后再离线使用。'
+        : '页面资源加载失败，请刷新重试。';
+    });
+  </script>
 </body>
 </html>

@@ -11,6 +11,12 @@
 // 结束局次写入成绩记录（按 recordId 去重）；内容版本不一致时放弃中断局次并说明；
 // 存储不可用或写入失败时游戏照常可玩并提示无法持久保存；提供清除本地记录入口
 // （两击确认）。预览入口不读写任何正式记录存储。
+// M6：离线运行与版本更新（offline.ts 为纯逻辑，此处只做接线）。注册 /sw.js
+// （scripts/build-sw.mjs 生成，预缓存入口、脚本、样式与随构建进入产物的练习
+// 数据）；页面提示缓存就绪（带版本标记）/ 准备中 / 失败与离线状态，首次访问
+// 未完成缓存前不承诺离线可玩；等待中的新版本只在「非单局中途」（选择屏且无
+// 进行中局次）采用，激活后清理旧版本缓存并刷新；主模块加载失败由 index.html
+// 内联兜底脚本提示，Service Worker 侧策略见 web/sw.source.js。
 // 正式入口为默认 URL，只走 selectExercises；?preview=candidate 为显式隔离的
 // 候选预览入口（previewExercises，草稿计入可用数），两者不共享局次状态。
 import type { Exercise, Grade } from '../../learning/models.js';
@@ -34,6 +40,8 @@ import {
 import type {
   FinishedRoundRecordV1, InterruptedRoundV1, KeyValueStore, RoundRecordQuestionV1, StoredTimerV1,
 } from './storage.js';
+import { decideUpdateAdoption, describeOfflineStatus, planAdoptionExecution } from './offline.js';
+import type { OfflinePhase, UpdateScreen } from './offline.js';
 
 type ScreenId = 'error' | 'select' | 'availability' | 'game' | 'result';
 
@@ -104,6 +112,18 @@ class NumberPuzzleApp {
   private restartConfirmTimer: ReturnType<typeof setTimeout> | null = null;
   private clearConfirmArmed = false;
   private clearConfirmTimer: ReturnType<typeof setTimeout> | null = null;
+  // M6：离线缓存与版本更新状态（决策逻辑在 offline.ts，此处只保存与展示）。
+  private screen: ScreenId = 'select';
+  private offlinePhase: OfflinePhase = 'preparing';
+  private offlineVersion: string | null = null;
+  private updateWaiting = false;
+  private updateNoticeText: string | null = null;
+  /** 已向等待中的 SW 发送 skip-waiting；controllerchange 后据此决定是否刷新。 */
+  private awaitingAdoption = false;
+  private swRegistration: ServiceWorkerRegistration | null = null;
+  /** 页面加载时的 controller：用于识别「新版本已激活接管」（waiting 可被浏览器跳过）。 */
+  private readonly initialController: ServiceWorker | null =
+    this.swSupported() ? navigator.serviceWorker.controller : null;
 
   constructor(content: GameContent, preview: boolean) {
     this.content = content;
@@ -116,6 +136,7 @@ class NumberPuzzleApp {
     this.wireGameAndResultScreens();
     this.wireSessionControls();
     this.wireStorageUi();
+    this.wireOfflineStatus();
     if (preview) {
       $('preview-banner').hidden = false;
       $('result-preview-note').hidden = false;
@@ -130,9 +151,12 @@ class NumberPuzzleApp {
   }
 
   private showScreen(id: ScreenId): void {
+    this.screen = id;
     for (const screen of ['error', 'select', 'availability', 'game', 'result'] as const) {
       $(`screen-${screen}`).hidden = screen !== id;
     }
+    // 返回选择屏后重新评估：等待中的新版本可在「非单局中途」的安全时机生效（M6）。
+    if (this.updateWaiting) this.evaluateUpdateAdoption();
   }
 
   private readSelectedGrades(): Grade[] {
@@ -458,6 +482,153 @@ class NumberPuzzleApp {
     status.hidden = false;
   }
 
+  // -------------------------------------------------------------------
+  // M6：离线缓存与版本更新（决策逻辑在 offline.ts，此处只做接线）。
+  // -------------------------------------------------------------------
+
+  private swSupported(): boolean {
+    return 'serviceWorker' in navigator && window.isSecureContext;
+  }
+
+  private swControlled(): boolean {
+    return this.swSupported() && navigator.serviceWorker.controller !== null;
+  }
+
+  private isRoundInProgress(): boolean {
+    return this.session.state === 'running' || this.session.state === 'paused';
+  }
+
+  private updateScreen(): UpdateScreen {
+    return this.screen === 'select' ? 'select' : 'other';
+  }
+
+  /** 注册 Service Worker 并跟踪缓存状态；不支持或注册失败时如实提示，不影响游玩。 */
+  private wireOfflineStatus(): void {
+    this.offlinePhase = this.swSupported()
+      ? (this.swControlled() ? 'ready' : 'preparing')
+      : 'unsupported';
+    window.addEventListener('online', () => this.renderOfflineNotice());
+    window.addEventListener('offline', () => this.renderOfflineNotice());
+    this.renderOfflineNotice();
+    if (!this.swSupported()) return;
+    navigator.serviceWorker.addEventListener('message', event => this.onSwMessage(event));
+    navigator.serviceWorker.addEventListener('controllerchange', () => this.onControllerChange());
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      this.swRegistration = registration;
+      this.syncRegistrationState(registration);
+      registration.addEventListener('updatefound', () => this.onUpdateFound(registration));
+    }).catch(() => {
+      // 注册失败（如首次安装阶段断网）：未完成缓存，不承诺离线可玩。
+      this.offlinePhase = this.swControlled() ? this.offlinePhase : 'failed';
+      this.renderOfflineNotice();
+    });
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'query-version' });
+    }
+  }
+
+  /** 依据注册对象同步安装/等待状态：首次安装失败→failed；出现等待版本→评估采用时机。 */
+  private syncRegistrationState(registration: ServiceWorkerRegistration): void {
+    const installing = registration.installing;
+    if (installing && !this.swControlled()) {
+      installing.addEventListener('statechange', () => {
+        if (installing.state === 'redundant' && !this.swControlled()) {
+          this.offlinePhase = 'failed'; // 预缓存未完成，新 SW 未激活
+          this.renderOfflineNotice();
+        }
+      });
+    }
+    if (registration.waiting) this.markUpdateWaiting();
+    this.renderOfflineNotice();
+  }
+
+  /** updatefound：新版本安装中；installed（已有旧版本控制）→ 进入等待。 */
+  private onUpdateFound(registration: ServiceWorkerRegistration): void {
+    const worker = registration.installing;
+    if (!worker) return;
+    worker.addEventListener('statechange', () => {
+      if (worker.state === 'installed' && this.swControlled()) this.markUpdateWaiting();
+      if (worker.state === 'redundant' && !this.swControlled()) {
+        this.offlinePhase = 'failed'; // 首次安装失败
+        this.renderOfflineNotice();
+      }
+    });
+  }
+
+  private markUpdateWaiting(): void {
+    if (this.updateWaiting) return;
+    this.updateWaiting = true;
+    this.evaluateUpdateAdoption();
+  }
+
+  /** 决定等待中的新版本何时生效（offline.ts decideUpdateAdoption）；选择屏且非单局中途即采用。 */
+  private evaluateUpdateAdoption(): void {
+    if (!this.updateWaiting || this.awaitingAdoption) return;
+    const decision = decideUpdateAdoption({
+      updateWaiting: true,
+      roundInProgress: this.isRoundInProgress(),
+      screen: this.updateScreen(),
+    });
+    this.updateNoticeText = decision.notice;
+    this.renderOfflineNotice();
+    if (decision.action !== 'adopt') return;
+    // waiting 语义不可依赖（可能被浏览器跳过而直通激活，见 offline.ts planAdoptionExecution）：
+    // waiting 缺失时按 controller 是否已接管决定刷新或收敛，不发无对象的 skip-waiting。
+    const plan = planAdoptionExecution({
+      waitingWorkerPresent: this.swRegistration?.waiting != null,
+      controllerChanged: this.controllerChangedSinceLoad(),
+    });
+    if (plan.action === 'send-skip-waiting') {
+      this.awaitingAdoption = true;
+      this.swRegistration!.waiting!.postMessage({ type: 'skip-waiting' });
+    } else if (plan.action === 'reload') {
+      window.location.reload();
+    } else {
+      this.updateWaiting = false;
+      this.updateNoticeText = null;
+      this.renderOfflineNotice();
+    }
+  }
+
+  private controllerChangedSinceLoad(): boolean {
+    const controller = this.swSupported() ? navigator.serviceWorker.controller : null;
+    return controller !== null && controller !== this.initialController;
+  }
+
+  /** controllerchange：首次激活（claim）同样触发；仅页面主动请求切换后才刷新页面。 */
+  private onControllerChange(): void {
+    if (!this.awaitingAdoption) return;
+    this.awaitingAdoption = false;
+    if (this.isRoundInProgress()) return; // 双保险：任何情况下不打断单局
+    this.updateWaiting = false;
+    this.updateNoticeText = null;
+    window.location.reload();
+  }
+
+  /** SW 广播 cache-ready（激活或对 query-version 的应答）：记录版本标记并提示就绪。 */
+  private onSwMessage(event: MessageEvent): void {
+    const data = event.data as { type?: unknown; version?: unknown } | null;
+    if (!data || data.type !== 'cache-ready') return;
+    this.offlinePhase = 'ready';
+    this.offlineVersion = typeof data.version === 'string' ? data.version : null;
+    this.renderOfflineNotice();
+  }
+
+  /** 离线状态提示行：文案与警示级别由 describeOfflineStatus 推导，更新提示优先。 */
+  private renderOfflineNotice(): void {
+    const status = describeOfflineStatus({
+      phase: this.offlinePhase,
+      offline: !navigator.onLine,
+      controlled: this.swControlled(),
+      version: this.offlineVersion,
+      updateNotice: this.updateNoticeText,
+    });
+    const notice = $('offline-notice');
+    notice.textContent = status.text;
+    notice.classList.toggle('status-warning', status.warning);
+    notice.hidden = false;
+  }
+
   /**
    * 计算画布可用空间并交给渲染层自适应：以视口高度减去画布上方的固定区域
    * （页眉、音效行、设备内边距）与下方操作区（按钮行、外边距、设备底部内边距）。
@@ -654,6 +825,10 @@ function boot(): void {
       $(`screen-${screen}`).hidden = true;
     }
     $('screen-error').hidden = false;
+  } finally {
+    // 主模块已加载执行：置位启动标记，index.html 内联兜底脚本据此区分
+    // 「模块加载失败（离线资源缺失）」与「应用级错误」（M6）。
+    (window as unknown as { __pixelAcademyBooted?: boolean }).__pixelAcademyBooted = true;
   }
 }
 
