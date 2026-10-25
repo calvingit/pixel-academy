@@ -5,7 +5,7 @@
 - 先读 [PLAN.md](PLAN.md) 的当前状态与对应里程碑，再按任务需要读取相关文档；不把全部文档预先加载进上下文。
 - 产品范围看 [PRD.md](PRD.md)，现有代码边界看 [架构说明](docs/architecture.md)，检查方法看 [VERIFICATION.md](VERIFICATION.md)。
 - 内容任务读 [内容基准](docs/content-baseline.md) 和 [内容维护流程](docs/content-workflow.md)；界面任务读 [设计规范](docs/design.md)。
-- 当前 M1 完成，下一项为 M2。M8–M15 是后续规划，未明确要求时不同时实施其他游戏。
+- 当前 M1–M6 已完成，M7 受阻（真机验证等缺口待闭环，详见 PLAN.md）。M8–M15 是后续规划（暂缓），未明确要求时不同时实施其他游戏。
 
 ## 实施约束
 

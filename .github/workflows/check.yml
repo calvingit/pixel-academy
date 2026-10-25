@@ -1,0 +1,19 @@
+# 持续集成检查（PLAN.md M7）：干净安装 + 类型检查 + 单元测试 + 生产构建。
+# 推送与拉取请求时执行；与本地 `npm run check` 同一命令，结果以实际运行为准。
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
