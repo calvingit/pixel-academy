@@ -7,7 +7,7 @@
 - 练习 ID：MATH-001–MATH-018，共 18 道，逐条结论见下表。
 - gameId：全部为 `number-puzzle`，与题库 `gameIds` 一致（src/content/exercises.ts）。
 - 年级：一年级 12 道（MATH-001–012）、二年级 6 道（MATH-013–018），以映射链核验（练习 → `mappingIds` → 单元 → 教材 grade；src/content/skills.ts 的 MAP-006、MAP-007、MAP-008、MAP-010、MAP-011、MAP-013；src/learning/catalog.ts:64-66）。每道题只关联一个映射、单一年级。
-- 变更版本：本次晋级发生在工作区未提交变更中，尚无提交哈希；审核记录随提交保留（content-workflow.md「新增或修订内容」第 6 步）。
+- 变更版本：首轮晋级随提交 83d98c3 保留；点阵呈现重审晋级随本提交保留（content-workflow.md「新增或修订内容」第 6 步）。
 
 ## 依据
 
@@ -56,6 +56,7 @@
 - 暂缓（保持 draft）3 道：MATH-016、MATH-017、MATH-018。三题数值与适配层面可过，但映射技能为「乘法的意义」，裸算式与该技能的教学适配属教学判断，代理审核（zcode-agent）无教学资质，按无把握教学判断暂缓。
 - 暂缓后果（玩法说明未决问题 1 已记录）：三道乘法题均暂缓则二年级单选仅剩 3 道，低于 5 道开局阈值，二年级单选显示「内容不足」；一年级单选（12 道）与混选局不受影响。
 - 无「修改后重审」项：本次结论中没有 revise 决定，全部任务未被修改，稳定 ID 与数值均未变动。
+- （第二轮重审后 MATH-016–018 已按点阵呈现晋级 approved，见文末「重审记录」；本节为首轮历史记录。）
 
 ## 审核者与时间
 
@@ -73,3 +74,15 @@
 - src/content/exercises.ts：MATH-001–015 的 review 晋级 approved；MATH-016–018 保持 draft。
 - tests/learning.test.mjs：原「production excludes all 18 unreviewed drafts」等按旧全草稿状态编写的断言更新为新状态（15 道 approved 可取、3 道 draft 仅预览），测试意图不变。
 - VERIFICATION.md「现有测试基准」中「当前 18 道练习都是 draft」一句同步更新，避免与题库状态矛盾。
+
+## 重审记录：乘法题点阵呈现（第二轮，MATH-016–018）
+
+- 起因：首轮以「裸算式无法考察乘法意义、代理无教学资质判定」暂缓三道乘法题；用户决定改为点阵图示呈现后重审。玩法说明同步修订（「三类任务的统一表达」新增 binary × 点阵规格：left 行 × right 列点阵配文「一共有多少个？」，不显示算式）。
+- 对象：MATH-016、MATH-017、MATH-018，gameId `number-puzzle`，二年级；映射链 MAP-013（math.multiplication.concept「乘法的意义」）→ MA-02A-U03「数一数与乘法」→ MA-02A。
+- 表述：题面为点阵加「一共有多少个？」，不出现算式与答案数字；MATH-016 为 2 行 3 列、MATH-017 为 3 行 4 列、MATH-018 为 5 行 2 列。
+- 正确性：推算 2 × 3 = 6、3 × 4 = 12、5 × 2 = 10；因数 2–5、积 6–12 均在档位 B 分档内；`answerFor` 结果与点阵总点数一致。
+- 适配性：点阵即乘法意义的等份分组模型，与所在单元「数一数与乘法」直接对应；点数 6/12/10 在二年级计数范围内；题面不显示答案数字，点选判定不泄露答案。
+- 依据：修订后的 [玩法说明](gameplay-number-puzzle.md)、src/content/exercises.ts、src/content/skills.ts（MAP-013 及映射链，经 src/content/units.ts 与 src/content/textbooks.ts 闭合核对）、[内容基准](content-baseline.md)「状态分离」；重审由独立代理（zcode-agent）执行，方式含映射链闭合核对与 dist 产物运行时筛选复验。
+- 结果：三题通过并晋级 approved（reviewer：`zcode-agent（代理审核）`，reviewedAt：`2026-10-25T07:13:18Z`）。二年级单选恢复 6 道可用，满足 5 道开局阈值，首轮「暂缓后果」解除。
+- 未覆盖：教学有效性（学生是否经「几个几」分组而非逐点清数得出总数）无法静态证明，属 M4 实机验收与教学观察；MAP-013 的 sourceVerification 与 curriculumVerification 仍为 pending；人工教师评审缺口不变。
+- 关联变更：src/content/exercises.ts 三题晋级 approved；tests/learning.test.mjs 的正式题集断言随内容状态更新（18 道 approved）；docs/gameplay-number-puzzle.md 除点阵规格外，同步修复随机源消耗顺序与界面文案判定顺序两处规则空缺，并清理审核前状态的过期表述（两处修复亦经独立代理复核确认）。

@@ -349,7 +349,9 @@ export const exercises: readonly Exercise[] = [
       "right": 3
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T07:13:18Z"
     }
   },
   {
@@ -368,7 +370,9 @@ export const exercises: readonly Exercise[] = [
       "right": 4
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T07:13:18Z"
     }
   },
   {
@@ -387,7 +391,9 @@ export const exercises: readonly Exercise[] = [
       "right": 2
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T07:13:18Z"
     }
   }
 ];

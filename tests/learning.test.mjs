@@ -23,13 +23,12 @@ test('main unit IDs do not shift when practice or preparation blocks are inserte
       Array.from({ length: count }, (_, i) => `${book}-U${String(i+1).padStart(2,'0')}`));
   }
 });
-test('production serves only the 15 approved exercises; 3 deferred drafts stay preview-only', () => {
+test('production serves all 18 approved exercises across grade selection', () => {
   assert.equal(catalog.exercises.length, 18);
   const approved = ids(selectExercises(query([1,2])));
-  assert.equal(approved.length, 15);
-  for (const id of ['MATH-016', 'MATH-017', 'MATH-018']) assert.ok(!approved.includes(id));
+  assert.equal(approved.length, 18);
   assert.equal(selectExercises(query([1])).length, 12);
-  assert.equal(selectExercises(query([2])).length, 3);
+  assert.equal(selectExercises(query([2])).length, 6);
   assert.equal(previewExercises(query([1,2])).length, 18);
 });
 test('all 63 grade subsets respect exact membership, including unavailable grades', () => {
@@ -50,7 +49,8 @@ test('subject and game filters are mandatory boundaries', () => {
 test('reviewed exercises can run independently of pending textbook adoption verification', () => {
   const exercise = structuredClone(catalog.exercises[12]);
   exercise.review = { status: 'approved', reviewer: 'test-fixture-only', reviewedAt: '2026-10-25T00:00:00Z' };
-  const core = createLearningCore(changed({ exercises: [exercise, catalog.exercises[15]] }));
+  const companion = { ...catalog.exercises[15], review: { status: 'draft' } };
+  const core = createLearningCore(changed({ exercises: [exercise, companion] }));
   assert.deepEqual(core.selectExercises(query([1])), []);
   assert.deepEqual(ids(core.selectExercises(query([2]))), [exercise.id]);
   assert.equal(core.previewExercises(query([1,2])).length, 2);
