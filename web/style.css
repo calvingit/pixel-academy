@@ -224,3 +224,39 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 }
 
 .status-warning { border-color: var(--warning); color: var(--warning); }
+
+/* M5：本地记录与恢复。 */
+.storage-notice { margin: 0 0 10px; }
+
+.restore-offer {
+  margin-top: 16px;
+  padding: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.restore-offer .restore-text { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+
+#restore-status { margin-top: 12px; }
+
+.records {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 2px dashed #d8d2c2;
+}
+
+.records h2 { font-size: 17px; margin: 4px 0; }
+
+.records-list { list-style: none; margin: 8px 0; padding: 0; }
+
+.records-list li {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 2px solid #d8d2c2;
+  border-radius: 10px;
+  background: #fbf8ef;
+  font-size: 14px;
+}
+
+.records-list li.records-more { border-style: dashed; color: var(--muted); }

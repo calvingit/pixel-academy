@@ -15,6 +15,10 @@
       <p class="app-subtitle">点选与题目答案相同的数字块</p>
     </header>
 
+    <p id="storage-notice" class="status status-warning storage-notice" hidden>
+      本地存储不可用，练习记录与设置无法保存，游戏仍可正常游玩。
+    </p>
+
     <section id="screen-error" class="screen" hidden>
       <p id="error-message" class="status status-warning">内容数据校验失败，游戏无法启动。</p>
     </section>
@@ -34,6 +38,23 @@
       <p id="select-empty-hint" class="hint" hidden>请先选择至少一个年级。</p>
       <div class="actions">
         <button id="btn-to-availability" type="button" class="primary" disabled>查看可用内容</button>
+      </div>
+      <div id="restore-offer" class="restore-offer" hidden>
+        <p id="restore-offer-text" class="restore-text"></p>
+        <div class="actions">
+          <button id="btn-restore" type="button" class="primary">继续上局</button>
+          <button id="btn-discard-round" type="button">放弃上局</button>
+        </div>
+      </div>
+      <p id="restore-status" class="status" hidden></p>
+      <div id="records-section" class="records">
+        <h2>练习记录</h2>
+        <p class="hint">保存在本机浏览器，可随时清除。</p>
+        <ul id="records-list" class="records-list"></ul>
+        <p id="records-empty" class="hint">暂无已保存的练习记录。</p>
+        <div class="actions">
+          <button id="btn-clear-records" type="button">清除本地记录</button>
+        </div>
       </div>
     </section>
 

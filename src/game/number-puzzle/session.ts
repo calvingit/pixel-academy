@@ -49,6 +49,30 @@ export class RoundSession {
     this.status = 'finished';
   }
 
+  /**
+   * 中断恢复（M5）：idle → running | paused，并按保存的剩余时长重新登记计时器。
+   * paused 为真时计时器进入冻结区（与 pause() 后一致，resume() 会重新换算）；
+   * 为假时以当前时钟为基准设置截止时刻。非法剩余时长拒绝，与 scheduleTimer 同口径。
+   */
+  restoreRound(options: { readonly paused: boolean; readonly timers: readonly PendingTimer[] }): void {
+    if (this.status !== 'idle') {
+      throw new Error(`restoreRound requires idle status, got ${this.status}`);
+    }
+    for (const timer of options.timers) {
+      if (!Number.isFinite(timer.remainingMs) || timer.remainingMs < 0) {
+        throw new RangeError(`Invalid restored timer remaining: ${String(timer.remainingMs)}`);
+      }
+    }
+    if (options.paused) {
+      for (const timer of options.timers) this.frozen.set(timer.kind, timer.remainingMs);
+      this.status = 'paused';
+    } else {
+      const now = this.clock();
+      for (const timer of options.timers) this.deadlines.set(timer.kind, now + timer.remainingMs);
+      this.status = 'running';
+    }
+  }
+
   /** 弃局（返回年级选择 / 重新开始 / 结算后再开）：running | paused | finished → idle。 */
   abandonRound(): void {
     if (this.status !== 'running' && this.status !== 'paused' && this.status !== 'finished') {

@@ -151,3 +151,32 @@ test('invalid durations are rejected', () => {
   assert.throws(() => session.scheduleTimer('resolve', Number.NaN), RangeError);
   assert.throws(() => session.scheduleTimer('resolve', Number.POSITIVE_INFINITY), RangeError);
 });
+
+// M5：中断恢复——从保存的剩余时长直接进入 running 或 paused。
+test('restoreRound re-enters running or paused with timers re-armed from saved remaining', () => {
+  const clock = makeClock();
+  // running 恢复：以当前时钟为基准重设截止时刻，按真实时间递减。
+  const session = new RoundSession(clock.now);
+  session.restoreRound({ paused: false, timers: [{ kind: 'resolve', remainingMs: 350 }] });
+  assert.equal(session.state, 'running');
+  clock.advance(100);
+  assert.equal(session.remainingMs('resolve'), 250);
+  // paused 恢复：计时器进入冻结区，真实时间流逝不推进；resume 按冻结剩余重挂。
+  const paused = new RoundSession(clock.now);
+  paused.restoreRound({ paused: true, timers: [{ kind: 'feedback', remainingMs: 180 }] });
+  assert.equal(paused.state, 'paused');
+  assert.equal(paused.isPaused(), true);
+  clock.advance(900);
+  assert.equal(paused.remainingMs('feedback'), 180);
+  assert.deepEqual(paused.resume(), [{ kind: 'feedback', remainingMs: 180 }]);
+  // 无计时器的恢复等价于开局后未登记计时。
+  const plain = new RoundSession(clock.now);
+  plain.restoreRound({ paused: false, timers: [] });
+  assert.equal(plain.state, 'running');
+  assert.equal(plain.remainingMs('resolve'), null);
+  // 仅 idle 可恢复；非法剩余时长拒绝（与 scheduleTimer 同口径）。
+  assert.throws(() => session.restoreRound({ paused: false, timers: [] }), Error);
+  const fresh = new RoundSession(clock.now);
+  assert.throws(() => fresh.restoreRound({ paused: false, timers: [{ kind: 'resolve', remainingMs: -1 }] }), RangeError);
+  assert.throws(() => fresh.restoreRound({ paused: false, timers: [{ kind: 'resolve', remainingMs: Number.NaN }] }), RangeError);
+});
