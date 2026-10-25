@@ -14,7 +14,9 @@ export const exercises: readonly Exercise[] = [
       "value": 0
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -31,7 +33,9 @@ export const exercises: readonly Exercise[] = [
       "value": 3
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -48,7 +52,9 @@ export const exercises: readonly Exercise[] = [
       "value": 10
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -67,7 +73,9 @@ export const exercises: readonly Exercise[] = [
       "right": 5
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -86,7 +94,9 @@ export const exercises: readonly Exercise[] = [
       "right": 3
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -105,7 +115,9 @@ export const exercises: readonly Exercise[] = [
       "right": 1
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -124,7 +136,9 @@ export const exercises: readonly Exercise[] = [
       "right": 2
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -143,7 +157,9 @@ export const exercises: readonly Exercise[] = [
       "right": 4
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -162,7 +178,9 @@ export const exercises: readonly Exercise[] = [
       "right": 1
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -181,7 +199,9 @@ export const exercises: readonly Exercise[] = [
       "right": 6
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -200,7 +220,9 @@ export const exercises: readonly Exercise[] = [
       "right": 2
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -219,7 +241,9 @@ export const exercises: readonly Exercise[] = [
       "right": 1
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -246,7 +270,9 @@ export const exercises: readonly Exercise[] = [
       ]
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -273,7 +299,9 @@ export const exercises: readonly Exercise[] = [
       ]
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {
@@ -300,7 +328,9 @@ export const exercises: readonly Exercise[] = [
       ]
     },
     "review": {
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "zcode-agent（代理审核）",
+      "reviewedAt": "2026-10-25T06:16:33Z"
     }
   },
   {

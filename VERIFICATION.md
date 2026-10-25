@@ -35,7 +35,7 @@ npm run check
 
 M1 的 11 项测试覆盖教材槽位、主单元编号、草稿隔离、全部 63 种非空年级组合、学科和游戏过滤、审核 fixture、关联错误以及数学判题与样本范围。
 
-测试中的 approved 记录只在测试 fixture 使用，不证明静态题库有已审核内容。当前 18 道练习都是 draft，正式取题为空属于预期结果。
+测试中的 approved 记录用于构造测试场景；静态题库的审核状态以 src/content/exercises.ts 和审核记录文档为准。首批 15 道练习已按 docs/content-review-first-batch.md 晋级 approved，3 道乘法练习保持 draft；正式取题只返回 approved 内容，针对其余年级组合为空属预期结果。
 
 测试数量会随实现变化；以本次执行输出为准，不为保持数量删减测试。未执行检查不能引用旧输出宣称本次通过。
 

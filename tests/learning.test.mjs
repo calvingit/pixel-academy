@@ -23,9 +23,13 @@ test('main unit IDs do not shift when practice or preparation blocks are inserte
       Array.from({ length: count }, (_, i) => `${book}-U${String(i+1).padStart(2,'0')}`));
   }
 });
-test('production excludes all 18 unreviewed drafts; preview is explicit', () => {
+test('production serves only the 15 approved exercises; 3 deferred drafts stay preview-only', () => {
   assert.equal(catalog.exercises.length, 18);
-  assert.deepEqual(selectExercises(query([1,2])), []);
+  const approved = ids(selectExercises(query([1,2])));
+  assert.equal(approved.length, 15);
+  for (const id of ['MATH-016', 'MATH-017', 'MATH-018']) assert.ok(!approved.includes(id));
+  assert.equal(selectExercises(query([1])).length, 12);
+  assert.equal(selectExercises(query([2])).length, 3);
   assert.equal(previewExercises(query([1,2])).length, 18);
 });
 test('all 63 grade subsets respect exact membership, including unavailable grades', () => {
@@ -46,7 +50,7 @@ test('subject and game filters are mandatory boundaries', () => {
 test('reviewed exercises can run independently of pending textbook adoption verification', () => {
   const exercise = structuredClone(catalog.exercises[12]);
   exercise.review = { status: 'approved', reviewer: 'test-fixture-only', reviewedAt: '2026-10-25T00:00:00Z' };
-  const core = createLearningCore(changed({ exercises: [exercise, catalog.exercises[0]] }));
+  const core = createLearningCore(changed({ exercises: [exercise, catalog.exercises[15]] }));
   assert.deepEqual(core.selectExercises(query([1])), []);
   assert.deepEqual(ids(core.selectExercises(query([2]))), [exercise.id]);
   assert.equal(core.previewExercises(query([1,2])).length, 2);
@@ -87,7 +91,7 @@ test('invalid tasks fail rather than executing strings or overflowing silently',
     { kind: 'chain', start: 1, steps: [] }, { kind: 'eval', code: '1+1' },
   ]) assert.throws(() => answerFor(task));
 });
-test('draft math samples obey the advertised numeric ranges and mapping concepts', () => {
+test('math samples obey the advertised numeric ranges and mapping concepts', () => {
   for (const exercise of catalog.exercises) {
     const result = answerFor(exercise.task);
     assert.ok(Number.isSafeInteger(result) && result >= 0);
@@ -102,5 +106,42 @@ test('draft math samples obey the advertised numeric ranges and mapping concepts
       assert.equal(exercise.task.kind, 'chain');
       assert.ok(exercise.task.steps.length >= 2);
     }
+  }
+});
+// 期望集合同样取自编译产物：exercises → mappingIds → 映射 → 单元 → 教材 grade，
+// 与 src/learning/catalog.ts 的 mappingGrades 索引和 select 语义同构，但不复用其实现。
+const bookGradeByUnit = new Map(catalog.units.map(u => [u.id,
+  catalog.textbooks.find(b => b.id === u.textbookId).grade]));
+const mappingGrades = new Map(catalog.mappings.map(m => [m.id,
+  new Set(m.unitIds.map(id => bookGradeByUnit.get(id)))]));
+const expectedApproved = grade => catalog.exercises
+  .filter(e => e.review.status === 'approved' && e.subject === 'math' &&
+    e.gameIds.includes('number-puzzle') &&
+    e.mappingIds.some(id => mappingGrades.get(id).has(grade)))
+  .map(e => e.id).sort();
+// 数值范围来自 docs/gameplay-number-puzzle.md「年级、数值范围与难度分档」与「实现常量一览」：
+// 档位 A（一年级）0–10、档位 B（二年级）0–100，均为含端点闭区间。
+const tierRange = { 1: [0, 10], 2: [0, 100] };
+
+test('selectExercises for a single grade equals the approved set derived from content data', () => {
+  for (const grade of [1, 2]) {
+    assert.deepEqual(ids(selectExercises(query([grade]))), expectedApproved(grade));
+  }
+});
+test('approved answers stay inside the gameplay numeric range of their grade tier', () => {
+  for (const exercise of catalog.exercises) {
+    if (exercise.review.status !== 'approved') continue;
+    const grades = exercise.mappingIds.flatMap(id => [...mappingGrades.get(id)]);
+    // 多年级关联的练习按玩法说明取最高档；出现未定档位的年级属文档缺口，应让测试失败。
+    const [min, max] = tierRange[Math.max(...grades)];
+    const answer = answerFor(exercise.task);
+    assert.ok(answer >= min && answer <= max, `${exercise.id} answer ${answer} outside ${min}–${max}`);
+  }
+});
+test('draft exercises never appear in any selectExercises result', () => {
+  const draftIds = new Set(catalog.exercises.filter(e => e.review.status === 'draft').map(e => e.id));
+  for (let mask = 1; mask < 64; mask++) {
+    const grades = [1,2,3,4,5,6].filter(g => mask & (1 << (g-1)));
+    for (const id of ids(selectExercises(query(grades)))) assert.ok(!draftIds.has(id), `draft ${id} was served`);
   }
 });
