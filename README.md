@@ -2,6 +2,20 @@
 
 复古掌机风格学习游戏项目。当前实现 M1：Learning Core 与首批候选内容；尚无网页、游戏引擎或可游玩游戏。
 
+## 文档入口
+
+| 文档 | 用途 |
+| --- | --- |
+| [PRD.md](PRD.md) | 产品目标、用户场景、范围与功能要求 |
+| [PLAN.md](PLAN.md) | M1–M15 里程碑、当前状态与验收条件 |
+| [AGENTS.md](AGENTS.md) | 项目协作约束与按需阅读入口 |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 本地开发和变更流程 |
+| [VERIFICATION.md](VERIFICATION.md) | 当前检查命令及未来验收方法 |
+| [架构说明](docs/architecture.md) | 现有代码、数据关系与扩展边界 |
+| [内容基准](docs/content-baseline.md) | 当前来源事实与核验缺口 |
+| [内容维护流程](docs/content-workflow.md) | 数据修改、审核和来源记录 |
+| [视觉与交互规范](docs/design.md) | 复古掌机方向、手机交互与 UI 验收 |
+
 ## 运行
 
 需要 Node.js 22+ 和 npm。

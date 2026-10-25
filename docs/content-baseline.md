@@ -35,7 +35,7 @@ MA-01A、MA-02A 的 lessons 仅保存交接中的代表课次（examples），�
 
 ## 数据层使用约定
 
-所有公开数据类型为只读；调用方不得通过类型断言或 JavaScript 修改已创建 Core 的底层数据。新增或修改内容后重新调用 createLearningCore。validateCatalog 校验静态 TypeScript 数据的引用完整性、重复 ID、跨学科关联、审核元数据及数学任务；不是用于不可信 JSON 的运行时 schema 校验器。
+数组带 readonly 类型约束，但对象没有深度冻结保证；调用方不得通过类型断言或 JavaScript 修改已创建 Core 的底层数据。新增或修改内容后重新调用 createLearningCore。validateCatalog 校验静态 TypeScript 数据的引用完整性、重复 ID、跨学科关联、审核元数据及数学任务；不是用于不可信 JSON 的运行时 schema 校验器。
 
 题目采用结构化任务，不存可执行表达式或冗余答案。`number` 表示识别给定数字的原型任务；`binary` 表示两个整数运算；`chain` 从 start 开始依次执行 steps。题目文字、数字图片和按键等呈现方式留给游戏实现。判题接受安全整数或十进制整数字符串，拒绝空串、布尔值、浮点字符串、表达式及非有限值。
 
@@ -46,3 +46,5 @@ MA-01A、MA-02A 的 lessons 仅保存交接中的代表课次（examples），�
 3. 再实现触摸输入、进度保存与离线验收。
 
 暂不补齐剩余教材，不增加后端或第二款游戏。
+
+具体内容变更与审核记录要求见 [内容维护流程](content-workflow.md)。
