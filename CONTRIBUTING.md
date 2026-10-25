@@ -4,7 +4,7 @@
 
 ## 本地开发
 
-在仓库根目录执行 `npm ci`，之后通过 `npm run check` 检查。当前只有数据层，尚无可启动的 H5 页面；具体命令和适用范围见 [VERIFICATION.md](VERIFICATION.md)。
+在仓库根目录执行 `npm ci`，之后通过 `npm run check` 检查。数字消除 H5 原型通过 `npm run serve` 在本地运行（先构建再启动静态服务）；具体命令和适用范围见 [VERIFICATION.md](VERIFICATION.md)。
 
 工程采用 ESM 与 NodeNext，TypeScript 源文件的相对导入沿用 .js 后缀。源码位于 src，测试从 dist 导入编译结果，生成目录不提交。依赖变更同步 package.json 和锁文件。
 

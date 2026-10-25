@@ -13,10 +13,17 @@
 | src/learning/catalog.ts | 引用检查、Core 创建、正式和候选筛选 |
 | src/learning/evaluation.ts | 安全整数答案计算与判题 |
 | src/index.ts | 汇总默认 catalog 与导出 API |
-| tests/learning.test.mjs | 对编译结果执行 Node.js 测试 |
+| src/game/number-puzzle/rules.ts | 数字消除纯规则：单局状态机、局序洗牌、判题、计分、保证规则、注入随机源；无 DOM 依赖 |
+| src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源 |
+| src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
+| src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画；只读规则状态，不判题 |
+| src/game/number-puzzle/main.ts | 浏览器入口：DOM 界面流转、局次生命周期与输入窗口计时 |
+| web/index.html、web/style.css | 静态 H5 入口页面与样式 |
+| scripts/serve.mjs | Node 内置 http 本地静态服务（npm run serve） |
+| tests/learning.test.mjs、tests/number-puzzle.test.mjs | 对编译结果执行 Node.js 测试 |
 | dist/ | 编译生成物，忽略提交 |
 
-当前 build 仅运行 tsc，产出 JavaScript 与声明文件；不是 H5 打包、资源压缩或可部署站点构建。
+当前 build 仅运行 tsc，产出 JavaScript 与声明文件；不是 H5 打包、资源压缩或可部署站点构建。页面以原生 ES 模块直接加载 dist 产物，由 scripts/serve.mjs 在本地提供，浏览器侧无打包器。
 
 ## 数据关系
 
@@ -54,15 +61,15 @@ flowchart TD
 
 ## 后续架构方向
 
-| 边界 | 规划职责 | 引入时机 |
+| 边界 | 规划职责 | 状态 |
 | --- | --- | --- |
-| 游戏规则 | 单局状态、出题、计分、胜负；尽量纯函数 | M3 |
-| 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3–M4 |
+| 游戏规则 | 单局状态、出题、计分、胜负；尽量纯函数 | M3 已落地（src/game/number-puzzle/rules.ts） |
+| 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3 已提供最小实现；复古掌机视觉与手机交互属 M4 |
 | 本地存储 | 设置、局次、内容版本与迁移 | M5 |
 | 离线资源 | 缓存、版本切换与缺失处理 | M6 |
 | 非数学任务 | 按具体游戏增加明确任务类型与判题 | M8–M15 |
 
-以上模块尚不存在。浏览器构建工具、存档格式、内容版本字段、缓存策略和托管环境均未确定；在相应里程碑落定时补充，不提前编造配置或命令。
+本地存储、离线资源与非数学任务模块尚不存在；游戏规则与浏览器界面已随 M3 提供，M4 继续完善视觉与交互。存档格式、内容版本字段、缓存策略和托管环境在相应里程碑落定时补充，不提前编造配置或命令。
 
 ## 需要保持的边界
 

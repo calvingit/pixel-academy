@@ -1,0 +1,114 @@
+/* 数字消除 H5 原型（M3）。复古掌机完整视觉与手机适配验收属 M4，此处只保证可读与可操作。 */
+:root {
+  color-scheme: light;
+  --panel: #2f2a45;
+  --muted: #6f6a86;
+  --paper: #f6f2e7;
+  --card: #fffdf7;
+  --accent: #355f9e;
+  --warning: #b3271e;
+  --hint: #a96f00;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--panel);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 16px 14px 32px;
+}
+
+.app-header { text-align: center; margin-bottom: 8px; }
+.app-header h1 { font-size: 26px; margin: 0; }
+.app-subtitle { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+
+.screen h2 { font-size: 19px; margin: 12px 0; }
+
+.hint { color: var(--muted); font-size: 14px; }
+
+.grades {
+  border: 2px solid var(--panel);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 0 0 14px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  background: var(--card);
+}
+
+.grades legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
+
+.grades label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #d8d2c2;
+  border-radius: 10px;
+  background: #fbf8ef;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.grades input { width: 20px; height: 20px; accent-color: var(--accent); }
+
+.actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+button {
+  font: inherit;
+  font-size: 16px;
+  padding: 12px 20px;
+  min-height: 48px;
+  border-radius: 10px;
+  border: 2px solid var(--panel);
+  background: var(--card);
+  color: var(--panel);
+  cursor: pointer;
+}
+
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.status {
+  background: var(--card);
+  border: 2px solid var(--panel);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
+.status-warning { border-color: var(--warning); color: var(--warning); }
+
+.preview-banner {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border: 2px dashed var(--hint);
+  border-radius: 10px;
+  color: var(--hint);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  background: #fdf6e3;
+}
+
+.board-canvas {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  border: 2px solid var(--panel);
+  border-radius: 14px;
+  background: var(--paper);
+  touch-action: none; /* 基础触摸支持：pointer 事件直接命中棋盘；完整手机验收属 M4 */
+}
+
+.result-line { font-size: 17px; margin: 6px 0; text-align: center; }
