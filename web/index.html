@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#232135">
   <title>数字消除 · Pixel Academy</title>
   <link rel="stylesheet" href="/style.css">
   <script type="module" src="/dist/game/number-puzzle/main.js"></script>
@@ -45,11 +46,23 @@
       </div>
     </section>
 
-    <section id="screen-game" class="screen" hidden>
+    <section id="screen-game" class="screen screen-game" hidden>
       <p id="preview-banner" class="preview-banner" hidden>候选内容预览 · 练习未审核</p>
-      <canvas id="board-canvas" class="board-canvas"></canvas>
-      <div class="actions">
-        <button id="btn-game-return" type="button">返回年级选择</button>
+      <div class="game-top">
+        <button id="btn-sound" type="button" class="chip" aria-pressed="true">音效 开</button>
+      </div>
+      <div id="board-wrap" class="board-wrap">
+        <canvas id="board-canvas" class="board-canvas"></canvas>
+        <div id="pause-overlay" class="pause-overlay" hidden>
+          <p class="pause-title">⏸ 已暂停</p>
+          <p class="pause-hint">进度已保留，随时继续。</p>
+          <button id="btn-resume" type="button" class="primary">继续游戏</button>
+        </div>
+      </div>
+      <div class="actions game-actions">
+        <button id="btn-pause" type="button">暂停</button>
+        <button id="btn-restart" type="button">重新开始</button>
+        <button id="btn-game-return" type="button">返回</button>
       </div>
     </section>
 

@@ -14,10 +14,12 @@
 | src/learning/evaluation.ts | 安全整数答案计算与判题 |
 | src/index.ts | 汇总默认 catalog 与导出 API |
 | src/game/number-puzzle/rules.ts | 数字消除纯规则：单局状态机、局序洗牌、判题、计分、保证规则、注入随机源；无 DOM 依赖 |
+| src/game/number-puzzle/session.ts | 单局会话状态机（纯逻辑）：运行/暂停切换、切后台自动暂停、动画计时器的冻结换算；时钟注入，无 DOM、无 setTimeout |
 | src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源 |
 | src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
-| src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画；只读规则状态，不判题 |
-| src/game/number-puzzle/main.ts | 浏览器入口：DOM 界面流转、局次生命周期与输入窗口计时 |
+| src/game/number-puzzle/audio.ts | WebAudio 合成音效（答对/答错/结算）：可关闭，无音频文件、无新增依赖，仅反馈增强不承载规则信息 |
+| src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
+| src/game/number-puzzle/main.ts | 浏览器入口：DOM 界面流转、局次生命周期与输入窗口计时、暂停/继续/重新开始/返回、visibilitychange 自动暂停、音效开关 |
 | web/index.html、web/style.css | 静态 H5 入口页面与样式 |
 | scripts/serve.mjs | Node 内置 http 本地静态服务（npm run serve） |
 | tests/learning.test.mjs、tests/number-puzzle.test.mjs | 对编译结果执行 Node.js 测试 |
@@ -64,12 +66,12 @@ flowchart TD
 | 边界 | 规划职责 | 状态 |
 | --- | --- | --- |
 | 游戏规则 | 单局状态、出题、计分、胜负；尽量纯函数 | M3 已落地（src/game/number-puzzle/rules.ts） |
-| 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3 已提供最小实现；复古掌机视觉与手机交互属 M4 |
+| 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3 提供最小实现；M4 完成复古掌机视觉、手机交互（暂停/继续/重新开始/返回、切后台自动暂停、自适应布局）与可关闭合成音效 |
 | 本地存储 | 设置、局次、内容版本与迁移 | M5 |
 | 离线资源 | 缓存、版本切换与缺失处理 | M6 |
 | 非数学任务 | 按具体游戏增加明确任务类型与判题 | M8–M15 |
 
-本地存储、离线资源与非数学任务模块尚不存在；游戏规则与浏览器界面已随 M3 提供，M4 继续完善视觉与交互。存档格式、内容版本字段、缓存策略和托管环境在相应里程碑落定时补充，不提前编造配置或命令。
+本地存储与离线资源模块尚不存在；游戏规则、浏览器界面与会话/音效能力已随 M3/M4 提供。存档格式、内容版本字段、缓存策略和托管环境在相应里程碑落定时补充，不提前编造配置或命令。M4 的渲染、输入、会话与音效能力都只抽取本游戏需要的部分，放在 `src/game/number-puzzle/` 下，未建通用引擎；第二款游戏出现真实复用需求后再提取公共能力。
 
 ## 需要保持的边界
 

@@ -1,4 +1,8 @@
-/* 数字消除 H5 原型（M3）。复古掌机完整视觉与手机适配验收属 M4，此处只保证可读与可操作。 */
+/* 数字消除 H5（M4）：复古掌机视觉与手机适配。
+   规范口径见 docs/design.md：掌机屏幕 / 游戏区域 / 明确操作区三层结构；
+   有限配色、硬投影（无渐变、无发光、无玻璃效果）；中文与算式用清晰字体不像素化；
+   触摸目标 ≥ 48px、按钮 touch-action: manipulation 防双击缩放，
+   棋盘画布 touch-action: none 使页面滚动与游戏输入互不冲突。 */
 :root {
   color-scheme: light;
   --panel: #2f2a45;
@@ -6,33 +10,71 @@
   --paper: #f6f2e7;
   --card: #fffdf7;
   --accent: #355f9e;
+  --accent-deep: #27466f;
   --warning: #b3271e;
   --hint: #a96f00;
+  --success: #1c7c43;
+  --shell: #232135;
+  --shell-deep: #14121f;
+  --shell-line: #3a3452;
 }
 
 * { box-sizing: border-box; }
 
+/* 显示切换统一走 hidden 属性，避免被布局类覆盖。 */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
-  background: var(--paper);
+  min-height: 100vh;
+  background: var(--shell-deep);
   color: var(--panel);
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
   line-height: 1.5;
+  padding: 16px 10px;
+  overscroll-behavior-y: contain;
 }
 
+/* 掌机机身：深色塑料壳 + 硬投影，内容区即「屏幕」。 */
 .app {
   max-width: 430px;
   margin: 0 auto;
-  padding: 16px 14px 32px;
+  padding: 18px 16px 24px;
+  background: var(--shell);
+  border: 3px solid var(--shell-deep);
+  border-radius: 26px;
+  box-shadow: 0 8px 0 #0b0a12;
 }
 
-.app-header { text-align: center; margin-bottom: 8px; }
-.app-header h1 { font-size: 26px; margin: 0; }
-.app-subtitle { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.app-header {
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 8px 12px 10px;
+  border: 2px solid var(--shell-line);
+  border-radius: 14px;
+  background: var(--shell-deep);
+}
 
-.screen h2 { font-size: 19px; margin: 12px 0; }
+.app-header h1 {
+  font-size: 26px;
+  margin: 0;
+  color: #f6f2e7;
+  letter-spacing: 6px;
+}
 
-.hint { color: var(--muted); font-size: 14px; }
+.app-subtitle { margin: 4px 0 0; color: #a49dc4; font-size: 14px; }
+
+.screen h2 { font-size: 19px; margin: 12px 0; color: #f6f2e7; }
+
+.hint { color: #a49dc4; font-size: 14px; margin: 8px 2px; }
+
+/* 屏幕内的常规界面铺在纸色底上，保持清晰可读。 */
+#screen-select, #screen-availability, #screen-result, #screen-error {
+  background: var(--paper);
+  border: 2px solid var(--shell-line);
+  border-radius: 16px;
+  padding: 6px 14px 18px;
+}
 
 .grades {
   border: 2px solid var(--panel);
@@ -51,42 +93,71 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-height: 48px;
   padding: 10px 12px;
-  border: 1px solid #d8d2c2;
+  border: 2px solid #d8d2c2;
   border-radius: 10px;
   background: #fbf8ef;
   font-size: 16px;
   cursor: pointer;
 }
 
-.grades input { width: 20px; height: 20px; accent-color: var(--accent); }
+.grades input { width: 22px; height: 22px; accent-color: var(--accent); }
 
-.actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
 
+/* 像素机按钮：厚描边 + 硬投影；按下时下沉，不用 hover 表达可用性。 */
 button {
   font: inherit;
   font-size: 16px;
-  padding: 12px 20px;
+  font-weight: 700;
+  padding: 10px 18px;
   min-height: 48px;
   border-radius: 10px;
   border: 2px solid var(--panel);
   background: var(--card);
   color: var(--panel);
   cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 4px 0 #c9c2ae;
 }
 
-button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-button:disabled { opacity: 0.45; cursor: not-allowed; }
+button:active { transform: translateY(3px); box-shadow: 0 1px 0 #c9c2ae; }
 
-.status {
-  background: var(--card);
-  border: 2px solid var(--panel);
-  border-radius: 12px;
-  padding: 12px 14px;
+button.primary { background: var(--accent); border-color: var(--accent-deep); color: #fff; box-shadow: 0 4px 0 var(--accent-deep); }
+button.primary:active { box-shadow: 0 1px 0 var(--accent-deep); }
+
+button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outline-offset: 2px; }
+
+/* 游戏屏：音效行 / 掌机屏幕（画布）/ 操作区，三段稳定位置。 */
+.screen-game { display: flex; flex-direction: column; }
+
+.game-top {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 48px;
+}
+
+.chip {
+  min-height: 48px;
+  padding: 6px 14px;
   font-size: 15px;
+  background: var(--shell-deep);
+  border-color: var(--shell-line);
+  color: #f6f2e7;
+  box-shadow: 0 3px 0 #0b0a12;
 }
 
-.status-warning { border-color: var(--warning); color: var(--warning); }
+.chip:active { box-shadow: 0 1px 0 #0b0a12; }
 
 .preview-banner {
   margin: 0 0 10px;
@@ -100,15 +171,56 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
   background: #fdf6e3;
 }
 
+/* 掌机屏幕外框：厚边框包住纸色画布。 */
+.board-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px;
+  background: var(--shell-deep);
+  border: 2px solid var(--shell-line);
+  border-radius: 18px;
+}
+
 .board-canvas {
   display: block;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
   border: 2px solid var(--panel);
   border-radius: 14px;
   background: var(--paper);
-  touch-action: none; /* 基础触摸支持：pointer 事件直接命中棋盘；完整手机验收属 M4 */
+  touch-action: none; /* 棋盘手势不触发页面滚动 */
 }
 
+/* 暂停覆盖层：盖住画布，拦截棋盘点击；文字 + 图形标记，不只靠颜色。 */
+.pause-overlay {
+  position: absolute;
+  inset: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: rgba(246, 242, 231, 0.94);
+  border: 2px dashed var(--panel);
+  border-radius: 14px;
+  text-align: center;
+  z-index: 2;
+}
+
+.pause-title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: 4px; }
+
+.pause-hint { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+
+.game-actions { margin-top: 14px; }
+
 .result-line { font-size: 17px; margin: 6px 0; text-align: center; }
+
+.status {
+  background: var(--card);
+  border: 2px solid var(--panel);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
+.status-warning { border-color: var(--warning); color: var(--warning); }
