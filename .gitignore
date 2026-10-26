@@ -3,3 +3,9 @@ dist/
 
 # 离线 Service Worker 生成物（scripts/build-sw.mjs 产物）
 web/sw.js
+
+# 站点部署暂存产物（scripts/stage-site.mjs）
+dist-site/
+
+# 浏览器驱动工具本地日志
+.playwright-cli/
