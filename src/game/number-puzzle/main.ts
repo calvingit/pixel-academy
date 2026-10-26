@@ -32,6 +32,7 @@ import { createRuntimeRng, restoreSeededRng } from './random.js';
 import type { RestorableRng } from './random.js';
 import { ALL_GRADES, GAME_ID, GRADE_NAMES, describeAvailability, loadGameContent } from './content.js';
 import type { GameContent } from './content.js';
+import { selectRoundExercises } from './generation.js';
 import { NumberPuzzleRenderer } from './render.js';
 import {
   GameStorage, STORAGE_SCHEMA_VERSION, buildFinishedRecord, buildInterruptedSnapshot,
@@ -106,6 +107,7 @@ class NumberPuzzleApp {
   private roundGrades: readonly Grade[] = [];
   private roundResults: readonly RoundRecordQuestionV1[] = [];
   private roundContentVersion = '';
+  private previousExerciseIds: readonly string[] = [];
   /** 内容版本指纹按年级组合缓存（同一组合的 select 结果在一次会话内不变）。 */
   private readonly fingerprintCache = new Map<string, string>();
   private restartConfirmArmed = false;
@@ -143,6 +145,7 @@ class NumberPuzzleApp {
       $('records-section').hidden = true; // 预览局不读写正式记录存储
     } else {
       this.applyStoredSettings();
+      this.previousExerciseIds = this.storage!.loadRecentExerciseIds();
       this.updateStorageNotice();
       this.renderRecords(this.storage!.loadFinishedRecords());
       this.prepareRestoreOffer();
@@ -194,7 +197,11 @@ class NumberPuzzleApp {
     this.unionExercises = report.unionExercises;
     this.unionGrades = [...this.selectedGrades];
     const status = $('availability-status');
-    status.textContent = report.statusText ?? report.rangeText;
+    const dynamicRange = `${report.availableGrades.map(grade => grade === 1
+      ? '一年级：认数、10 以内加法、5 以内减法'
+      : '二年级：100 以内两步加减、乘法点阵').join('；')}。动态出题 · 每局 10 题。`;
+    status.textContent = report.statusText ?? (this.preview ? report.rangeText : dynamicRange);
+    if (!this.preview && report.startable && report.statusText) status.textContent += ` ${dynamicRange}`;
     status.classList.toggle('status-warning', report.statusText !== null);
     ($('btn-start') as HTMLButtonElement).disabled = !report.startable;
     this.showScreen('availability');
@@ -284,11 +291,11 @@ class NumberPuzzleApp {
   }
 
   /** 年级组合 → 内容版本指纹（缓存；指纹覆盖练习 ID、关联年级与任务）。 */
-  private contentVersionFor(grades: readonly Grade[]): string {
-    const key = grades.join(',');
+  private contentVersionFor(grades: readonly Grade[], legacy = false): string {
+    const key = `${legacy ? 'legacy:' : ''}${grades.join(',')}`;
     const cached = this.fingerprintCache.get(key);
     if (cached !== undefined) return cached;
-    const version = contentFingerprint(this.select(grades).map(exercise => ({
+    const version = contentFingerprint((legacy ? this.content.legacySelect(grades) : this.select(grades)).map(exercise => ({
       id: exercise.id,
       grade: this.content.gradeOf(exercise),
       task: exercise.task,
@@ -378,9 +385,11 @@ class NumberPuzzleApp {
     }
     if (loaded.status !== 'ok') return;
     const snapshot = loaded.value;
+    // 旧静态题库仍保留，只有其精确指纹匹配时才允许旧局次继续。
+    const legacy = snapshot.contentVersion === this.contentVersionFor(snapshot.grades, true);
     const check = checkRestore(snapshot, {
       gameId: GAME_ID,
-      contentVersion: this.contentVersionFor(snapshot.grades),
+      contentVersion: this.contentVersionFor(snapshot.grades, legacy),
     });
     if (check.status !== 'restorable') {
       // 内容版本不兼容（或游戏不匹配）：只放弃中断局次，历史成绩与设置保持不动。
@@ -468,6 +477,7 @@ class NumberPuzzleApp {
   private performClearRecords(): void {
     if (!this.storage) return;
     this.storage.clearAll();
+    this.previousExerciseIds = [];
     for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) {
       input.checked = false;
     }
@@ -736,8 +746,12 @@ class NumberPuzzleApp {
     this.pendingRestore = null;
     $('restore-offer').hidden = true;
     const rng = createRuntimeRng();
+    const selected = this.preview ? exercises
+      : selectRoundExercises(exercises, this.content.gradeOf, rng, this.previousExerciseIds);
     this.session.beginRound();
-    this.round = { state: createRound({ exercises, gradeOf: this.content.gradeOf, rng }), rng };
+    this.round = { state: createRound({ exercises: selected, gradeOf: this.content.gradeOf, rng }), rng };
+    this.previousExerciseIds = this.round.state.questions.map(question => question.exerciseId);
+    this.storage?.saveRecentExerciseIds(this.previousExerciseIds);
     // M5：局次身份、年级来源与内容版本随快照/成绩保存；年级取本局题集对应的组合。
     this.recordId = createRecordId();
     this.roundGrades = this.unionGrades.length ? this.unionGrades : [...this.selectedGrades];

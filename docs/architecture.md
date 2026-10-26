@@ -17,6 +17,7 @@
 | src/game/number-puzzle/session.ts | 单局会话状态机（纯逻辑）：运行/暂停切换、切后台自动暂停、动画计时器的冻结换算；时钟注入，无 DOM、无 setTimeout |
 | src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源；M5 支持内部状态快照（snapshotState）与按状态恢复（restoreSeededRng），中断续局的随机序列与连续游玩完全一致 |
 | src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
+| src/game/number-puzzle/generation.ts | 数字消除本地生成规则：有限候选构造、按年级及题型配额抽取、上一局优先避重；纯 TypeScript，无 DOM、存储或网络依赖 |
 | src/game/number-puzzle/audio.ts | WebAudio 合成音效（答对/答错/结算）：可关闭，无音频文件、无新增依赖，仅反馈增强不承载规则信息 |
 | src/game/number-puzzle/garden.ts | 数字花园静态 Canvas 装饰：天空、山丘、植被与蓝蓝，无游戏状态或判题依赖；由 render.ts 在题面与棋盘之前绘制，随静态导入进入离线预缓存 |
 | src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
@@ -33,6 +34,10 @@
 build 先运行 tsc，再由 scripts/build-sw.mjs 生成 web/sw.js（预缓存清单 + 版本标记）；产出 JavaScript 与声明文件加离线 Service Worker，不是 H5 打包、资源压缩或可部署站点构建。页面以原生 ES 模块直接加载 dist 产物，由 scripts/serve.mjs 在本地提供，浏览器侧无打包器、无第三方依赖。
 
 ## 数据关系
+
+数字消除正式内容装配先用 `generateExercises` 构造经规则审核的有限候选，再调用 `createLearningCore` 校验并通过 `selectExercises` 筛选；开局用 `selectRoundExercises` 按配额抽 10 题，再交给原有 `createRound` 洗牌和建立棋盘。生成模块属于本游戏，不扩展为通用引擎；默认 `src/index.ts` 导出的 catalog、selectExercises 仍是首批静态内容。静态题库另用于显式候选预览与旧中断局次的精确指纹兼容检查，不作为动态缺题降级。
+
+题目 ID 由生成规则版本、映射及参数决定；内容指纹覆盖全部合法候选，与本局抽题结果无关。中断快照继续保存完整题目和 RNG 状态，恢复不抽题。旧静态指纹和当前动态指纹分别严格匹配；原设置、成绩、快照 schema 不变。新增同前缀 `v1:recent-exercises` 键只存最近一次开局的至多 10 个题目 ID，刷新后用于避重，清除本机记录时一并清除；存储不可用时仅保留页面内避重。
 
 ```mermaid
 flowchart TD

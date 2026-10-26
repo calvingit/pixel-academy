@@ -8,6 +8,7 @@ import { evidence } from '../../content/evidence.js';
 import { createLearningCore } from '../../learning/catalog.js';
 import type { Catalog, Exercise, ExerciseQuery, Grade } from '../../learning/models.js';
 import { START_THRESHOLD } from './rules.js';
+import { generateExercises } from './generation.js';
 
 export const GAME_ID = 'number-puzzle';
 export const ALL_GRADES: readonly Grade[] = [1, 2, 3, 4, 5, 6];
@@ -40,6 +41,8 @@ export interface GameContent {
   /** 候选预览取题：包含 draft；仅用于显式预览入口，不作为降级路径。 */
   readonly preview: (grades: readonly Grade[]) => readonly Exercise[];
   readonly gradeOf: (exercise: Exercise) => Grade;
+  /** 旧静态局次的内容版本核对；不用于新正式局次。 */
+  readonly legacySelect: (grades: readonly Grade[]) => readonly Exercise[];
 }
 
 /**
@@ -49,10 +52,12 @@ export interface GameContent {
 export function loadGameContent(): GameContent {
   const catalog: Catalog = { textbooks, units, skills, mappings, exercises, evidence };
   const core = createLearningCore(catalog);
+  const generatedCore = createLearningCore({ ...catalog, exercises: generateExercises() });
   return {
-    select: grades => core.selectExercises(query(grades)),
+    select: grades => generatedCore.selectExercises(query(grades)),
     preview: grades => core.previewExercises(query(grades)),
     gradeOf: createExerciseGradeIndex(catalog),
+    legacySelect: grades => core.selectExercises(query(grades)),
   };
 }
 

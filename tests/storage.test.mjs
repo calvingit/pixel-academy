@@ -16,7 +16,7 @@ import { GAME_ID, loadGameContent } from '../dist/game/number-puzzle/content.js'
 
 const content = loadGameContent();
 const gradeOf = content.gradeOf;
-const unionExercises = content.select([1, 2]);
+const unionExercises = content.legacySelect([1, 2]);
 const contentVersion = contentFingerprint(
   unionExercises.map(exercise => ({ id: exercise.id, grade: gradeOf(exercise), task: exercise.task })),
 );

@@ -1,0 +1,554 @@
+{
+  "version": "assets-v1-0ec3933847a6",
+  "sizes": [
+    {
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 568,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "overflow": false
+    }
+  ],
+  "initialRecords": 1,
+  "final": {
+    "records": 5,
+    "errors": [],
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "offline": "离线缓存已就绪（版本 assets-v1-0ec3933847a6），断网也能游玩。"
+  },
+  "grade1Result": {
+    "text": "本局完成！\n\n总分 100\n\n一次通过 10/10\n\n答错 0 次\n\n再来一局\n返回年级选择",
+    "steps": [
+      {
+        "index": 1,
+        "task": {
+          "kind": "binary",
+          "operator": "+",
+          "left": 3,
+          "right": 4
+        },
+        "expected": 7
+      },
+      {
+        "index": 2,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 2,
+          "right": 1
+        },
+        "expected": 1
+      },
+      {
+        "index": 3,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 5,
+          "right": 4
+        },
+        "expected": 1
+      },
+      {
+        "index": 4,
+        "task": {
+          "kind": "binary",
+          "operator": "+",
+          "left": 1,
+          "right": 9
+        },
+        "expected": 10
+      },
+      {
+        "index": 5,
+        "task": {
+          "kind": "number",
+          "value": 7
+        },
+        "expected": 7
+      },
+      {
+        "index": 6,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 5,
+          "right": 5
+        },
+        "expected": 0
+      },
+      {
+        "index": 7,
+        "task": {
+          "kind": "number",
+          "value": 1
+        },
+        "expected": 1
+      },
+      {
+        "index": 8,
+        "task": {
+          "kind": "binary",
+          "operator": "+",
+          "left": 4,
+          "right": 5
+        },
+        "expected": 9
+      },
+      {
+        "index": 9,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 4,
+          "right": 1
+        },
+        "expected": 3
+      }
+    ]
+  },
+  "grade2Result": {
+    "text": "本局完成！\n\n总分 100\n\n一次通过 10/10\n\n答错 0 次\n\n再来一局\n返回年级选择",
+    "steps": [
+      {
+        "index": 0,
+        "task": {
+          "kind": "chain",
+          "start": 5,
+          "steps": [
+            {
+              "operator": "-",
+              "operand": 1
+            },
+            {
+              "operator": "+",
+              "operand": 3
+            }
+          ]
+        },
+        "expected": 7
+      },
+      {
+        "index": 1,
+        "task": {
+          "kind": "chain",
+          "start": 38,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 4
+            },
+            {
+              "operator": "-",
+              "operand": 1
+            }
+          ]
+        },
+        "expected": 41
+      },
+      {
+        "index": 2,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 4
+        },
+        "expected": 8
+      },
+      {
+        "index": 3,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 3
+        },
+        "expected": 6
+      },
+      {
+        "index": 4,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 4
+        },
+        "expected": 12
+      },
+      {
+        "index": 5,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 3
+        },
+        "expected": 9
+      },
+      {
+        "index": 6,
+        "task": {
+          "kind": "chain",
+          "start": 84,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 7
+            },
+            {
+              "operator": "-",
+              "operand": 6
+            }
+          ]
+        },
+        "expected": 85
+      },
+      {
+        "index": 7,
+        "task": {
+          "kind": "chain",
+          "start": 76,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 5
+            },
+            {
+              "operator": "+",
+              "operand": 7
+            }
+          ]
+        },
+        "expected": 88
+      },
+      {
+        "index": 8,
+        "task": {
+          "kind": "chain",
+          "start": 50,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 8
+            },
+            {
+              "operator": "+",
+              "operand": 9
+            }
+          ]
+        },
+        "expected": 67
+      },
+      {
+        "index": 9,
+        "task": {
+          "kind": "chain",
+          "start": 72,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 6
+            },
+            {
+              "operator": "-",
+              "operand": 2
+            }
+          ]
+        },
+        "expected": 76
+      }
+    ]
+  },
+  "mixedResult": {
+    "text": "本局完成！\n\n总分 100\n\n一次通过 10/10\n\n答错 0 次\n\n再来一局\n返回年级选择",
+    "steps": [
+      {
+        "index": 0,
+        "task": {
+          "kind": "chain",
+          "start": 24,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 6
+            },
+            {
+              "operator": "+",
+              "operand": 7
+            }
+          ]
+        },
+        "expected": 37
+      },
+      {
+        "index": 1,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 1,
+          "right": 1
+        },
+        "expected": 0
+      },
+      {
+        "index": 2,
+        "task": {
+          "kind": "chain",
+          "start": 57,
+          "steps": [
+            {
+              "operator": "-",
+              "operand": 4
+            },
+            {
+              "operator": "-",
+              "operand": 7
+            }
+          ]
+        },
+        "expected": 46
+      },
+      {
+        "index": 3,
+        "task": {
+          "kind": "number",
+          "value": 6
+        },
+        "expected": 6
+      },
+      {
+        "index": 4,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 4
+        },
+        "expected": 8
+      },
+      {
+        "index": 5,
+        "task": {
+          "kind": "binary",
+          "operator": "+",
+          "left": 1,
+          "right": 9
+        },
+        "expected": 10
+      },
+      {
+        "index": 6,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 3
+        },
+        "expected": 9
+      },
+      {
+        "index": 7,
+        "task": {
+          "kind": "binary",
+          "operator": "+",
+          "left": 2,
+          "right": 7
+        },
+        "expected": 9
+      },
+      {
+        "index": 8,
+        "task": {
+          "kind": "binary",
+          "operator": "-",
+          "left": 3,
+          "right": 3
+        },
+        "expected": 0
+      },
+      {
+        "index": 9,
+        "task": {
+          "kind": "chain",
+          "start": 88,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 4
+            },
+            {
+              "operator": "-",
+              "operand": 2
+            }
+          ]
+        },
+        "expected": 90
+      }
+    ]
+  },
+  "offlineResult": {
+    "text": "本局完成！\n\n总分 100\n\n一次通过 10/10\n\n答错 0 次\n\n再来一局\n返回年级选择",
+    "steps": [
+      {
+        "index": 0,
+        "task": {
+          "kind": "chain",
+          "start": 31,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 5
+            },
+            {
+              "operator": "+",
+              "operand": 1
+            }
+          ]
+        },
+        "expected": 37
+      },
+      {
+        "index": 1,
+        "task": {
+          "kind": "chain",
+          "start": 14,
+          "steps": [
+            {
+              "operator": "-",
+              "operand": 10
+            },
+            {
+              "operator": "+",
+              "operand": 8
+            }
+          ]
+        },
+        "expected": 12
+      },
+      {
+        "index": 2,
+        "task": {
+          "kind": "chain",
+          "start": 21,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 9
+            },
+            {
+              "operator": "+",
+              "operand": 7
+            }
+          ]
+        },
+        "expected": 37
+      },
+      {
+        "index": 3,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 3
+        },
+        "expected": 9
+      },
+      {
+        "index": 4,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 3
+        },
+        "expected": 6
+      },
+      {
+        "index": 5,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 4
+        },
+        "expected": 8
+      },
+      {
+        "index": 6,
+        "task": {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 5
+        },
+        "expected": 10
+      },
+      {
+        "index": 7,
+        "task": {
+          "kind": "chain",
+          "start": 43,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 10
+            },
+            {
+              "operator": "-",
+              "operand": 9
+            }
+          ]
+        },
+        "expected": 44
+      },
+      {
+        "index": 8,
+        "task": {
+          "kind": "chain",
+          "start": 35,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 4
+            },
+            {
+              "operator": "-",
+              "operand": 9
+            }
+          ]
+        },
+        "expected": 30
+      },
+      {
+        "index": 9,
+        "task": {
+          "kind": "chain",
+          "start": 36,
+          "steps": [
+            {
+              "operator": "-",
+              "operand": 2
+            },
+            {
+              "operator": "-",
+              "operand": 6
+            }
+          ]
+        },
+        "expected": 28
+      }
+    ]
+  },
+  "restoredRecordId": "np-5dc98f50-bdd6-4836-9a99-255dde861e0b",
+  "legacyRestored": true
+}

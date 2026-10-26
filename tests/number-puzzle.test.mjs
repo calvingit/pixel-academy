@@ -12,7 +12,9 @@ import { createSeededRng } from '../dist/game/number-puzzle/random.js';
 import { describeAvailability, loadGameContent, createExerciseGradeIndex } from '../dist/game/number-puzzle/content.js';
 
 const query = grades => ({ subject: 'math', grades, gameId: 'number-puzzle' });
-const content = loadGameContent();
+// 固定样本用于棋盘、随机消耗顺序与旧局次回归；动态入口在 generation.test.mjs 验证。
+const loadedContent = loadGameContent();
+const content = { ...loadedContent, select: loadedContent.legacySelect };
 const gradeOf = content.gradeOf;
 const unionExercises = grades => content.select(grades);
 // 严格序列随机源：耗尽即抛错，用于核对精确的消耗顺序。

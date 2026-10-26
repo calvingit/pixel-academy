@@ -30,6 +30,7 @@ export const STORAGE_KEYS = {
   settings: `${STORAGE_KEY_PREFIX}:v${STORAGE_SCHEMA_VERSION}:settings`,
   records: `${STORAGE_KEY_PREFIX}:v${STORAGE_SCHEMA_VERSION}:records`,
   interrupted: `${STORAGE_KEY_PREFIX}:v${STORAGE_SCHEMA_VERSION}:interrupted`,
+  recentExercises: `${STORAGE_KEY_PREFIX}:v${STORAGE_SCHEMA_VERSION}:recent-exercises`,
 } as const;
 
 export interface StoredSettingsV1 {
@@ -630,6 +631,20 @@ export class GameStorage {
     return parsed.status === 'ok' ? parsed.value.records : [];
   }
 
+  loadRecentExerciseIds(): readonly string[] {
+    const raw = this.readRaw(STORAGE_KEYS.recentExercises);
+    if (raw === null) return [];
+    let value: unknown;
+    try { value = JSON.parse(raw); } catch { return []; }
+    return Array.isArray(value) && value.length <= QUESTIONS_PER_ROUND
+      && value.every(id => nonEmptyString(id) !== null) ? value : [];
+  }
+
+  saveRecentExerciseIds(ids: readonly string[]): boolean {
+    if (ids.length > QUESTIONS_PER_ROUND || ids.some(id => !nonEmptyString(id))) return false;
+    return this.writeRaw(STORAGE_KEYS.recentExercises, JSON.stringify(ids));
+  }
+
   /** 追加成绩；recordId 已存在时不重复写入。返回 false 表示未持久化（不可用或写入失败）。 */
   appendFinishedRecord(record: FinishedRoundRecordV1): boolean {
     const validated = parseFinishedRecord(record);
@@ -658,7 +673,7 @@ export class GameStorage {
 
   /** 清除本地记录：设置、成绩与中断快照全部移除，回到首次使用状态。 */
   clearAll(): void {
-    for (const key of [STORAGE_KEYS.settings, STORAGE_KEYS.records, STORAGE_KEYS.interrupted]) {
+    for (const key of Object.values(STORAGE_KEYS)) {
       this.removeRaw(key);
     }
   }
