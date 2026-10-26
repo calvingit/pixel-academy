@@ -80,7 +80,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .records-list li { padding: 12px; border-bottom: 1px solid var(--line); font-size: 13px; }
 .status { margin: 0; flex: none; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); font-size: 14px; overflow-wrap: anywhere; }
 .status-warning { color: var(--warning); border-color: #dca99a; background: #fff0e9; }
-.offline-notice:not(.status-warning) { display: none; }
 .offline-notice { font-size: 11px; color: var(--muted); border: 0; padding: 0 2px; background: transparent; }
 .restore-offer { flex: none; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 0; padding: 8px 12px; background: #f7efda; border: 1px solid #e2d3aa; border-radius: 16px; }
 .restore-text { margin: 0; font-size: 14px; }
