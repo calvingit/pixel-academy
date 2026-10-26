@@ -18,6 +18,7 @@
 | src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源；M5 支持内部状态快照（snapshotState）与按状态恢复（restoreSeededRng），中断续局的随机序列与连续游玩完全一致 |
 | src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
 | src/game/number-puzzle/audio.ts | WebAudio 合成音效（答对/答错/结算）：可关闭，无音频文件、无新增依赖，仅反馈增强不承载规则信息 |
+| src/game/number-puzzle/garden.ts | 数字花园静态 Canvas 装饰：天空、山丘、植被与蓝蓝，无游戏状态或判题依赖；由 render.ts 在题面与棋盘之前绘制，随静态导入进入离线预缓存 |
 | src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
 | src/game/number-puzzle/main.ts | 浏览器入口：DOM 界面流转、局次生命周期与输入窗口计时、暂停/继续/重新开始/返回、visibilitychange 自动暂停、音效开关；M5 接线本地记录（设置即改即存、逐状态更新中断快照、结算写成绩、恢复提供、清除入口与不可用提示），预览入口不读写正式记录存储 |
 | src/game/number-puzzle/storage.ts | 本地记录与恢复纯逻辑（M5）：版本化键与 schemaVersion、设置/成绩/中断快照的结构校验（损坏与非法字段按首次使用或逐条丢弃）、内容版本指纹与恢复前置检查、同 recordId 幂等去重与成绩上限、注入式 KV 门面 GameStorage（写入失败自动停用持久化）；无 DOM、无 localStorage 直接依赖，注入 localStorage 适配器在 main.ts |

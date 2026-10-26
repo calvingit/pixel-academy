@@ -1,0 +1,593 @@
+{
+  "targetVersion": "assets-v1-5a01ba3c4214",
+  "sizes": [
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "overflow": false,
+      "canvas": [
+        252,
+        434
+      ],
+      "tile": [
+        75.6,
+        61.6
+      ],
+      "minButton": 48
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "canvas": [
+        254,
+        438
+      ],
+      "tile": [
+        76.2,
+        62.16774193548387
+      ],
+      "minButton": 48
+    },
+    {
+      "viewport": [
+        412,
+        915
+      ],
+      "overflow": false,
+      "canvas": [
+        296,
+        509
+      ],
+      "tile": [
+        88.8,
+        72.24516129032259
+      ],
+      "minButton": 48
+    },
+    {
+      "viewport": [
+        568,
+        320
+      ],
+      "overflow": false,
+      "canvas": [
+        296,
+        509
+      ],
+      "tile": [
+        88.8,
+        72.24516129032259
+      ],
+      "minButton": 48
+    },
+    {
+      "viewport": [
+        1280,
+        900
+      ],
+      "overflow": false,
+      "canvas": [
+        287,
+        494
+      ],
+      "tile": [
+        86.1,
+        70.11612903225806
+      ],
+      "minButton": 48
+    }
+  ],
+  "restoredRecordId": "np-f16c721e-50f7-437c-8fa6-827602a11e55",
+  "onlineSteps": [
+    {
+      "index": 0,
+      "task": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 4,
+        "right": 6
+      },
+      "answer": 10,
+      "tile": 9
+    },
+    {
+      "index": 1,
+      "task": {
+        "kind": "binary",
+        "operator": "-",
+        "left": 5,
+        "right": 2
+      },
+      "answer": 3,
+      "tile": 2
+    },
+    {
+      "index": 2,
+      "task": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 2,
+        "right": 3
+      },
+      "answer": 5,
+      "tile": 7
+    },
+    {
+      "index": 3,
+      "task": {
+        "kind": "chain",
+        "start": 45,
+        "steps": [
+          {
+            "operator": "+",
+            "operand": 12
+          },
+          {
+            "operator": "-",
+            "operand": 7
+          }
+        ]
+      },
+      "answer": 50,
+      "tile": 0
+    },
+    {
+      "index": 4,
+      "task": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 1,
+        "right": 1
+      },
+      "answer": 2,
+      "tile": 5
+    },
+    {
+      "index": 5,
+      "task": {
+        "kind": "chain",
+        "start": 30,
+        "steps": [
+          {
+            "operator": "+",
+            "operand": 20
+          },
+          {
+            "operator": "-",
+            "operand": 10
+          }
+        ]
+      },
+      "answer": 40,
+      "tile": 0
+    },
+    {
+      "index": 6,
+      "task": {
+        "kind": "number",
+        "value": 3
+      },
+      "answer": 3,
+      "tile": 11
+    },
+    {
+      "index": 7,
+      "task": {
+        "kind": "number",
+        "value": 0
+      },
+      "answer": 0,
+      "tile": 3
+    },
+    {
+      "index": 8,
+      "task": {
+        "kind": "binary",
+        "operator": "*",
+        "left": 3,
+        "right": 4
+      },
+      "answer": 12,
+      "tile": 0
+    },
+    {
+      "index": 9,
+      "task": {
+        "kind": "binary",
+        "operator": "*",
+        "left": 2,
+        "right": 3
+      },
+      "answer": 6,
+      "tile": 4
+    }
+  ],
+  "online": {
+    "text": "本局完成！\n\n总分 95\n\n一次通过 9/10\n\n答错 3 次\n\n再来一局\n返回年级选择",
+    "records": [
+      {
+        "schemaVersion": 1,
+        "recordId": "np-44235d9b-3c0f-47aa-abbe-3c87cb5f8f1d",
+        "gameId": "number-puzzle",
+        "finishedAt": "2026-10-26T05:48:45.479Z",
+        "grades": [
+          1,
+          2
+        ],
+        "contentVersion": "fp1:18:907e6bcb4225dc65",
+        "score": 95,
+        "firstTryCount": 9,
+        "totalWrongCount": 3,
+        "questions": [
+          {
+            "exerciseId": "MATH-002",
+            "firstTry": false,
+            "wrongCount": 3,
+            "score": 5
+          },
+          {
+            "exerciseId": "MATH-009",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-008",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-006",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-014",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-003",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-017",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-018",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-015",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-016",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          }
+        ]
+      },
+      {
+        "schemaVersion": 1,
+        "recordId": "np-c2c8a5ae-e84f-4e61-b24c-4f980aafe042",
+        "gameId": "number-puzzle",
+        "finishedAt": "2026-10-26T05:52:24.810Z",
+        "grades": [
+          1,
+          2
+        ],
+        "contentVersion": "fp1:18:907e6bcb4225dc65",
+        "score": 95,
+        "firstTryCount": 9,
+        "totalWrongCount": 3,
+        "questions": [
+          {
+            "exerciseId": "MATH-011",
+            "firstTry": false,
+            "wrongCount": 3,
+            "score": 5
+          },
+          {
+            "exerciseId": "MATH-004",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-008",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-003",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-001",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-009",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-005",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-007",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-006",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-013",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          }
+        ]
+      },
+      {
+        "schemaVersion": 1,
+        "recordId": "np-b50ed039-93bb-4a4b-8601-737d76c0ffee",
+        "gameId": "number-puzzle",
+        "finishedAt": "2026-10-26T05:52:29.145Z",
+        "grades": [
+          2
+        ],
+        "contentVersion": "fp1:6:6fc38f7859a65a62",
+        "score": 60,
+        "firstTryCount": 6,
+        "totalWrongCount": 0,
+        "questions": [
+          {
+            "exerciseId": "MATH-013",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-014",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-016",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-017",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-018",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-015",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          }
+        ]
+      },
+      {
+        "schemaVersion": 1,
+        "recordId": "np-f16c721e-50f7-437c-8fa6-827602a11e55",
+        "gameId": "number-puzzle",
+        "finishedAt": "2026-10-26T05:57:19.468Z",
+        "grades": [
+          1,
+          2
+        ],
+        "contentVersion": "fp1:18:907e6bcb4225dc65",
+        "score": 95,
+        "firstTryCount": 9,
+        "totalWrongCount": 3,
+        "questions": [
+          {
+            "exerciseId": "MATH-010",
+            "firstTry": false,
+            "wrongCount": 3,
+            "score": 5
+          },
+          {
+            "exerciseId": "MATH-007",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-005",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-014",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-006",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-013",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-002",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-001",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-017",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-016",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "offlineSteps": [
+    {
+      "index": 0,
+      "task": {
+        "kind": "chain",
+        "start": 30,
+        "steps": [
+          {
+            "operator": "+",
+            "operand": 20
+          },
+          {
+            "operator": "-",
+            "operand": 10
+          }
+        ]
+      },
+      "answer": 40,
+      "tile": 0
+    },
+    {
+      "index": 1,
+      "task": {
+        "kind": "binary",
+        "operator": "*",
+        "left": 3,
+        "right": 4
+      },
+      "answer": 12,
+      "tile": 0
+    },
+    {
+      "index": 2,
+      "task": {
+        "kind": "binary",
+        "operator": "*",
+        "left": 2,
+        "right": 3
+      },
+      "answer": 6,
+      "tile": 0
+    },
+    {
+      "index": 3,
+      "task": {
+        "kind": "chain",
+        "start": 18,
+        "steps": [
+          {
+            "operator": "+",
+            "operand": 22
+          },
+          {
+            "operator": "-",
+            "operand": 5
+          }
+        ]
+      },
+      "answer": 35,
+      "tile": 0
+    },
+    {
+      "index": 4,
+      "task": {
+        "kind": "chain",
+        "start": 45,
+        "steps": [
+          {
+            "operator": "+",
+            "operand": 12
+          },
+          {
+            "operator": "-",
+            "operand": 7
+          }
+        ]
+      },
+      "answer": 50,
+      "tile": 0
+    },
+    {
+      "index": 5,
+      "task": {
+        "kind": "binary",
+        "operator": "*",
+        "left": 5,
+        "right": 2
+      },
+      "answer": 10,
+      "tile": 3
+    }
+  ],
+  "offline": {
+    "text": "本局完成！\n\n总分 60\n\n一次通过 6/6\n\n答错 0 次\n\n再来一局\n返回年级选择",
+    "count": 5,
+    "errors": [],
+    "online": false
+  }
+}

@@ -1,22 +1,22 @@
-/* 数字消除 H5（M4）：复古掌机视觉与手机适配。
+/* 数字消除 H5：数字花园掌机视觉与手机适配。
    规范口径见 docs/design.md：掌机屏幕 / 游戏区域 / 明确操作区三层结构；
    有限配色、硬投影（无渐变、无发光、无玻璃效果）；中文与算式用清晰字体不像素化；
    触摸目标 ≥ 48px、按钮 touch-action: manipulation 防双击缩放，
    棋盘画布 touch-action: none 使页面滚动与游戏输入互不冲突。 */
 :root {
   color-scheme: light;
-  --panel: #2f2a45;
-  --muted: #6f6a86;
-  --paper: #f6f2e7;
-  --card: #fffdf7;
-  --accent: #355f9e;
-  --accent-deep: #27466f;
+  --panel: #193b38;
+  --muted: #526b60;
+  --paper: #f3f7ec;
+  --card: #fffbe5;
+  --accent: #2d7057;
+  --accent-deep: #204f40;
   --warning: #b3271e;
-  --hint: #a96f00;
+  --hint: #795016;
   --success: #1c7c43;
-  --shell: #232135;
-  --shell-deep: #14121f;
-  --shell-line: #3a3452;
+  --shell: #74bfa4;
+  --shell-deep: #244a44;
+  --shell-line: #315b4e;
 }
 
 * { box-sizing: border-box; }
@@ -26,8 +26,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
-  background: var(--shell-deep);
+  min-height: 100dvh;
+  background: var(--paper);
   color: var(--panel);
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
   line-height: 1.5;
@@ -35,38 +35,39 @@ body {
   overscroll-behavior-y: contain;
 }
 
-/* 掌机机身：深色塑料壳 + 硬投影，内容区即「屏幕」。 */
+/* 薄荷绿掌机：硬描边与投影，长内容随页面滚动。 */
 .app {
   max-width: 430px;
   margin: 0 auto;
-  padding: 18px 16px 24px;
+  padding: 14px 10px 22px;
   background: var(--shell);
   border: 3px solid var(--shell-deep);
-  border-radius: 26px;
-  box-shadow: 0 8px 0 #0b0a12;
+  border-radius: 20px 20px 38px 20px;
+  box-shadow: 5px 6px 0 #244a44;
 }
 
 .app-header {
   text-align: center;
   margin-bottom: 10px;
   padding: 8px 12px 10px;
-  border: 2px solid var(--shell-line);
-  border-radius: 14px;
-  background: var(--shell-deep);
+  border: 3px solid #71522e;
+  border-radius: 4px;
+  background: #e9ae64;
+  box-shadow: 3px 4px 0 #71522e, inset 0 3px #fbd797;
 }
 
 .app-header h1 {
   font-size: 26px;
   margin: 0;
-  color: #f6f2e7;
-  letter-spacing: 6px;
+  color: #193b38;
+  letter-spacing: 4px;
 }
 
-.app-subtitle { margin: 4px 0 0; color: #a49dc4; font-size: 14px; }
+.app-subtitle { margin: 4px 0 0; color: var(--panel); font-size: 14px; }
 
-.screen h2 { font-size: 19px; margin: 12px 0; color: #f6f2e7; }
+.screen h2 { font-size: 19px; margin: 12px 0; color: var(--panel); }
 
-.hint { color: #a49dc4; font-size: 14px; margin: 8px 2px; }
+.hint { color: #365d4e; font-size: 14px; margin: 8px 2px; }
 
 /* 屏幕内的常规界面铺在纸色底上，保持清晰可读。 */
 #screen-select, #screen-availability, #screen-result, #screen-error {
@@ -95,9 +96,9 @@ body {
   gap: 10px;
   min-height: 48px;
   padding: 10px 12px;
-  border: 2px solid #d8d2c2;
+  border: 2px solid #bacdb0;
   border-radius: 10px;
-  background: #fbf8ef;
+  background: #fffdf2;
   font-size: 16px;
   cursor: pointer;
 }
@@ -125,24 +126,24 @@ button {
   color: var(--panel);
   cursor: pointer;
   touch-action: manipulation;
-  box-shadow: 0 4px 0 #c9c2ae;
+  box-shadow: 0 4px 0 #b8c9a4;
 }
 
-button:active { transform: translateY(3px); box-shadow: 0 1px 0 #c9c2ae; }
+button:active { transform: translateY(3px); box-shadow: 0 1px 0 #b8c9a4; }
 
 button.primary { background: var(--accent); border-color: var(--accent-deep); color: #fff; box-shadow: 0 4px 0 var(--accent-deep); }
 button.primary:active { box-shadow: 0 1px 0 var(--accent-deep); }
 
 button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
-button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outline-offset: 2px; }
+button:focus-visible, input:focus-visible { outline: 3px solid #0767b4; outline-offset: 2px; }
 
 /* 游戏屏：音效行 / 掌机屏幕（画布）/ 操作区，三段稳定位置。 */
 .screen-game { display: flex; flex-direction: column; }
 
 .game-top {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   min-height: 48px;
 }
@@ -151,13 +152,13 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
   min-height: 48px;
   padding: 6px 14px;
   font-size: 15px;
-  background: var(--shell-deep);
+  background: #dcf1cf;
   border-color: var(--shell-line);
-  color: #f6f2e7;
-  box-shadow: 0 3px 0 #0b0a12;
+  color: var(--panel);
+  box-shadow: 0 3px 0 #244a44;
 }
 
-.chip:active { box-shadow: 0 1px 0 #0b0a12; }
+.chip:active { box-shadow: 0 1px 0 #244a44; }
 
 .preview-banner {
   margin: 0 0 10px;
@@ -171,7 +172,7 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
   background: #fdf6e3;
 }
 
-/* 掌机屏幕外框：厚边框包住纸色画布。 */
+/* 画布尺寸由渲染器控制，外框不挤压逻辑棋盘。 */
 .board-wrap {
   position: relative;
   display: flex;
@@ -185,9 +186,9 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 
 .board-canvas {
   display: block;
-  border: 2px solid var(--panel);
-  border-radius: 14px;
-  background: var(--paper);
+  border: 0;
+  border-radius: 6px;
+  background: #64cff6;
   touch-action: none; /* 棋盘手势不触发页面滚动 */
 }
 
@@ -200,8 +201,9 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
   justify-content: center;
   align-items: center;
   gap: 6px;
-  background: rgba(246, 242, 231, 0.94);
-  border: 2px dashed var(--panel);
+  background: #173c38f5;
+  color: #fff7d5;
+  border: 2px solid #b6dfc5;
   border-radius: 14px;
   text-align: center;
   z-index: 2;
@@ -209,9 +211,13 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 
 .pause-title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: 4px; }
 
-.pause-hint { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+.pause-hint { margin: 0 0 10px; color: #e0ebcd; font-size: 14px; }
 
-.game-actions { margin-top: 14px; }
+.game-actions { margin-top: 14px; gap: 8px; }
+.game-actions button { padding-inline: 12px; }
+.garden-label { font-size: 13px; font-weight: 800; color: var(--panel); }
+.console-label { margin: 0 4px 10px; font: bold 10px monospace; letter-spacing: 2px; color: var(--panel); }
+.grades label:has(input:checked) { border-color: var(--accent); background: #e4f1ce; }
 
 .result-line { font-size: 17px; margin: 6px 0; text-align: center; }
 
@@ -246,7 +252,7 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 .records {
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 2px dashed #d8d2c2;
+  border-top: 2px dashed #bacdb0;
 }
 
 .records h2 { font-size: 17px; margin: 4px 0; }
@@ -256,9 +262,9 @@ button:focus-visible, input:focus-visible + * { outline: 3px solid #f2b632; outl
 .records-list li {
   margin-bottom: 8px;
   padding: 8px 10px;
-  border: 2px solid #d8d2c2;
+  border: 2px solid #bacdb0;
   border-radius: 10px;
-  background: #fbf8ef;
+  background: #fffdf2;
   font-size: 14px;
 }
 

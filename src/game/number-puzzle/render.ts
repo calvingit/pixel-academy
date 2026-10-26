@@ -3,6 +3,7 @@
 // 不在动画代码重复一套判题）。动画期间输入是否忽略由规则层 phase 决定。
 // M4：答对/答错反馈带形状与文案冗余（✓/✗ + 文字，不依赖颜色或声音单独传达）；
 // 暂停冻结动画时间轴；显示尺寸按容器宽度与视口高度自适应（保持 360:620 逻辑比例）。
+import { drawNumberGarden } from './garden.js';
 import { answerFor } from '../../learning/evaluation.js';
 import type { MathTask } from '../../learning/models.js';
 import {
@@ -27,19 +28,18 @@ const MIN_DISPLAY_SCALE = 0.7;
 const MAX_DISPLAY_SCALE = 1;
 
 const COLOR = {
-  background: '#f6f2e7',
-  panel: '#2f2a45',
-  card: '#fffdf7',
-  cardStroke: '#8f88ab',
-  tileFill: '#fffdf7',
-  tileStroke: '#2f2a45',
-  tileShadow: '#d8d0b8',
+  panel: '#193b38',
+  card: '#fffbe5',
+  cardStroke: '#71522e',
+  tileFill: '#a9e5ff',
+  tileStroke: '#193b38',
+  tileShadow: '#254342',
   wrongFill: '#fde3e0',
   wrongStroke: '#b3271e',
   wrongText: '#b3271e',
   success: '#1c7c43',
-  hintStroke: '#a96f00',
-  muted: '#6f6a86',
+  hintStroke: '#795016',
+  muted: '#526b60',
 };
 
 /** 题面下方反馈条：kind 决定 ✓/✗ 形状与颜色，text 提供文案冗余（不依赖颜色单独传达）。 */
@@ -224,8 +224,7 @@ export class NumberPuzzleRenderer {
   private draw(now: number): void {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
-    ctx.fillStyle = COLOR.background;
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    drawNumberGarden(ctx);
     this.drawHud();
     if (this.task) this.drawTask(this.task);
     this.drawFeedback();
@@ -234,13 +233,16 @@ export class NumberPuzzleRenderer {
 
   private drawHud(): void {
     const ctx = this.ctx;
+    ctx.fillStyle = COLOR.card;
+    ctx.fillRect(8, 12, 140, 34);
+    ctx.fillRect(228, 12, 124, 34);
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
     ctx.fillStyle = COLOR.panel;
     ctx.font = `bold 17px ${FONT_STACK}`;
     ctx.fillText(`第 ${this.questionIndex + 1} / ${this.totalQuestions} 题`, 14, HUD_Y);
     ctx.textAlign = 'right';
-    ctx.fillStyle = COLOR.muted;
+    ctx.fillStyle = COLOR.panel;
     ctx.fillText(`得分 ${this.score}`, LOGICAL_W - 14, HUD_Y);
   }
 
@@ -259,7 +261,7 @@ export class NumberPuzzleRenderer {
     // 题目卡片：与棋盘块同族的描边卡片，划出稳定的题目区。
     ctx.fillStyle = COLOR.card;
     ctx.strokeStyle = COLOR.cardStroke;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     this.roundRect(area.x, area.y, area.w, area.h, 10);
     ctx.fill();
     ctx.stroke();
@@ -329,6 +331,8 @@ export class NumberPuzzleRenderer {
     const ctx = this.ctx;
     const { kind, text } = this.feedback;
     const color = kind === 'correct' ? COLOR.success : COLOR.wrongText;
+    ctx.fillStyle = COLOR.card;
+    ctx.fillRect(12, FEEDBACK_Y - 12, 336, 25);
     ctx.font = `bold 16px ${FONT_STACK}`;
     const textWidth = ctx.measureText(text).width;
     const glyphBox = 18;
@@ -395,7 +399,13 @@ export class NumberPuzzleRenderer {
     this.roundRect(cx - w / 2, cy - h / 2, w, h, 10 * scale);
     ctx.fillStyle = options.wrong ? COLOR.wrongFill : COLOR.tileFill;
     ctx.fill();
-    ctx.lineWidth = 2;
+    if (!options.wrong) {
+      ctx.fillStyle = '#d5f3ff';
+      ctx.fillRect(cx - w / 2 + 6 * scale, cy - h / 2 + 6 * scale, w - 12 * scale, 4 * scale);
+      ctx.fillStyle = '#69b9d3';
+      ctx.fillRect(cx - w / 2 + 6 * scale, cy + h / 2 - 10 * scale, w - 12 * scale, 4 * scale);
+    }
+    ctx.lineWidth = 3;
     if (options.hintPhase !== undefined) {
       ctx.strokeStyle = options.wrong ? COLOR.wrongStroke : COLOR.hintStroke;
       ctx.globalAlpha = alpha * (0.35 + 0.65 * options.hintPhase);

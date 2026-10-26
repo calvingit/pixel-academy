@@ -1,0 +1,72 @@
+{
+  "before": {
+    "record": "np-38f5fc26-f166-4df3-9d2a-784bd4421a61",
+    "version": "新版本已下载，返回年级选择后自动生效；进行中的局次不受影响。",
+    "background": "rgb(35, 33, 53)"
+  },
+  "pending": {
+    "notice": "新版本已下载，返回年级选择后自动生效；进行中的局次不受影响。",
+    "record": "np-38f5fc26-f166-4df3-9d2a-784bd4421a61",
+    "background": "rgb(35, 33, 53)"
+  },
+  "result": "本局完成！\n\n总分 60\n\n一次通过 6/6\n\n答错 0 次\n\n再来一局\n返回年级选择",
+  "adopted": {
+    "notice": "离线缓存已就绪（版本 assets-v1-21671698e221），断网也能游玩。",
+    "records": [
+      {
+        "schemaVersion": 1,
+        "recordId": "np-38f5fc26-f166-4df3-9d2a-784bd4421a61",
+        "gameId": "number-puzzle",
+        "finishedAt": "2026-10-26T05:54:19.455Z",
+        "grades": [
+          2
+        ],
+        "contentVersion": "fp1:6:6fc38f7859a65a62",
+        "score": 60,
+        "firstTryCount": 6,
+        "totalWrongCount": 0,
+        "questions": [
+          {
+            "exerciseId": "MATH-014",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-015",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-016",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-013",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-017",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          },
+          {
+            "exerciseId": "MATH-018",
+            "firstTry": true,
+            "wrongCount": 0,
+            "score": 10
+          }
+        ]
+      }
+    ],
+    "grades": [
+      "2"
+    ]
+  }
+}

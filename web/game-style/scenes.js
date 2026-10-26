@@ -1,0 +1,11 @@
+export const scenes = [
+  { id:'number', title:'数字消除', english:'NUMBER GARDEN', icon:'7', world:'数字花园', description:'蓝色小伙伴守着一片数字花园。明亮的数字块、奶油色题目卡，让每一次点选都清楚又轻快。', task:'3 + 4 = ?', choices:['1','8','5','7','2','6','9','4','3'], palette:['#64cff6','#91ce65','#ffda51'], caption:'和蓝蓝一起，发现数字的秘密' },
+  { id:'hanzi', title:'汉字勇者', english:'FOREST OF WORDS', icon:'木', world:'森林里的汉字', description:'戴上小绿帽，走进茂密森林。汉字像宝物一样放在木牌上，等待小勇者发现。', task:'找到「木」', choices:['林','木','森'], palette:['#4ca858','#f0d99b','#9ed64d'], caption:'背好行囊，去森林寻找汉字' },
+  { id:'pinyin', title:'拼音冒险', english:'CLOUD EXPLORER', icon:'ā', world:'云端飞行日记', description:'蓝色飞行员穿过白云与浮空岛。大大的声音卡和糖果色字母，把拼音变成一场天空旅行。', task:'声音按钮视觉演示', choices:['b','p','m'], palette:['#58ccf5','#ff857a','#c5a4ed'], caption:'跟着小飞鸟，向云端出发' },
+  { id:'courier', title:'英语快递员', english:'LITTLE POST OFFICE', icon:'A', world:'狐狸的快递小镇', description:'红屋顶、石子路，还有一间水果小铺。小狐狸带着包裹出发，英语任务就是沿途的路标。', task:'Deliver the apple', choices:['apple','pear','box'], palette:['#f59b46','#6ec389','#ffce75'], caption:'叮咚！小狐狸的包裹到啦' },
+  { id:'geometry', title:'几何建筑师', english:'SHAPE WORKSHOP', icon:'△', world:'机器人的积木工坊', description:'三角形屋顶、方形积木、圆圆的车轮。和机器人搭档一起，把简单形状拼成小小想象。', task:'选一个形状，看看效果', choices:['△','□','○'], palette:['#fc8579','#ffdc4d','#70d98a'], caption:'用形状，搭起天马行空的想象' },
+  { id:'dungeon', title:'算术地下城', english:'MATH QUEST', icon:'⚔', world:'城堡深处的秘密', description:'石砖拱门、跳动火把与戴王冠的史莱姆。暗色场景衬托明亮的题目，冒险也可以很友好。', task:'8 + 5 = ?', choices:['11','12','13'], palette:['#454361','#ffb65b','#9bdb66'], caption:'提起勇气，推开知识的大门' },
+  { id:'island', title:'单词冒险岛', english:'WORD ISLAND', icon:'B', world:'海风吹来的单词', description:'椰子树在沙滩上摇摆，远处是碧蓝大海。物品卡与大字单词，让岛上的发现一目了然。', task:'发现岛上的小宝物', choices:['BANANA'], palette:['#37bbd3','#ffe19a','#55b681'], caption:'下一站，藏着单词的热带小岛' },
+  { id:'idiom', title:'成语大冒险', english:'BUNNY TALES', icon:'兔', world:'树桩旁的小故事', description:'兔子、老树桩和一片安静草地。把成语放进有角色的画面里，用四张字卡呈现故事线索。', task:'树桩旁，发生了什么？', choices:['守','株','待','兔'], palette:['#85c55e','#dba66b','#fff0d2'], caption:'和小兔子一起，走进成语故事' },
+  { id:'detective', title:'文字侦探', english:'STORY DETECTIVE', icon:'⌕', world:'公园里的线索', description:'带上放大镜，翻开侦探笔记。宽松的行距、完整的短句和醒目的词卡，让文字成为线索。', task:'他在公园里捡到一把伞，\n在原地等了很久。', choices:['公园','原地','很久'], palette:['#6fc7a0','#ffe174','#bfa8ed'], caption:'睁大眼睛，线索就在文字里' },
+];

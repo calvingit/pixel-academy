@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f7ec">
+  <title>像素小学堂 · 游戏风格实验室</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./index.html"><span class="brand-icon" aria-hidden="true">P<span>✦</span></span><span>像素小学堂<small>PIXEL ACADEMY</small></span></a>
+    <span class="prototype-label"><i></i> 独立视觉原型</span>
+  </header>
+  <main class="workspace">
+    <aside class="library">
+      <p class="eyebrow">PICK YOUR ADVENTURE</p>
+      <h1>今天，去哪儿冒险？</h1>
+      <p class="intro">九个小世界，九种学习的乐趣。<br>选一个，看看它的模样。</p>
+      <nav id="game-list" aria-label="游戏场景"></nav>
+      <p class="library-foot">HTML + CANVAS · 09 个风格样板</p>
+    </aside>
+    <section class="preview" aria-label="掌机预览">
+      <div class="preview-heading"><span><i></i> 场景预览</span><span id="scene-counter">01 / 09</span></div>
+      <div class="console">
+        <div class="console-top"><span>PIXEL POCKET</span><span class="power"><i></i> POWER</span></div>
+        <div class="screen" id="screen">
+          <canvas id="scene" width="360" height="500" aria-hidden="true"></canvas>
+          <div class="hud" aria-hidden="true"><span>★ 小小冒险家</span><span class="hearts">♥ ♥ ♥</span></div>
+          <h2 id="game-title"></h2>
+          <div id="task" class="task"></div>
+          <div id="choices" class="choices" role="group" aria-label="体验选中效果"></div>
+          <p class="feedback" id="feedback" role="status">点一点，试试选中效果</p>
+          <div class="pause-layer" id="pause-layer" hidden><span aria-hidden="true">Ⅱ</span><h3>冒险休息站</h3><p>小伙伴正在等你回来</p><button id="resume">继续预览 ▶</button></div>
+        </div>
+        <div class="console-controls"><button id="pause" aria-pressed="false">Ⅱ 暂停</button><span class="speaker" aria-hidden="true">▰ ▰ ▰</span><button id="reset">↻ 重置</button></div>
+        <p class="console-bottom">LEARN A LITTLE. ADVENTURE A LOT.</p>
+      </div>
+      <p class="preview-disclaimer">界面演示 · 不判题、不计分、不保存记录</p>
+      <div class="scene-navigation"><button id="previous" aria-label="上一个场景">←</button><span id="scene-caption"></span><button id="next" aria-label="下一个场景">→</button></div>
+    </section>
+    <aside class="field-notes">
+      <span class="note-star" aria-hidden="true">✦</span>
+      <p class="eyebrow">A LITTLE WORLD OF WONDER</p>
+      <h3 id="world-title"></h3><p id="world-description"></p>
+      <div class="palette" aria-label="场景配色" id="palette"></div>
+      <div class="note-divider"></div>
+      <h4>试试看</h4><p>切换冒险场景，点击彩色选项，体验像素按钮与选中反馈。</p>
+      <p class="boundary">这是界面效果演示。题目为展示文案，不判题、不计分、不保存记录；听辨按钮仅演示视觉效果，不播放语音。</p>
+    </aside>
+  </main>
+  <footer class="site-footer"><span>为好奇心，造一座游乐场。</span><span>游戏风格实验室 / 2026</span></footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

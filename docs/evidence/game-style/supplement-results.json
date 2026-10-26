@@ -1,0 +1,29 @@
+{
+  "environment": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "platform": "MacIntel"
+  },
+  "empty": {
+    "text": "三年级暂无已审核的数学练习。当前开放：一年级、二年级（数学）。",
+    "disabled": true,
+    "overflow": false
+  },
+  "mixed": {
+    "text": "本局练习来自：一年级。三年级暂无内容。",
+    "disabled": false
+  },
+  "focus": {
+    "id": "btn-start",
+    "outline": "solid",
+    "width": "3px"
+  },
+  "storage": {
+    "hidden": false,
+    "text": "\n      本地存储不可用，练习记录与设置无法保存，游戏仍可正常游玩。\n    ",
+    "selectVisible": true
+  },
+  "bootstrap": {
+    "notice": "页面资源加载失败，请刷新重试。",
+    "gameHidden": true
+  }
+}

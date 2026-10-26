@@ -646,10 +646,14 @@ class NumberPuzzleApp {
     const appStyle = getComputedStyle(app);
     const bodyPadding = parseFloat(bodyStyle.paddingTop) + parseFloat(bodyStyle.paddingBottom);
     const topOffset = wrapRect.top - appRect.top;
-    const bottomReserve = actions.offsetHeight + 16 /* .game-actions margin-top */
+    const wrapStyle = getComputedStyle(wrap);
+    const frameHeight = parseFloat(wrapStyle.paddingTop) + parseFloat(wrapStyle.paddingBottom)
+      + parseFloat(wrapStyle.borderTopWidth) + parseFloat(wrapStyle.borderBottomWidth);
+    const frameWidth = parseFloat(wrapStyle.paddingLeft) + parseFloat(wrapStyle.paddingRight);
+    const bottomReserve = actions.offsetHeight + parseFloat(getComputedStyle(actions).marginTop)
       + parseFloat(appStyle.paddingBottom) + parseFloat(appStyle.borderBottomWidth);
     const availH = window.innerHeight - bodyPadding - topOffset - bottomReserve;
-    this.renderer.fitDisplay(wrap.clientWidth, availH);
+    this.renderer.fitDisplay(wrap.clientWidth - frameWidth, availH - frameHeight);
   }
 
   private onRestartClick(): void {
@@ -749,7 +753,7 @@ class NumberPuzzleApp {
 
   private onTileClick(tileIndex: number): void {
     const round = this.round;
-    if (!round || this.session.state !== 'running') return; // 暂停/结算期间不接受棋盘输入
+    if (!round || this.session.state !== 'running' || round.state.phase !== 'asking') return; // 反馈/消除窗口内不读取已推进的题目
     const exerciseId = round.state.questions[round.state.questionIndex]!.exerciseId;
     const wrongsBefore = round.state.currentWrongCount; // 本题作答前已答错次数
     const step = clickTile(round.state, tileIndex, round.rng);
