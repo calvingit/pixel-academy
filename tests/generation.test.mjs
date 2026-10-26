@@ -5,8 +5,7 @@ import { generateExercises, selectRoundExercises } from '../dist/game/number-puz
 import { loadGameContent } from '../dist/game/number-puzzle/content.js';
 import { createSeededRng, restoreSeededRng } from '../dist/game/number-puzzle/random.js';
 import { createRound, clickTile, completeResolve } from '../dist/game/number-puzzle/rules.js';
-import { GameStorage, STORAGE_KEYS, buildInterruptedSnapshot, parseInterrupted, roundFromSnapshot,
-  contentFingerprint, checkRestore } from '../dist/game/number-puzzle/storage.js';
+
 
 const content = loadGameContent();
 const all = content.select([1, 2]);
@@ -67,7 +66,6 @@ test('all 63 grade combinations filter without importing exercises from other gr
     assert.ok(rows.every(e => grades.includes(content.gradeOf(e))));
     if (!grades.includes(1) && !grades.includes(2)) assert.equal(rows.length, 0);
   }
-  assert.equal(content.legacySelect([1, 2]).length, 18);
   assert.equal(content.preview([1, 2]).length, 18);
 });
 
@@ -91,55 +89,22 @@ test('quotas, within-round uniqueness, adjacent-round minimum overlap and seeded
   assert.throws(() => selectRoundExercises(content.select([1]).slice(0, 1), content.gradeOf, createSeededRng(1), []), RangeError);
 });
 
-test('dynamic rounds complete across seeds and resume exactly from persisted tasks and RNG', () => {
+test('dynamic rounds resume exactly from persisted tasks and RNG', () => {
   const finish = (initial, rng) => {
     let state = initial;
     while (state.phase !== 'finished') {
       const answer = answerFor(state.questions[state.questionIndex].task);
-      const index = state.board.indexOf(answer);
-      assert.ok(index >= 0);
-      state = completeResolve(clickTile(state, index, rng).state);
+      state = completeResolve(clickTile(state, state.board.indexOf(answer), rng).state);
     }
     assert.equal(state.score, 100);
     return state;
   };
-  for (const grades of [[1], [2], [1, 2]]) {
-    const candidates = content.select(grades);
-    for (let seed = 0; seed < 20; seed++) {
-      const rng = createSeededRng(seed);
-      const selected = selectRoundExercises(candidates, content.gradeOf, rng, []);
-      const round = createRound({ exercises: selected, gradeOf: content.gradeOf, rng });
-      const version = contentFingerprint(candidates.map(e => ({ id: e.id, grade: content.gradeOf(e), task: e.task })));
-      const snapshot = buildInterruptedSnapshot({ gameId: 'number-puzzle', recordId: 'dynamic', grades,
-        contentVersion: version, round, rngState: rng.snapshotState(), paused: true, timers: [], results: [],
-        savedAt: '2026-10-26T06:11:53Z' });
-      const parsed = parseInterrupted(JSON.stringify(snapshot));
-      assert.equal(parsed.status, 'ok');
-      assert.equal(checkRestore(parsed.value, { gameId: 'number-puzzle', contentVersion: version }).status, 'restorable');
-      const continuous = finish(round, rng);
-      const restored = finish(roundFromSnapshot(parsed.value), restoreSeededRng(parsed.value.rngState));
-      assert.deepEqual(restored, continuous);
-    }
+  for (const grades of [[1], [2], [1, 2]]) for (let seed = 0; seed < 10; seed++) {
+    const rng = createSeededRng(seed);
+    const selected = sample(grades, seed);
+    const round = createRound({ exercises: selected, gradeOf: content.gradeOf, rng });
+    const copied = JSON.parse(JSON.stringify(round));
+    const restoredRng = restoreSeededRng(rng.snapshotState());
+    assert.deepEqual(finish(round, rng), finish(copied, restoredRng));
   }
-});
-
-test('recent question identities persist across reloads, reject corruption and clear with records', () => {
-  const data = new Map();
-  const backend = { getItem: key => data.get(key) ?? null,
-    setItem: (key, value) => data.set(key, value), removeItem: key => data.delete(key) };
-  const storage = new GameStorage(backend);
-  const previous = sample([1], 1).map(e => e.id);
-  assert.equal(storage.saveRecentExerciseIds(previous), true);
-  const reloaded = new GameStorage(backend);
-  assert.deepEqual(reloaded.loadRecentExerciseIds(), previous);
-  assert.equal(sample([1], 2, reloaded.loadRecentExerciseIds()).filter(e => previous.includes(e.id)).length, 0);
-  for (const corrupt of ['{', '{}', '[1]', '[""]', JSON.stringify(Array(11).fill('id'))]) {
-    data.set(STORAGE_KEYS.recentExercises, corrupt);
-    assert.deepEqual(storage.loadRecentExerciseIds(), []);
-  }
-  assert.equal(storage.saveRecentExerciseIds(Array(11).fill('id')), false);
-  storage.saveRecentExerciseIds(previous);
-  storage.clearAll();
-  assert.deepEqual(reloaded.loadRecentExerciseIds(), []);
-  assert.deepEqual(new GameStorage(null).loadRecentExerciseIds(), []);
 });

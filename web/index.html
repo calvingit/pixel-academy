@@ -16,10 +16,16 @@
       <p class="app-subtitle">点选与题目答案相同的数字块</p>
     </header>
 
+    <div class="player-bar"><span id="player-avatar" class="avatar-art"></span><strong id="wallet">正在读取本机档案…</strong></div>
+    <nav id="main-nav" class="actions" aria-label="学习与收藏">
+      <button id="btn-open-courses" type="button">学习课程</button><button id="btn-open-review" type="button">错题复习</button>
+      <button id="btn-open-shop" type="button">金币商店</button><button id="btn-open-profile" type="button">我的收藏</button>
+    </nav>
+    <p id="app-notice" class="status" role="status" hidden></p>
     <p id="offline-notice" class="status offline-notice" hidden></p>
 
     <p id="storage-notice" class="status status-warning storage-notice" hidden>
-      本地存储不可用，练习记录与设置无法保存，游戏仍可正常游玩。
+      临时模式：记录无法持久保存，购买、道具消耗和金币领取不可用，仍可免费学习和挑战。
     </p>
 
     <section id="screen-error" class="screen" hidden>
@@ -56,14 +62,14 @@
         <ul id="records-list" class="records-list"></ul>
         <p id="records-empty" class="hint">暂无已保存的练习记录。</p>
         <div class="actions">
-          <button id="btn-clear-records" type="button">清除本地记录</button>
+          <button id="btn-clear-records" type="button">清除成绩</button>
         </div>
       </div>
     </section>
 
     <section id="screen-availability" class="screen" hidden>
       <h2>可用内容</h2>
-      <p id="availability-status" class="status"></p>
+      <p id="availability-status" class="status"></p><p id="availability-inventory" class="hint"></p>
       <div class="actions">
         <button id="btn-back-select" type="button">返回调整年级</button>
         <button id="btn-start" type="button" class="primary">开始一局</button>
@@ -76,14 +82,17 @@
         <span class="garden-label">和蓝蓝一起，发现数字的秘密</span>
         <button id="btn-sound" type="button" class="chip" aria-pressed="true">音效 开</button>
       </div>
+      <p id="game-mode" class="hint"></p><p id="countdown" class="countdown" role="timer" aria-live="off"></p>
+      <div id="challenge-tools" class="challenge-tools"><div class="actions"><button id="btn-hint" type="button">提醒卡</button><button id="btn-time" type="button">加时 +5秒</button></div><p id="hint-condition" class="hint"></p><button id="btn-ready" type="button" class="primary" hidden>继续答题</button></div>
       <div id="board-wrap" class="board-wrap">
-        <canvas id="board-canvas" class="board-canvas"></canvas>
+        <p id="game-task" class="sr-only"></p><canvas id="board-canvas" class="board-canvas"></canvas>
         <div id="pause-overlay" class="pause-overlay" hidden>
-          <p class="pause-title">Ⅱ 冒险休息站</p>
-          <p class="pause-hint">进度已保留，随时继续。</p>
+          <p id="pause-title" class="pause-title">Ⅱ 冒险休息站</p>
+          <p id="pause-hint" class="pause-hint">进度已保留，随时继续。</p>
           <button id="btn-resume" type="button" class="primary">继续游戏</button>
         </div>
       </div>
+      <div id="practice-tools" hidden><p id="practice-feedback" class="status"></p><div class="actions"><button id="btn-practice-explain" type="button">免费查看讲解</button><button id="btn-practice-next" type="button" hidden>下一题</button><button id="btn-mastered" type="button" class="primary" hidden>已学会</button></div></div>
       <div class="actions game-actions">
         <button id="btn-pause" type="button">暂停</button>
         <button id="btn-restart" type="button">重新开始</button>
@@ -92,17 +101,24 @@
     </section>
 
     <section id="screen-result" class="screen" hidden>
-      <h2>本局完成！</h2>
+      <h2 id="result-title">本局完成！</h2>
       <p id="result-preview-note" class="preview-banner" hidden>候选预览局 · 结果不计入正式记录</p>
       <p id="result-score" class="result-line"></p>
       <p id="result-first-try" class="result-line"></p>
-      <p id="result-wrong" class="result-line"></p>
+      <p id="result-wrong" class="result-line"></p><p id="result-coins" class="status"></p>
       <div class="actions">
         <button id="btn-again" type="button" class="primary">再来一局</button>
         <button id="btn-return" type="button">返回年级选择</button>
       </div>
     </section>
+    <section id="screen-shop" class="screen" hidden><h2>金币商店</h2><p class="hint">永久装扮购买后自由切换；道具按使用次数消耗。价格不会因失败而上涨。</p><div id="default-equipment" class="actions"></div><div id="shop-list" class="card-grid"></div><button type="button" data-home>返回首页</button></section>
+    <section id="screen-courses" class="screen" hidden><h2>学习课程</h2><p class="hint">按首页所选年级展示。免费不限时，每课首次独立完成三题 +10 金币。</p><div id="courses-list" class="card-grid"></div><button type="button" data-home>返回首页</button></section>
+    <section id="screen-review" class="screen" hidden><h2>错题复习</h2><label for="review-filter">查看记录</label><select id="review-filter"><option value="pending">待复习错题</option><option value="timeout">超时待练习</option><option value="mastered">已学会</option></select><div id="review-list" class="card-grid"></div><button type="button" data-home>返回首页</button></section>
+    <section id="screen-profile" class="screen" hidden><h2>我的收藏与资料</h2><p id="collection-summary"></p><p id="collection-target" class="status"></p><form id="nickname-form"><label for="nickname">昵称</label><input id="nickname" name="nickname" autocomplete="nickname" required><p id="rename-info" class="hint"></p><button type="submit">保存昵称</button></form><p class="hint">档案只在本机浏览器保存。清除浏览器数据或更换设备会失去金币、装扮和学习进度。</p><div class="actions"><button id="btn-reset" type="button">重置全部数据</button><button type="button" data-home>返回首页</button></div></section>
   </main>
+  <dialog id="revive-dialog" aria-labelledby="revive-title" closedby="none"><h2 id="revive-title">要继续挑战吗？</h2><p id="revive-message"></p><p id="revive-reason" class="hint"></p><div class="actions"><button id="btn-revive" type="button">使用复活卡</button><button id="btn-end" type="button">结束挑战</button></div></dialog>
+  <dialog id="preview-dialog" aria-labelledby="preview-title" closedby="closerequest"><h2 id="preview-title"></h2><div id="preview-body"></div><button id="preview-close" type="button" autofocus>关闭预览</button></dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-message" closedby="closerequest"><p id="confirm-message"></p><form method="dialog" class="actions"><button value="no" autofocus>取消</button><button value="yes" class="primary">确认</button></form></dialog>
   <script>
     // 离线资源缺失兜底（PLAN.md M6）：主模块加载失败（如离线且缓存未完成、
     // 缓存被部分清理）时 boot 不会执行、启动标记不会被置位；load 事件后仍无

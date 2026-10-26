@@ -4,17 +4,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { catalog, createLearningCore, answerFor } from '../dist/index.js';
 import {
-  createRound, clickTile, endWrongFeedback, completeResolve,
+  createRound, clickTile, reviveRound, startQuestion, useHint, completeResolve,
   BOARD_TILES, QUESTIONS_PER_ROUND, START_THRESHOLD, FIRST_TRY_SCORE, RETRY_SCORE,
   HINT_THRESHOLD, SAME_VALUE_CAP, TIER_RANGES, tierForGrade,
 } from '../dist/game/number-puzzle/rules.js';
 import { createSeededRng } from '../dist/game/number-puzzle/random.js';
 import { describeAvailability, loadGameContent, createExerciseGradeIndex } from '../dist/game/number-puzzle/content.js';
 
+const resumeAfterWrong = state => startQuestion(reviveRound(state));
 const query = grades => ({ subject: 'math', grades, gameId: 'number-puzzle' });
 // 固定样本用于棋盘、随机消耗顺序与旧局次回归；动态入口在 generation.test.mjs 验证。
 const loadedContent = loadGameContent();
-const content = { ...loadedContent, select: loadedContent.legacySelect };
+const content = { ...loadedContent, select: loadedContent.preview };
 const gradeOf = content.gradeOf;
 const unionExercises = grades => content.select(grades);
 // 严格序列随机源：耗尽即抛错，用于核对精确的消耗顺序。
@@ -50,14 +51,14 @@ const playRound = (state, rng, wrongOn = () => false) => {
       if (wrongOn(current)) {
         const wrongIndex = current.board.findIndex(slot => slot !== answer);
         assert.ok(wrongIndex !== -1);
-        current = endWrongFeedback(clickTile(current, wrongIndex, rng).state);
+        current = resumeAfterWrong(clickTile(current, wrongIndex, rng).state);
       }
       const hit = current.board.findIndex(slot => slot === answer);
       const step = clickTile(current, hit, rng);
       assert.equal(step.outcome.type, 'correct');
       current = step.state;
     } else if (current.phase === 'resolving') {
-      current = completeResolve(current);
+      current = startQuestion(completeResolve(current));
     } else {
       assert.fail(`unexpected phase ${current.phase}`);
     }
@@ -75,7 +76,7 @@ test('constants and grade tiers match the gameplay spec', () => {
   assert.equal(START_THRESHOLD, 5);
   assert.equal(FIRST_TRY_SCORE, 10);
   assert.equal(RETRY_SCORE, 5);
-  assert.equal(HINT_THRESHOLD, 3);
+  assert.equal(HINT_THRESHOLD, 2);
   assert.equal(SAME_VALUE_CAP, 2);
   assert.deepEqual(TIER_RANGES.A, { min: 0, max: 10 });
   assert.deepEqual(TIER_RANGES.B, { min: 0, max: 100 });
@@ -157,7 +158,7 @@ test('wrong answers never eliminate, never score and lock input during feedback'
   assert.equal(wrong.outcome.type, 'wrong');
   assert.equal(wrong.outcome.wrongCount, 1);
   assert.equal(wrong.outcome.hintActive, false);
-  assert.equal(wrong.state.phase, 'wrong-feedback');
+  assert.equal(wrong.state.phase, 'interrupted');
   assert.equal(wrong.state.score, 0);
   assert.equal(wrong.state.totalWrongCount, 1);
   assert.deepEqual(wrong.state.board, boardBefore, 'wrong click must not eliminate or fill any tile');
@@ -166,15 +167,13 @@ test('wrong answers never eliminate, never score and lock input during feedback'
   const duringFeedback = clickTile(wrong.state, wrongIndex, countingRng.rng);
   assert.equal(duringFeedback.outcome.type, 'ignored');
   assert.deepEqual(duringFeedback.state, wrong.state);
-  state = endWrongFeedback(wrong.state);
+  state = resumeAfterWrong(wrong.state);
   assert.equal(state.phase, 'asking');
-  // 累计答错 3 次触发提示阈值。
-  state = endWrongFeedback(clickTile(state, wrongIndex, rng).state);
-  const third = clickTile(state, wrongIndex, rng);
-  assert.equal(third.outcome.type, 'wrong');
-  assert.equal(third.outcome.wrongCount, 3);
-  assert.equal(third.outcome.hintActive, true);
-  state = endWrongFeedback(third.state);
+  // 第二次错误仍不自动提示，复活后手动用卡。
+  const second = clickTile(state, wrongIndex, rng);
+  assert.equal(second.outcome.hintActive, false);
+  state = startQuestion(useHint(reviveRound(second.state)));
+  assert.equal(state.hintUsed, true);
   // 答错后答对：+5 分，不计一次通过。
   const hit = state.board.findIndex(slot => slot === answer);
   const corrected = clickTile(state, hit, rng);
@@ -183,10 +182,10 @@ test('wrong answers never eliminate, never score and lock input during feedback'
   assert.equal(corrected.outcome.gainedScore, RETRY_SCORE);
   assert.equal(corrected.state.score, 5);
   assert.equal(corrected.state.firstTryCount, 0);
-  assert.equal(corrected.state.totalWrongCount, 3);
+  assert.equal(corrected.state.totalWrongCount, 2);
   assert.equal(corrected.state.currentWrongCount, 0);
   state = completeResolve(corrected.state);
-  assert.equal(state.phase, 'asking');
+  assert.equal(state.phase, 'ready');
   assert.equal(state.questionIndex, 1);
 });
 
@@ -222,11 +221,11 @@ test('a full round completes with expected scoring and settlement stats', () => 
   assert.equal(allFirstTry.score, 100);
   assert.equal(allFirstTry.firstTryCount, 10);
   assert.equal(allFirstTry.totalWrongCount, 0);
-  // 前 3 题各答错一次后答对：7 × 10 + 3 × 5 = 85。
-  const withWrongs = startAndPlay([1, 2], 22, state => state.questionIndex < 3);
-  assert.equal(withWrongs.score, 85);
-  assert.equal(withWrongs.firstTryCount, 7);
-  assert.equal(withWrongs.totalWrongCount, 3);
+  // 前 2 题各复活一次后答对：8 × 10 + 2 × 5 = 90。
+  const withWrongs = startAndPlay([1, 2], 22, state => state.questionIndex < 2);
+  assert.equal(withWrongs.score, 90);
+  assert.equal(withWrongs.firstTryCount, 8);
+  assert.equal(withWrongs.totalWrongCount, 2);
   // 二年级单选只有 6 道可用：一局题数 = 可用数。
   const grade2 = startAndPlay([2], 23);
   assert.equal(grade2.questions.length, 6);
@@ -250,17 +249,17 @@ test('no unsolvable board, no null slot and no value above the cap across many s
           assert.ok(state.board.filter(slot => slot === value).length <= SAME_VALUE_CAP,
             `seed ${seed}: value ${value} exceeds the same-value cap`);
         }
-        if (wrongPicker() < 0.5) {
+        if (wrongPicker() < 0.5 && state.revivals < 2) {
           const wrongIndex = state.board.findIndex(slot => slot !== answer);
           const wrong = clickTile(state, wrongIndex, rng);
           assert.equal(wrong.outcome.type, 'wrong');
           assert.ok(wrong.state.board.includes(answer), 'wrong click must not remove the answer');
-          state = endWrongFeedback(wrong.state);
+          state = resumeAfterWrong(wrong.state);
         }
         const hit = state.board.findIndex(slot => slot === answer);
         state = clickTile(state, hit, rng).state;
       } else if (state.phase === 'resolving') {
-        state = completeResolve(state);
+        state = startQuestion(completeResolve(state));
       } else {
         assert.fail(`unexpected phase ${state.phase}`);
       }

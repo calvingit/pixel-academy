@@ -17,7 +17,7 @@ test('数字花园静态绘制坐标有效，Canvas 状态不泄漏且不修改�
     },
     beginPath() {}, moveTo: check, lineTo: check, closePath() {}, fill() {},
   };
-  drawNumberGarden(ctx);
+  for (const skin of ['garden', 'autumn', 'snow']) drawNumberGarden(ctx, skin);
   assert.equal(depth, 0);
   assert.ok(rectangles > 100);
 });

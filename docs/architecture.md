@@ -1,10 +1,10 @@
 # 架构说明
 
-更新日期：2026-10-25。本说明区分当前实现与规划，字段定义以 [models.ts](../src/learning/models.ts) 为准。
+更新日期：2026-10-26。本说明区分当前实现与规划，Learning Core 字段以 [models.ts](../src/learning/models.ts) 为准，游戏侧课程和档案类型见下表。
 
 ## 当前实现
 
-工程是 TypeScript ESM 数据层，无运行时第三方依赖。Node.js 22+ 为 package.json 中声明的最低要求；已执行检查的环境为 Node.js 24.22.1。TypeScript 锁定为 5.9.3。
+工程是 TypeScript ESM 静态 H5 与纯 TypeScript 学习数据层，无运行时第三方依赖。Node.js 22+ 为 package.json 中声明的最低要求；已执行检查的环境为 Node.js 24.2.0。TypeScript 锁定为 5.9.3。
 
 | 位置 | 职责 |
 | --- | --- |
@@ -14,15 +14,17 @@
 | src/learning/evaluation.ts | 安全整数答案计算与判题 |
 | src/index.ts | 汇总默认 catalog 与导出 API |
 | src/game/number-puzzle/rules.ts | 数字消除纯规则：单局状态机、局序洗牌、判题、计分、保证规则、注入随机源；无 DOM 依赖 |
-| src/game/number-puzzle/session.ts | 单局会话状态机（纯逻辑）：运行/暂停切换、切后台自动暂停、动画计时器的冻结换算；时钟注入，无 DOM、无 setTimeout |
+| src/game/number-puzzle/session.ts | 纯计时逻辑 RoundSession：注入时钟、绝对截止时间、剩余时间、暂停冻结和恢复；无 DOM 或真实计时器 |
 | src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源；M5 支持内部状态快照（snapshotState）与按状态恢复（restoreSeededRng），中断续局的随机序列与连续游玩完全一致 |
 | src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
 | src/game/number-puzzle/generation.ts | 数字消除本地生成规则：有限候选构造、按年级及题型配额抽取、上一局优先避重；纯 TypeScript，无 DOM、存储或网络依赖 |
 | src/game/number-puzzle/audio.ts | WebAudio 合成音效（答对/答错/结算）：可关闭，无音频文件、无新增依赖，仅反馈增强不承载规则信息 |
 | src/game/number-puzzle/garden.ts | 数字花园静态 Canvas 装饰：天空、山丘、植被与蓝蓝，无游戏状态或判题依赖；由 render.ts 在题面与棋盘之前绘制，随静态导入进入离线预缓存 |
 | src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
-| src/game/number-puzzle/main.ts | 浏览器入口：DOM 界面流转、局次生命周期与输入窗口计时、暂停/继续/重新开始/返回、visibilitychange 自动暂停、音效开关；M5 接线本地记录（设置即改即存、逐状态更新中断快照、结算写成绩、恢复提供、清除入口与不可用提示），预览入口不读写正式记录存储 |
-| src/game/number-puzzle/storage.ts | 本地记录与恢复纯逻辑（M5）：版本化键与 schemaVersion、设置/成绩/中断快照的结构校验（损坏与非法字段按首次使用或逐条丢弃）、内容版本指纹与恢复前置检查、同 recordId 幂等去重与成绩上限、注入式 KV 门面 GameStorage（写入失败自动停用持久化）；无 DOM、无 localStorage 直接依赖，注入 localStorage 适配器在 main.ts |
+| src/game/number-puzzle/main.ts | DOM 页面、Canvas 输入、有限挑战和计时接线、课程／复习、商店和资料、后台暂停、异步事务与错误提示、离线与更新 |
+| src/game/number-puzzle/storage.ts | v1 设置、成绩和避重 ID 的只读导入；持久化 MathTask 输入校验；不恢复旧局次，不写入或清理旧键 |
+| src/game/number-puzzle/profile.ts | 纯金币／道具／奖励／错题操作与档案校验；ProfileStore 隔离异步存储，原生 IndexedDB readwrite 事务和修订号检查提供原子提交及跨页面冲突拒绝 |
+| src/game/number-puzzle/learning.ts | 五节课程、课程范围内动态抽题、稳定题目身份、题面文本和程序化解题说明；无 DOM 或存储依赖 |
 | src/game/number-puzzle/offline.ts | 离线状态与版本更新纯逻辑（M6）：缓存名前缀与版本标记格式、旧版本缓存清理决策（staleCacheNames）、更新采用时机（decideUpdateAdoption：仅选择屏且无进行中局次 adopt）与执行决策（planAdoptionExecution：waiting 缺失且新版本已接管则刷新、未接管则收敛——waiting 可被浏览器跳过直通激活）、离线状态文案推导（describeOfflineStatus，含更新提示优先）；无 DOM、无 Service Worker 依赖，浏览器接线在 main.ts，SW 侧策略在 web/sw.source.js（两处头注交叉说明） |
 | web/index.html、web/style.css | 静态 H5 入口页面与样式（M5 增加存储提示、恢复提供、练习记录与清除入口；M6 增加离线状态提示行与主模块加载失败的内联兜底脚本） |
 | web/sw.source.js | 离线 Service Worker 模板（M6，跟踪提交）：install 预缓存清单（任一失败不激活）、不自动 skipWaiting、activate 清理同前缀旧缓存并广播 cache-ready、同源 GET 缓存优先 + 未命中回填、导航回退入口页与离线兜底页；由 build 脚本替换占位符后生成 web/sw.js（构建产物，gitignore） |
@@ -37,7 +39,13 @@ build 先运行 tsc，再由 scripts/build-sw.mjs 生成 web/sw.js（预缓存�
 
 数字消除正式内容装配先用 `generateExercises` 构造经规则审核的有限候选，再调用 `createLearningCore` 校验并通过 `selectExercises` 筛选；开局用 `selectRoundExercises` 按配额抽 10 题，再交给原有 `createRound` 洗牌和建立棋盘。生成模块属于本游戏，不扩展为通用引擎；默认 `src/index.ts` 导出的 catalog、selectExercises 仍是首批静态内容。静态题库另用于显式候选预览与旧中断局次的精确指纹兼容检查，不作为动态缺题降级。
 
-题目 ID 由生成规则版本、映射及参数决定；内容指纹覆盖全部合法候选，与本局抽题结果无关。中断快照继续保存完整题目和 RNG 状态，恢复不抽题。旧静态指纹和当前动态指纹分别严格匹配；原设置、成绩、快照 schema 不变。新增同前缀 `v1:recent-exercises` 键只存最近一次开局的至多 10 个题目 ID，刷新后用于避重，清除本机记录时一并清除；存储不可用时仅保留页面内避重。
+题目 ID 由生成规则版本、映射及参数决定。错题身份另按任务类型、参数与顺序确定，不以生成版本或局次 ID 重置领奖资格。正式题与复习原题都经 selectExercises；撤回审核范围的原题仅保留历史，不自动换题或降级。
+
+新版档案保存在 IndexedDB 的 pixel-academy 数据库、profiles store、local 记录中，结构版本为 2。钱包、库存、购买／装备、昵称、课程、错题、领奖标记、当前局和成绩同属一个事务记录；每次提交检查 revision，事务失败不发布新状态，多页面陈旧提交拒绝并同步。成绩最多保留 100 条，奖励凭据独立保留。存储不可用时只临时学习／挑战，不允许交易或持久领奖。
+
+首次创建档案时只读导入旧 localStorage 设置、历史成绩与避重信息，不恢复旧中断局，不补发历史金币；后续已有档案不重复导入。清除成绩不清除钱包或领奖资格，明确确认的全部重置使用独立事务；旧 localStorage 键保持不动。
+
+当前挑战保存完整题目、棋盘、RNG 状态、复活与道具标记、剩余时间及绝对截止时间；内容版本组合生成规则版本和挑战规则版本，更新规则应同步升级版本。恢复默认暂停，意外中止留下的运行状态按截止时间扣除经过时间，不刷新题目或重置倒计时。课程小练习保存当前题与独立完成情况。进行中的挑战／小练习阻止本页主动采用等待中的 Service Worker 更新。
 
 ```mermaid
 flowchart TD
@@ -77,11 +85,13 @@ flowchart TD
 | --- | --- | --- |
 | 游戏规则 | 单局状态、出题、计分、胜负；尽量纯函数 | M3 已落地（src/game/number-puzzle/rules.ts） |
 | 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3 提供最小实现；M4 完成复古掌机视觉、手机交互（暂停/继续/重新开始/返回、切后台自动暂停、自适应布局）与可关闭合成音效 |
-| 本地存储 | 设置、局次、内容版本与迁移 | M5 已落地（src/game/number-puzzle/storage.ts）：键 `pixel-academy:number-puzzle:v1:{settings|records|interrupted}`，结构带 schemaVersion；内容版本为正式题集指纹，不兼容时仅放弃中断局次；成绩按 recordId 幂等、上限 100 条 |
+| 本地存储 | 档案、事务、内容版本与旧数据导入 | 新版由 profile.ts 的 IndexedDB 事务承载；storage.ts 仅保留旧格式读取，旧中断恢复与写入分支已移除 |
 | 离线资源 | 缓存、版本切换与缺失处理 | M6 已落地（web/sw.source.js + scripts/build-sw.mjs 生成 web/sw.js；策略纯逻辑在 src/game/number-puzzle/offline.ts）：缓存名带构建哈希版本、install 全量预缓存（任一失败不激活）、不自动 skipWaiting（页面在非单局中途时机采用）、activate 清理旧版本缓存、缓存优先 + 未命中回填、离线导航兜底页；内容随构建进入产物，无在线内容请求 |
 | 非数学任务 | 按具体游戏增加明确任务类型与判题 | M8–M15 |
 
-本地存储已随 M5 提供（storage.ts，纯逻辑 + 注入式 KV，浏览器入口接入 localStorage；中断快照保存完整单局状态、RNG 内部状态、计时器剩余与已累计的逐题结果，恢复不重复计分）。离线资源已随 M6 提供：版本链路是「构建时对全部预缓存资源（含 dist 内练习数据模块）计算哈希 → 缓存名与页面提示带版本标记 → 更新经浏览器 SW 更新检查发现 → 页面在非单局中途时机（选择屏且无进行中局次）采用 → 激活清理旧版本缓存」；单局进行中页面不发网络请求，局次数据全部在内存，更新不会中途混用新旧资源；中断局次与内容版本的兼容仍由 M5 的内容指纹规则处理。游戏规则、浏览器界面与会话/音效能力已随 M3/M4 提供。存档格式与内容版本字段已在 M5 落定（见 storage.ts 头注）。M4 的渲染、输入、会话与音效能力都只抽取本游戏需要的部分，放在 `src/game/number-puzzle/` 下，未建通用引擎；第二款游戏出现真实复用需求后再提取公共能力。
+M5 的旧 localStorage 档案保留为只读导入来源，新版原子档案和计时版本约束见上文“数据关系”。M6 的资源版本链路继续使用完整静态导入闭包哈希，缓存完成后支持本地学习、挑战、交易与记录；首次未缓存不承诺离线。
+
+游戏规则、浏览器界面、计时、音效和课程均限于本游戏实际需要，没有引入后端或通用游戏引擎。其他游戏仍在 M8–M15，出现真实复用需求时再提取公共能力。
 
 ## 需要保持的边界
 

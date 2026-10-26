@@ -1,501 +1,625 @@
-// 数字消除 H5 入口：常规界面（年级选择、可用内容、结算）用 DOM，
-// 游戏区用 Canvas 2D（render.ts）。完整流程：年级多选 → 可用内容提示 →
-// 开始一局 → 作答与消除 → 结果反馈 → 再玩或返回（PLAN.md M3）。
-// M4：游戏屏提供暂停/继续、重新开始（两击确认防误触）与返回；页面隐藏
-// （visibilitychange）自动暂停且恢复前台不自动继续；动画计时器经 RoundSession
-// 冻结换算，暂停期间到点的计时器在继续后按剩余时长补触发；音效为 WebAudio
-// 合成、可关闭（audio.ts），只作反馈增强，不承载规则信息。
-// M5：本地记录与恢复（storage.ts 为纯逻辑，此处只做接线）。年级选择与音效设置
-// 即改即存；单局每次规则状态变化后把最小恢复状态（题目、棋盘、分数、阶段、
-// RNG 内部状态、计时器剩余）写入中断快照，刷新或关闭后可继续且不重复计分；
-// 结束局次写入成绩记录（按 recordId 去重）；内容版本不一致时放弃中断局次并说明；
-// 存储不可用或写入失败时游戏照常可玩并提示无法持久保存；提供清除本地记录入口
-// （两击确认）。预览入口不读写任何正式记录存储。
-// M6：离线运行与版本更新（offline.ts 为纯逻辑，此处只做接线）。注册 /sw.js
-// （scripts/build-sw.mjs 生成，预缓存入口、脚本、样式与随构建进入产物的练习
-// 数据）；页面提示缓存就绪（带版本标记）/ 准备中 / 失败与离线状态，首次访问
-// 未完成缓存前不承诺离线可玩；等待中的新版本只在「非单局中途」（选择屏且无
-// 进行中局次）采用，激活后清理旧版本缓存并刷新；主模块加载失败由 index.html
-// 内联兜底脚本提示，Service Worker 侧策略见 web/sw.source.js。
-// 正式入口为默认 URL，只走 selectExercises；?preview=candidate 为显式隔离的
-// 候选预览入口（previewExercises，草稿计入可用数），两者不共享局次状态。
 import type { Exercise, Grade } from '../../learning/models.js';
-import {
-  clickTile, completeResolve, createRound, endWrongFeedback,
-  ELIMINATE_MS, FILL_MS, WRONG_FEEDBACK_MS,
-} from './rules.js';
-import type { RoundState } from './rules.js';
-import type { TimerKind } from './session.js';
+import { evaluateAnswer } from '../../learning/evaluation.js';
+import { createRound, clickTile, completeResolve, timeoutRound, reviveRound, startQuestion, useHint,
+  useExtraTime, failRound, QUESTION_MS, EXTRA_TIME_MS, ELIMINATE_MS, FILL_MS, RULES_VERSION } from './rules.js';
+import type { RoundState, ClickOutcome } from './rules.js';
+import { createRuntimeRng, restoreSeededRng } from './random.js';
+import { ALL_GRADES, GRADE_NAMES, describeAvailability, loadGameContent } from './content.js';
+import type { GameContent } from './content.js';
+import { selectRoundExercises, GENERATION_VERSION } from './generation.js';
+import { NumberPuzzleRenderer } from './render.js';
 import { RoundSession } from './session.js';
 import { GameAudio } from './audio.js';
-import { createRuntimeRng, restoreSeededRng } from './random.js';
-import type { RestorableRng } from './random.js';
-import { ALL_GRADES, GAME_ID, GRADE_NAMES, describeAvailability, loadGameContent } from './content.js';
-import type { GameContent } from './content.js';
-import { selectRoundExercises } from './generation.js';
-import { NumberPuzzleRenderer } from './render.js';
-import {
-  GameStorage, STORAGE_SCHEMA_VERSION, buildFinishedRecord, buildInterruptedSnapshot,
-  checkRestore, contentFingerprint, roundFromSnapshot,
-} from './storage.js';
-import type {
-  FinishedRoundRecordV1, InterruptedRoundV1, KeyValueStore, RoundRecordQuestionV1, StoredTimerV1,
-} from './storage.js';
+import { LegacyStorage } from './storage.js';
+import { createProfile, openProfileStore, ConflictError, PersistenceError, PRODUCTS, buy, consume, rename,
+  collectMistake, rewardCourse, rewardReview, settleChallenge } from './profile.js';
+import type { Profile, ProfileStore, SavedChallenge, Product, Avatar, Skin } from './profile.js';
+import { COURSES, selectCourseExercises, taskIdentity, taskText, explainTask } from './learning.js';
 import { decideUpdateAdoption, describeOfflineStatus, planAdoptionExecution } from './offline.js';
 import type { OfflinePhase, UpdateScreen } from './offline.js';
 
-type ScreenId = 'error' | 'select' | 'availability' | 'game' | 'result';
-
-interface RunningRound {
-  state: RoundState;
-  rng: RestorableRng;
-}
-
-const RESTART_CONFIRM_MS = 3000;
-/** 记录列表最多展示的条数（更早的记录仍保存在存储中）。 */
-const RECORDS_SHOWN = 10;
-
+type ScreenId = 'error' | 'select' | 'availability' | 'game' | 'result' | 'shop' | 'courses' | 'review' | 'profile';
+const CHALLENGE_CONTENT_VERSION = `${GENERATION_VERSION}:${RULES_VERSION}`;
 const $ = <T extends HTMLElement>(id: string): T => {
   const element = document.getElementById(id);
   if (!element) throw new Error(`Missing element #${id}`);
   return element as T;
 };
-
-/** 浏览器 localStorage 适配器：读取被策略阻止时抛错，返回 null 走无存储模式。 */
-function createBrowserKeyValueStore(): KeyValueStore | null {
-  try {
-    if (typeof localStorage === 'undefined') return null;
-    return localStorage;
-  } catch {
-    return null;
-  }
-}
-
-/** 局次记录 ID：同一局（含中断恢复后的续局）共享，用于成绩去重。 */
-function createRecordId(): string {
-  const cryptoApi = globalThis.crypto;
-  if (cryptoApi && typeof cryptoApi.randomUUID === 'function') return `np-${cryptoApi.randomUUID()}`;
-  return `np-${Date.now().toString(36)}-${Math.floor(Math.random() * 2 ** 32).toString(36)}`;
-}
-
-const formatRecordTime = (iso: string): string => {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
-  const two = (value: number): string => String(value).padStart(2, '0');
-  return `${date.getMonth() + 1}-${date.getDate()} ${two(date.getHours())}:${two(date.getMinutes())}`;
+const text = (id: string, value: string): void => { $(id).textContent = value; };
+const button = (label: string, action: () => void, disabled = false): HTMLButtonElement => {
+  const element = document.createElement('button'); element.type = 'button'; element.textContent = label;
+  element.disabled = disabled; element.addEventListener('click', action); return element;
+};
+const avatarArt = (avatar: Avatar): string => {
+  const color = { lanlan: '#2688cd', cat: '#d29551', rabbit: '#f1cfcb', owl: '#976e51' }[avatar];
+  const ears = avatar === 'rabbit' ? '<rect x="13" y="1" width="8" height="23" rx="3"/><rect x="28" y="1" width="8" height="23" rx="3"/>'
+    : avatar === 'cat' || avatar === 'owl' ? '<path d="M7 24V7L22 17M27 17L42 7V24"/>' : '';
+  const face = avatar === 'owl' ? '<g fill="#fffbe5" stroke="#193b38" stroke-width="2"><circle cx="17" cy="29" r="7"/><circle cx="33" cy="29" r="7"/></g><g fill="#193b38"><circle cx="17" cy="29" r="2"/><circle cx="33" cy="29" r="2"/><path d="M22 36h6l-3 6z"/></g>'
+    : `<path d="M17 28v5m16-5v5m-12 5h8${avatar === 'cat' ? 'M3 34l9 2m26 0 9-2M3 40l9-2m26 0 9 2' : ''}" stroke="#193b38" stroke-width="3" fill="none"/>`;
+  return `<svg viewBox="0 0 50 50" aria-hidden="true"><g fill="${color}" stroke="#193b38" stroke-width="2">${ears}<rect x="6" y="16" width="38" height="30" rx="9"/></g>${face}</svg>`;
 };
 
 class NumberPuzzleApp {
-  private readonly content: GameContent;
-  private readonly preview: boolean;
-  private readonly select: (grades: readonly Grade[]) => readonly Exercise[];
-  private readonly renderer: NumberPuzzleRenderer;
-  private readonly session = new RoundSession(() => performance.now());
-  private readonly audio = new GameAudio();
-  private readonly timers = new Map<TimerKind, ReturnType<typeof setTimeout>>();
-  private selectedGrades: Grade[] = [];
-  private unionExercises: readonly Exercise[] = [];
-  /** 与 unionExercises 配套的年级集合（开始/重开/再来一局的记录来源）。 */
-  private unionGrades: readonly Grade[] = [];
-  private round: RunningRound | null = null;
-  /** 正式记录存储；预览入口为 null（预览局不读写正式记录存储）。 */
-  private readonly storage: GameStorage | null;
-  /** 恢复提供中待用户决定的中断快照。 */
-  private pendingRestore: InterruptedRoundV1 | null = null;
-  /** 当前局次身份与逐题作答累计（含恢复续局，随快照保存）。 */
-  private recordId: string | null = null;
-  private roundGrades: readonly Grade[] = [];
-  private roundResults: readonly RoundRecordQuestionV1[] = [];
-  private roundContentVersion = '';
-  private previousExerciseIds: readonly string[] = [];
-  /** 内容版本指纹按年级组合缓存（同一组合的 select 结果在一次会话内不变）。 */
-  private readonly fingerprintCache = new Map<string, string>();
-  private restartConfirmArmed = false;
-  private restartConfirmTimer: ReturnType<typeof setTimeout> | null = null;
-  private clearConfirmArmed = false;
-  private clearConfirmTimer: ReturnType<typeof setTimeout> | null = null;
-  // M6：离线缓存与版本更新状态（决策逻辑在 offline.ts，此处只保存与展示）。
+  private readonly session = new RoundSession(() => Date.now());
+  private profile: Profile = createProfile();
+  private store: ProfileStore | null = null;
+  private recoveryStore: ProfileStore | null = null;
+  private busy = false;
   private screen: ScreenId = 'select';
+  private readonly renderer: NumberPuzzleRenderer;
+  private readonly audio = new GameAudio();
+  private practiceBoard: RoundState | null = null;
+  private lastResult: Profile['records'][number] | null = null;
+  private courseId: string | null = null;
+  private animation: { before: RoundState; outcome: Extract<ClickOutcome, { type: 'correct' }>; drawn: boolean } | null = null;
+  private reviewFilter = 'pending';
+  private readonly select: (grades: readonly Grade[]) => readonly Exercise[];
   private offlinePhase: OfflinePhase = 'preparing';
   private offlineVersion: string | null = null;
   private updateWaiting = false;
   private updateNoticeText: string | null = null;
-  /** 已向等待中的 SW 发送 skip-waiting；controllerchange 后据此决定是否刷新。 */
   private awaitingAdoption = false;
   private swRegistration: ServiceWorkerRegistration | null = null;
-  /** 页面加载时的 controller：用于识别「新版本已激活接管」（waiting 可被浏览器跳过）。 */
-  private readonly initialController: ServiceWorker | null =
-    this.swSupported() ? navigator.serviceWorker.controller : null;
+  private readonly initialController: ServiceWorker | null = this.swSupported() ? navigator.serviceWorker.controller : null;
 
-  constructor(content: GameContent, preview: boolean) {
-    this.content = content;
-    this.preview = preview;
+  constructor(private readonly content: GameContent, private readonly preview: boolean) {
     this.select = preview ? content.preview : content.select;
-    this.storage = preview ? null : new GameStorage(createBrowserKeyValueStore());
-    this.renderer = new NumberPuzzleRenderer($('board-canvas'), { onTileClick: index => this.onTileClick(index) });
-    this.wireSelectScreen();
-    this.wireAvailabilityScreen();
-    this.wireGameAndResultScreens();
-    this.wireSessionControls();
-    this.wireStorageUi();
+    this.renderer = new NumberPuzzleRenderer($('board-canvas'), { onTileClick: index => this.run(() => this.answer(index)) });
+    this.wireUi();
     this.wireOfflineStatus();
-    if (preview) {
-      $('preview-banner').hidden = false;
-      $('result-preview-note').hidden = false;
-      $('records-section').hidden = true; // 预览局不读写正式记录存储
+    setInterval(() => this.tick(), 100);
+  }
+
+  async initialize(): Promise<void> {
+    if (!this.preview) {
+      try {
+        this.store = await openProfileStore();
+        this.recoveryStore = this.store;
+        this.profile = await this.store.load(() => {
+          const initial = createProfile();
+          try {
+            const legacy = new LegacyStorage(localStorage);
+            const settings = legacy.loadSettings();
+            initial.grades = [...settings.selectedGrades]; initial.soundOn = settings.soundOn;
+            initial.legacyRecords = legacy.loadFinishedRecords(); initial.recentIds = [...legacy.loadRecentExerciseIds()];
+          } catch { this.notice('旧设置无法读取；新版档案已独立初始化，旧数据未删除。'); }
+          return initial;
+        });
+        if (this.profile.challenge) await this.change(draft => {
+          const c = draft.challenge!;
+          if (c.contentVersion !== CHALLENGE_CONTENT_VERSION) {
+            draft.challenge = null; this.notice('上局内容版本已变更，不能继续；金币和历史记录保留。'); return;
+          }
+          this.capture(c);
+          c.paused = true; c.deadline = null;
+        });
+      } catch (error) {
+        this.store = null; this.notice(`档案无法读取，进入临时模式：${this.message(error)}`);
+      }
     } else {
-      this.applyStoredSettings();
-      this.previousExerciseIds = this.storage!.loadRecentExerciseIds();
-      this.updateStorageNotice();
-      this.renderRecords(this.storage!.loadFinishedRecords());
-      this.prepareRestoreOffer();
+      this.profile.coins = 0; this.profile.cards = { time: 0, hint: 0, revive: 0, rename: 0 };
     }
+    this.audio.setMuted(!this.profile.soundOn);
     this.showScreen('select');
+    (window as unknown as Record<string, unknown>).__pixelAcademyBooted = true;
   }
 
-  private showScreen(id: ScreenId): void {
-    this.screen = id;
-    for (const screen of ['error', 'select', 'availability', 'game', 'result'] as const) {
-      $(`screen-${screen}`).hidden = screen !== id;
-    }
-    // 返回选择屏后重新评估：等待中的新版本可在「非单局中途」的安全时机生效（M6）。
-    if (this.updateWaiting) this.evaluateUpdateAdoption();
+  private message(error: unknown): string { return error instanceof Error ? error.message : String(error); }
+  private notice(message: string): void { text('app-notice', message); $('app-notice').hidden = false; }
+  private run(action: () => Promise<void>): void {
+    if (this.busy) return;
+    $('app-notice').hidden = true;
+    this.busy = true; document.body.setAttribute('aria-busy', 'true');
+    void action().catch(async error => {
+      let message = this.message(error);
+      if (error instanceof ConflictError && this.store) {
+        try { this.profile = await this.store.load(createProfile); }
+        catch (readError) {
+          this.store = null; message = `无法同步档案：${this.message(readError)}`;
+          if (this.profile.challenge) this.session.pause(this.profile.challenge);
+        }
+        this.practiceBoard = null;
+      }
+      if (error instanceof PersistenceError) {
+        this.store = null;
+        if (this.profile.challenge) this.session.pause(this.profile.challenge);
+      }
+      this.notice(message);
+    }).finally(() => { this.busy = false; document.body.removeAttribute('aria-busy'); this.render();
+      if (document.hidden && this.profile.challenge && !this.profile.challenge.paused) this.run(() => this.pause());
+      if (this.updateWaiting) this.evaluateUpdateAdoption(); });
   }
-
-  private readSelectedGrades(): Grade[] {
-    return ALL_GRADES.filter(grade => {
-      const input = document.querySelector<HTMLInputElement>(`input[name="grade"][value="${grade}"]`);
-      return input?.checked ?? false;
+  private async change(change: (draft: Profile) => void, persistentOnly = false): Promise<void> {
+    if (persistentOnly && (!this.store || this.preview)) throw new Error('临时／预览模式不能购买、用卡或持久领奖');
+    if (this.store) this.profile = await this.store.commit(this.profile, change);
+    else { const next = structuredClone(this.profile); change(next); this.profile = next; }
+  }
+  private capture(c: SavedChallenge): void {
+    c.remainingMs = this.session.remaining(c);
+  }
+  private activate(c: SavedChallenge, kind: SavedChallenge['timerKind'], milliseconds: number): void {
+    this.session.start(c, kind, milliseconds);
+  }
+  private wireUi(): void {
+    for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) input.addEventListener('change', () => this.run(async () => {
+      const grades = ALL_GRADES.filter(g => document.querySelector<HTMLInputElement>(`input[name="grade"][value="${g}"]`)?.checked);
+      await this.change(p => { p.grades = grades; });
+    }));
+    for (const id of ['shop', 'courses', 'review', 'profile'] as const) $(`btn-open-${id}`).onclick = () => { this.courseId = null; this.showScreen(id); };
+    for (const element of document.querySelectorAll<HTMLButtonElement>('[data-home]')) element.onclick = () => this.showScreen('select');
+    $('btn-to-availability').onclick = () => this.showScreen('availability');
+    $('btn-back-select').onclick = () => this.showScreen('select');
+    $('btn-start').onclick = () => this.run(() => this.startRound());
+    $('btn-again').onclick = () => this.run(() => this.startRound());
+    $('btn-return').onclick = () => this.showScreen('select');
+    $('btn-restore').onclick = () => { this.practiceBoard = null; this.showScreen('game'); };
+    $('btn-discard-round').onclick = () => this.run(() => this.abandon(false));
+    $('btn-game-return').onclick = () => this.run(() => this.abandon(false));
+    $('btn-restart').onclick = () => this.run(() => this.abandon(true));
+    $('btn-pause').onclick = () => this.run(() => this.togglePause());
+    $('btn-resume').onclick = () => this.run(() => this.togglePause());
+    $('btn-ready').onclick = () => this.run(async () => {
+      await this.change(p => { const c = p.challenge!; c.state = startQuestion(c.state); this.activate(c, 'question', QUESTION_MS); });
     });
-  }
-
-  private openGradesText(): string {
-    const open = ALL_GRADES.filter(grade => this.select([grade]).length > 0);
-    return open.length ? `${open.map(grade => GRADE_NAMES[grade]).join('、')}（数学）` : '暂无';
-  }
-
-  private wireSelectScreen(): void {
-    $('select-open-hint').textContent = `可任意选择一个或多个年级。当前开放：${this.openGradesText()}。`;
-    for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) {
-      input.addEventListener('change', () => {
-        this.refreshSelectScreen();
-        this.saveSettings(); // M5：年级选择即改即存
-      });
-    }
-    $('btn-to-availability').addEventListener('click', () => this.showAvailability());
-    this.refreshSelectScreen();
-  }
-
-  private refreshSelectScreen(): void {
-    this.selectedGrades = this.readSelectedGrades();
-    $('select-empty-hint').hidden = this.selectedGrades.length > 0;
-    ($('btn-to-availability') as HTMLButtonElement).disabled = this.selectedGrades.length === 0;
-  }
-
-  private showAvailability(): void {
-    const report = describeAvailability(this.select, this.selectedGrades, { preview: this.preview });
-    this.unionExercises = report.unionExercises;
-    this.unionGrades = [...this.selectedGrades];
-    const status = $('availability-status');
-    const dynamicRange = `${report.availableGrades.map(grade => grade === 1
-      ? '一年级：认数、10 以内加法、5 以内减法'
-      : '二年级：100 以内两步加减、乘法点阵').join('；')}。动态出题 · 每局 10 题。`;
-    status.textContent = report.statusText ?? (this.preview ? report.rangeText : dynamicRange);
-    if (!this.preview && report.startable && report.statusText) status.textContent += ` ${dynamicRange}`;
-    status.classList.toggle('status-warning', report.statusText !== null);
-    ($('btn-start') as HTMLButtonElement).disabled = !report.startable;
-    this.showScreen('availability');
-  }
-
-  private wireAvailabilityScreen(): void {
-    $('btn-back-select').addEventListener('click', () => this.showScreen('select'));
-    $('btn-start').addEventListener('click', () => this.startRound(this.unionExercises));
-  }
-
-  private wireGameAndResultScreens(): void {
-    $('btn-again').addEventListener('click', () => this.startRound(this.unionExercises));
-    $('btn-return').addEventListener('click', () => {
-      this.teardownRound();
-      this.showScreen('select');
-      this.refreshSelectScreen();
+    $('btn-hint').onclick = () => this.run(() => this.useCard('hint'));
+    $('btn-time').onclick = () => this.run(() => this.useCard('time'));
+    $('btn-revive').onclick = () => this.run(() => this.revive());
+    $('btn-end').onclick = () => this.run(async () => { await this.change(p => { p.challenge!.state = failRound(p.challenge!.state); this.settle(p); }); this.showScreen('result'); });
+    $('revive-dialog').addEventListener('cancel', event => { event.preventDefault(); ($('btn-end') as HTMLButtonElement).focus(); });
+    $('preview-close').onclick = () => ($('preview-dialog') as HTMLDialogElement).close();
+    $('btn-sound').onclick = () => this.run(async () => {
+      await this.change(p => { p.soundOn = !p.soundOn; }); this.audio.setMuted(!this.profile.soundOn);
     });
-    // 游戏中途退出：放弃当前局。
-    $('btn-game-return').addEventListener('click', () => {
-      this.teardownRound();
-      this.showScreen('select');
-      this.refreshSelectScreen();
+    $('btn-clear-records').onclick = () => this.run(async () => {
+      if (!await this.confirm('清除成绩？金币、课程、错题和领奖记录会保留。')) return;
+      await this.change(p => { p.records = []; p.legacyRecords = []; }, true);
     });
-  }
-
-  /** 暂停/继续、暂停覆盖层、重新开始（两击确认）与音效开关。 */
-  private wireSessionControls(): void {
-    $('btn-pause').addEventListener('click', () => {
-      if (this.session.isPaused()) this.resumeRound();
-      else this.pauseRound();
+    $('btn-reset').onclick = () => this.run(async () => {
+      if (!await this.confirm('重置全部本机档案？金币、卡片、装扮、昵称、学习进度、当前局和成绩将全部清除，无法撤销。')) return;
+      const store = this.store ?? this.recoveryStore;
+      if (!store || this.preview) throw new Error('本地存储不可用，无法重置档案');
+      this.profile = await store.reset(); this.store = store;
+      this.practiceBoard = null; this.courseId = null; this.showScreen('select');
     });
-    $('btn-resume').addEventListener('click', () => this.resumeRound());
-    $('btn-restart').addEventListener('click', () => this.onRestartClick());
-    $('btn-sound').addEventListener('click', () => {
-      this.audio.setMuted(!this.audio.isMuted());
-      this.syncSoundButton();
-      this.saveSettings(); // M5：音效设置即改即存
+    $('nickname-form').onsubmit = event => { event.preventDefault(); this.run(async () => {
+      const value = ($('nickname') as HTMLInputElement).value;
+      await this.change(p => rename(p, value), true); this.notice('昵称已保存。');
+    }); };
+    $('review-filter').onchange = () => { this.reviewFilter = ($('review-filter') as HTMLSelectElement).value; this.renderReview(); };
+    $('btn-practice-explain').onclick = () => this.run(async () => {
+      await this.change(p => { p.practice!.revealed = true; p.practice!.passed = false; });
     });
-    // 切到后台：停止推进需要玩家参与的状态（仅 running 时自动暂停；恢复前台
-    // 保持暂停，由玩家显式「继续」）；恢复后视口可能变化，重新自适应画布尺寸。
+    $('btn-practice-next').onclick = () => this.run(() => this.nextPractice());
+    $('btn-mastered').onclick = () => this.run(async () => {
+      await this.change(p => { const practice = p.practice!; if (!practice.reviewId || practice.correct !== 1) throw new Error('请先答对本题');
+        p.mistakes[practice.reviewId]!.mastered = true; p.practice = null; });
+      this.practiceBoard = null; this.showScreen('review');
+    });
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') this.pauseRound();
-      else this.fitBoard();
+      if (document.hidden && this.profile.challenge && !this.profile.challenge.paused) {
+        this.run(async () => { await this.pause(); });
+      }
+    });
+    window.addEventListener('pagehide', () => {
+      if (this.store && this.profile.challenge && !this.busy) this.run(() => this.pause());
     });
     window.addEventListener('resize', () => this.fitBoard());
-    window.addEventListener('orientationchange', () => this.fitBoard());
     window.visualViewport?.addEventListener('resize', () => this.fitBoard());
   }
-
-  // -------------------------------------------------------------------
-  // M5：本地记录与恢复（纯逻辑在 storage.ts，此处只做 DOM 接线）。
-  // -------------------------------------------------------------------
-
-  private syncSoundButton(): void {
-    const muted = this.audio.isMuted();
-    const button = $('btn-sound');
-    button.textContent = muted ? '音效 关' : '音效 开';
-    button.setAttribute('aria-pressed', muted ? 'false' : 'true');
+  private async confirm(message: string): Promise<boolean> {
+    const resumeOnCancel = !!this.profile.challenge && !this.profile.challenge.paused;
+    if (resumeOnCancel) await this.pause();
+    text('confirm-message', message);
+    const dialog = $('confirm-dialog') as HTMLDialogElement;
+    dialog.returnValue = ''; dialog.showModal();
+    return new Promise((resolve, reject) => dialog.addEventListener('close', () => {
+      const accepted = dialog.returnValue === 'yes';
+      if (!accepted && resumeOnCancel) void this.togglePause().then(() => resolve(false), reject);
+      else resolve(accepted);
+    }, { once: true }));
   }
-
-  /** 启动时应用已保存的设置（缺失或损坏按首次使用处理，保持默认）。 */
-  private applyStoredSettings(): void {
-    if (!this.storage) return;
-    const settings = this.storage.loadSettings();
-    for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) {
-      input.checked = settings.selectedGrades.includes(Number(input.value) as Grade);
+  private showScreen(id: ScreenId): void {
+    this.screen = id; document.body.dataset.screen = id;
+    if (id === 'result') this.audio.play('finish');
+    for (const section of document.querySelectorAll<HTMLElement>('.screen')) section.hidden = section.id !== `screen-${id}`;
+    if (id !== 'game') this.renderer.stop();
+    this.render();
+    if (this.updateWaiting) this.evaluateUpdateAdoption();
+  }
+  private render(): void {
+    text('wallet', this.preview ? '候选预览 · 不读写正式档案' : !this.store ? '临时模式 · 金币和进度不保存' : `${this.profile.nickname || '小小探险家'} · ${this.profile.coins} 金币`);
+    $('player-avatar').innerHTML = avatarArt(this.profile.avatar);
+    document.body.dataset.skin = this.profile.skin;
+    $('storage-notice').hidden = this.preview || this.store !== null;
+    $('preview-banner').hidden = !this.preview;
+    $('result-preview-note').hidden = !this.preview;
+    $('records-section').hidden = this.preview;
+    $('main-nav').hidden = this.preview || this.screen === 'game';
+    for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) input.checked = this.profile.grades.includes(Number(input.value) as Grade);
+    ($('btn-to-availability') as HTMLButtonElement).disabled = !this.profile.grades.length;
+    $('select-empty-hint').hidden = this.profile.grades.length > 0;
+    text('select-open-hint', '可任意选择一个或多个年级。当前开放：一年级、二年级（数学）。');
+    $('restore-offer').hidden = !this.profile.challenge && !this.profile.practice;
+    text('restore-offer-text', this.profile.practice ? '有尚未完成的课程或复习，可继续学习。' : '新版挑战进度已保存，恢复后手动继续。');
+    text('btn-sound', this.profile.soundOn ? '音效 开' : '音效 关');
+    $('btn-sound').setAttribute('aria-pressed', String(this.profile.soundOn));
+    if (this.screen === 'select') this.renderRecords();
+    if (this.screen === 'availability') {
+      const report = describeAvailability(this.select, this.profile.grades, { preview: this.preview });
+      text('availability-status', report.statusText ?? '动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次');
+      ($('btn-start') as HTMLButtonElement).disabled = !report.startable;
+      text('availability-inventory', `加时卡 ${this.profile.cards.time} · 提醒卡 ${this.profile.cards.hint} · 复活卡 ${this.profile.cards.revive}。开始前可去商店准备道具。`);
     }
-    this.audio.setMuted(!settings.soundOn);
-    this.syncSoundButton();
-    this.refreshSelectScreen();
+    if (this.screen === 'game') this.renderGame();
+    if (this.screen === 'result') this.renderResult();
+    if (this.screen === 'shop') this.renderShop();
+    if (this.screen === 'courses') this.renderCourses();
+    if (this.screen === 'review') this.renderReview();
+    if (this.screen === 'profile') this.renderProfile();
+    this.syncDialog();
   }
-
-  private saveSettings(): void {
-    if (!this.storage) return;
-    this.storage.saveSettings({
-      schemaVersion: STORAGE_SCHEMA_VERSION,
-      selectedGrades: this.selectedGrades,
-      soundOn: !this.audio.isMuted(),
+  private renderRecords(): void {
+    const list = $('records-list'); list.replaceChildren();
+    for (const r of [...this.profile.records].reverse().slice(0, 10)) {
+      const item = document.createElement('li'); item.textContent = `${r.passed ? '通关' : '挑战结束'} · ${r.score} 分 · 首次答对 ${r.firstTryCount}/${r.total} · +${r.coins} 金币`; list.append(item);
+    }
+    for (const r of [...this.profile.legacyRecords].reverse().slice(0, Math.max(0, 10 - list.children.length))) {
+      const item = document.createElement('li'); item.textContent = `历史成绩 · ${r.score} 分 · 首次答对 ${r.firstTryCount}/${r.questions.length}（不补发金币）`; list.append(item);
+    }
+    $('records-empty').hidden = list.children.length > 0;
+  }
+  private async startRound(): Promise<void> {
+    if ((this.profile.challenge || this.profile.practice) && !await this.confirm('开始新挑战将放弃当前局未结算金币或当前小练习进度，已消耗道具不退回。')) return;
+    const rng = createRuntimeRng(); const candidates = this.select(this.profile.grades);
+    const selected = this.preview ? candidates : selectRoundExercises(candidates, this.content.gradeOf, rng, this.profile.recentIds);
+    const state = createRound({ exercises: selected, gradeOf: this.content.gradeOf, rng });
+    await this.change(p => {
+      p.practice = null;
+      p.challenge = { id: crypto.randomUUID(), grades: [...p.grades], state, rngState: rng.snapshotState(), contentVersion: CHALLENGE_CONTENT_VERSION,
+        paused: false, remainingMs: QUESTION_MS, deadline: Date.now() + QUESTION_MS, timerKind: 'question' };
+      p.recentIds = state.questions.map(q => q.exerciseId);
     });
-    this.updateStorageNotice();
+    this.practiceBoard = null; this.showScreen('game');
   }
-
-  /** 存储不可用或写入失败时提示当前记录无法持久保存；预览入口不提示。 */
-  private updateStorageNotice(): void {
-    const notice = $('storage-notice');
-    notice.hidden = !this.storage || this.storage.isEnabled();
+  private currentExercise(c: SavedChallenge): Exercise {
+    const question = c.state.questions[c.state.questionIndex]!;
+    const exercise = this.select(c.grades).find(e => e.id === question.exerciseId);
+    if (!exercise || taskIdentity(exercise.task) !== taskIdentity(question.task)) throw new Error('题目已不在当前内容范围，无法继续');
+    return exercise;
   }
-
-  /** 年级组合 → 内容版本指纹（缓存；指纹覆盖练习 ID、关联年级与任务）。 */
-  private contentVersionFor(grades: readonly Grade[], legacy = false): string {
-    const key = `${legacy ? 'legacy:' : ''}${grades.join(',')}`;
-    const cached = this.fingerprintCache.get(key);
-    if (cached !== undefined) return cached;
-    const version = contentFingerprint((legacy ? this.content.legacySelect(grades) : this.select(grades)).map(exercise => ({
-      id: exercise.id,
-      grade: this.content.gradeOf(exercise),
-      task: exercise.task,
-    })));
-    this.fingerprintCache.set(key, version);
-    return version;
+  private recordInterruption(p: Profile, c: SavedChallenge, reason: 'wrong' | 'timeout', exercise: Exercise): void {
+    if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), reason);
+    c.timerKind = null; c.deadline = null; c.remainingMs = 0;
+    if (c.state.phase === 'finished') this.settle(p);
   }
-
-  /** 单局进行中把最小恢复状态写入中断快照；写入失败时提示无法持久保存。 */
-  private persistSnapshot(): void {
-    const round = this.round;
-    if (!round || !this.storage || !this.recordId) return;
-    const timers: StoredTimerV1[] = [];
-    for (const kind of ['resolve', 'feedback'] as const) {
-      const remaining = this.session.remainingMs(kind);
-      if (remaining !== null) timers.push({ kind, remainingMs: remaining });
+  private settle(p: Profile): void {
+    const c = p.challenge!;
+    if (this.store && !this.preview) {
+      settleChallenge(p, c, new Date().toISOString()); this.lastResult = p.records.at(-1) ?? null;
+    } else {
+      const s = c.state;
+      this.lastResult = { id: c.id, at: new Date().toISOString(), score: s.score, firstTryCount: s.firstTryCount,
+        totalWrongCount: s.totalWrongCount, totalTimeoutCount: s.totalTimeoutCount, revivals: s.revivals,
+        completed: s.questionIndex, total: s.questions.length, passed: s.result === 'passed', coins: 0 };
+      p.challenge = null;
     }
-    const saved = this.storage.saveInterrupted(buildInterruptedSnapshot({
-      gameId: GAME_ID,
-      recordId: this.recordId,
-      grades: this.roundGrades,
-      contentVersion: this.roundContentVersion,
-      round: round.state,
-      rngState: round.rng.snapshotState(),
-      paused: this.session.isPaused(),
-      timers,
-      results: this.roundResults,
-      savedAt: new Date().toISOString(),
-    }));
-    if (!saved) this.updateStorageNotice();
   }
-
-  /** 结束局次写入成绩（recordId 去重）并清除中断快照，不重复记录已结束局次。 */
-  private recordFinishedRound(state: RoundState): void {
-    const storage = this.storage;
-    if (!storage || !this.recordId) return;
-    const record = buildFinishedRecord({
-      gameId: GAME_ID,
-      recordId: this.recordId,
-      grades: this.roundGrades,
-      contentVersion: this.roundContentVersion,
-      state,
-      results: this.roundResults,
-      finishedAt: new Date().toISOString(),
+  private async answer(index: number): Promise<void> {
+    if (this.profile.practice) { await this.answerPractice(index); return; }
+    const c = this.profile.challenge;
+    if (!c || c.paused || c.state.phase !== 'asking') return;
+    let correct = false;
+    let animation: typeof this.animation = null;
+    await this.change(p => {
+      const active = p.challenge!; this.capture(active);
+      const exercise = this.currentExercise(active);
+      if (active.remainingMs <= 0) {
+        active.state = timeoutRound(active.state); this.recordInterruption(p, active, 'timeout', exercise); return;
+      }
+      const rng = restoreSeededRng(active.rngState);
+      const before = active.state;
+      const step = clickTile(active.state, index, rng); active.state = step.state; active.rngState = rng.snapshotState();
+      if (step.outcome.type === 'wrong') this.recordInterruption(p, active, 'wrong', exercise);
+      if (step.outcome.type === 'correct') {
+        animation = { before, outcome: step.outcome, drawn: false };
+        correct = true; this.activate(active, 'resolve', step.outcome.fill ? ELIMINATE_MS + FILL_MS : ELIMINATE_MS);
+      }
     });
-    const appended = storage.appendFinishedRecord(record);
-    storage.clearInterrupted(); // 无论写入是否成功都清快照；极端情况下重载按同 recordId 去重兜底。
-    if (appended) this.renderRecords(storage.loadFinishedRecords());
-    this.updateStorageNotice();
+    this.animation = animation;
+    this.audio.play(correct ? 'correct' : 'wrong');
+    if (!this.profile.challenge) this.showScreen('result');
   }
-
-  private renderRecords(records: readonly FinishedRoundRecordV1[]): void {
-    const list = $('records-list');
-    list.textContent = '';
-    const empty = $('records-empty');
-    if (!records.length) {
-      empty.hidden = false;
-      return;
-    }
-    empty.hidden = true;
-    const recent = records.slice(-RECORDS_SHOWN).reverse();
-    for (const record of recent) {
-      const item = document.createElement('li');
-      item.textContent = `${formatRecordTime(record.finishedAt)} · `
-        + `${record.grades.map(grade => GRADE_NAMES[grade]).join('、')} · `
-        + `总分 ${record.score} · 一次通过 ${record.firstTryCount}/${record.questions.length} · `
-        + `答错 ${record.totalWrongCount} 次`;
-      list.appendChild(item);
-    }
-    const older = records.length - recent.length;
-    if (older > 0) {
-      const item = document.createElement('li');
-      item.className = 'records-more';
-      item.textContent = `……更早的 ${older} 条记录已保存。`;
-      list.appendChild(item);
-    }
-  }
-
-  /** 启动时检查中断快照：可恢复则提供「继续上局」；内容版本不兼容则安全放弃并说明；损坏按首次使用处理。 */
-  private prepareRestoreOffer(): void {
-    const storage = this.storage;
-    if (!storage) return;
-    const loaded = storage.loadInterrupted();
-    if (loaded.status === 'invalid') {
-      console.warn(`Discarded a corrupted interrupted-round save: ${loaded.reason}`);
-      return;
-    }
-    if (loaded.status !== 'ok') return;
-    const snapshot = loaded.value;
-    // 旧静态题库仍保留，只有其精确指纹匹配时才允许旧局次继续。
-    const legacy = snapshot.contentVersion === this.contentVersionFor(snapshot.grades, true);
-    const check = checkRestore(snapshot, {
-      gameId: GAME_ID,
-      contentVersion: this.contentVersionFor(snapshot.grades, legacy),
+  private tick(): void {
+    const c = this.profile.challenge;
+    if (this.screen === 'game' && c) this.renderCountdown();
+    if (!c || c.paused || !c.timerKind || c.deadline === null || c.deadline > Date.now() || this.busy) return;
+    this.run(async () => {
+      await this.change(p => {
+        const active = p.challenge!; this.capture(active);
+        if (active.remainingMs > 0) return;
+        if (active.timerKind === 'resolve') {
+          this.animation = null;
+          active.state = completeResolve(active.state);
+          if (active.state.phase === 'finished') this.settle(p);
+          else this.activate(active, active.state.phase === 'asking' ? 'question' : null, QUESTION_MS);
+        } else {
+          const exercise = this.currentExercise(active); active.state = timeoutRound(active.state);
+          this.recordInterruption(p, active, 'timeout', exercise);
+        }
+      });
+      if (!this.profile.challenge) this.showScreen('result');
     });
-    if (check.status !== 'restorable') {
-      // 内容版本不兼容（或游戏不匹配）：只放弃中断局次，历史成绩与设置保持不动。
-      storage.clearInterrupted();
-      const status = $('restore-status');
-      status.textContent = '内容已更新，上次中断的局次无法继续，已安全放弃。历史成绩与设置不受影响。';
-      status.classList.add('status-warning');
-      status.hidden = false;
-      return;
-    }
-    this.pendingRestore = snapshot;
-    const round = snapshot.round;
-    const answered = Math.min(round.questionIndex, round.questions.length);
-    $('restore-offer-text').textContent =
-      `检测到上次未完成的局次：已完成 ${answered}/${round.questions.length} 题，得分 ${round.score}。`;
-    $('restore-offer').hidden = false;
   }
-
-  /** 继续中断的局次：题目、分数、阶段与 RNG 状态与中断时刻一致，暂停态原样恢复。 */
-  private restoreInterruptedRound(): void {
-    const snapshot = this.pendingRestore;
-    const storage = this.storage;
-    this.pendingRestore = null;
-    $('restore-offer').hidden = true;
-    if (!snapshot || !storage) return;
-    const exercises = this.select(snapshot.grades);
-    if (!exercises.length) {
-      // 双保险：内容版本一致时不会发生；发生则按不兼容处理，不清历史成绩。
-      storage.clearInterrupted();
-      return;
+  private async pause(): Promise<void> {
+    if (!this.profile.challenge || this.profile.challenge.paused) return;
+    await this.change(p => { const c = p.challenge!; this.session.pause(c); });
+  }
+  private async togglePause(): Promise<void> {
+    if (!this.profile.challenge) return;
+    if (!this.profile.challenge.paused) { await this.pause(); return; }
+    await this.change(p => { const c = p.challenge!; this.session.resume(c); });
+  }
+  private async useCard(card: 'hint' | 'time'): Promise<void> {
+    await this.change(p => {
+      const c = p.challenge!; if (!c || c.paused) throw new Error('当前不能使用道具');
+      this.capture(c);
+      if (c.state.phase === 'asking' && c.remainingMs <= 0) throw new Error('时间已到，不能使用道具');
+      c.state = card === 'hint' ? useHint(c.state) : useExtraTime(c.state);
+      consume(p, card);
+      if (card === 'time') this.activate(c, 'question', c.remainingMs + EXTRA_TIME_MS);
+    }, true);
+  }
+  private async revive(): Promise<void> {
+    await this.change(p => {
+      const c = p.challenge!; const next = reviveRound(c.state);
+      if (p.cards.revive === 0) buy(p, 'revive');
+      consume(p, 'revive'); c.state = next; c.paused = false; this.activate(c, null, QUESTION_MS);
+    }, true);
+  }
+  private async abandon(restart: boolean): Promise<void> {
+    if (!await this.confirm(this.profile.challenge ? '放弃本局未结算金币？已消耗的道具不会退回。' : '退出当前小练习？课程阅读进度和已发放奖励保留。')) return;
+    await this.change(p => { p.challenge = null; p.practice = null; }); this.practiceBoard = null;
+    if (restart) await this.startRound(); else this.showScreen('select');
+  }
+  private renderCountdown(): void {
+    const c = this.profile.challenge!;
+    const remaining = this.session.remaining(c);
+    text('countdown', c.state.phase === 'asking' ? `剩余 ${(remaining / 1000).toFixed(1)} 秒` : c.state.phase === 'ready' ? '准备继续 · 暂未计时' : '已停止计时');
+  }
+  private renderGame(): void {
+    const practice = this.profile.practice; const c = this.profile.challenge;
+    if (!practice && !c) { this.showScreen('select'); return; }
+    this.renderer.setSkin(this.profile.skin);
+    $('challenge-tools').hidden = !!practice;
+    $('practice-tools').hidden = !practice;
+    ($('btn-pause') as HTMLButtonElement).disabled = !!practice;
+    ($('btn-restart') as HTMLButtonElement).hidden = !!practice;
+    let state: RoundState;
+    if (practice) {
+      if (!this.practiceBoard) {
+        const exercise = practice.exercises[Math.min(practice.index, practice.exercises.length - 1)]!;
+        this.practiceBoard = createRound({ exercises: [exercise], gradeOf: this.content.gradeOf, rng: createRuntimeRng() });
+      }
+      state = this.practiceBoard;
+      text('countdown', `不限时 · 第 ${Math.min(practice.index + 1, practice.exercises.length)}/${practice.exercises.length} 题`);
+      const exercise = practice.exercises[Math.min(practice.index, practice.exercises.length - 1)]!;
+      text('practice-feedback', practice.revealed || practice.answered ? explainTask(exercise.task) : '先独立作答，也可以免费查看讲解。');
+      ($('btn-practice-explain') as HTMLButtonElement).disabled = practice.revealed || practice.answered;
+      $('btn-practice-next').hidden = !practice.answered && !practice.revealed;
+      text('btn-practice-next', practice.reviewId ? '再练一次' : '下一题');
+      $('btn-mastered').hidden = !practice.reviewId || practice.correct !== 1;
+      text('game-mode', practice.courseId ? '课程小练习 · 全部独立答对可完成课程' : '错题复习 · 免费不限时');
+    } else {
+      state = c!.state;
+      this.renderCountdown(); text('game-mode', `已复活 ${state.revivals}/2 · 答错 ${state.totalWrongCount} · 超时 ${state.totalTimeoutCount}`);
+      text('btn-hint', `提醒卡 ${this.profile.cards.hint}`);
+      text('btn-time', `加时 +5秒 ${this.profile.cards.time}`);
+      const canSpend = !!this.store && !this.preview && !c!.paused;
+      ($('btn-hint') as HTMLButtonElement).disabled = !canSpend || state.totalWrongCount < 2 || state.hintUsed || !this.profile.cards.hint || !['ready', 'asking'].includes(state.phase);
+      ($('btn-time') as HTMLButtonElement).disabled = !canSpend || state.timeUsed || !this.profile.cards.time || state.phase !== 'asking';
+      text('hint-condition', state.totalWrongCount < 2 ? `整局再答错 ${2 - state.totalWrongCount} 次开放提醒卡；超时不计入。` : state.hintUsed ? '本题提醒已使用。' : '提醒卡已开放，每题限一张。');
     }
-    this.session.restoreRound({ paused: snapshot.paused, timers: snapshot.timers });
-    this.round = { state: roundFromSnapshot(snapshot), rng: restoreSeededRng(snapshot.rngState) };
-    this.recordId = snapshot.recordId;
-    this.roundGrades = [...snapshot.grades];
-    this.roundResults = snapshot.results.map(question => ({ ...question }));
-    this.roundContentVersion = snapshot.contentVersion;
-    this.unionExercises = exercises;
-    this.unionGrades = [...snapshot.grades];
-    this.showScreen('game');
-    this.renderer.reset(this.round.state);
+    if (state.phase === 'resolving' && this.animation) {
+      if (!this.animation.drawn) {
+        this.renderer.reset(this.animation.before); this.renderer.applyCorrect(this.animation.outcome); this.animation.drawn = true;
+      }
+    } else {
+      this.renderer.reset(state.phase === 'resolving' ? { ...state, questionIndex: Math.max(0, state.questionIndex - 1) } : state);
+    }
+    if (c?.paused) this.renderer.pause(); else { this.renderer.resume(); this.renderer.start(); }
     this.fitBoard();
-    this.renderer.start();
-    this.syncPauseUi();
-    // 运行中恢复：按保存的剩余时长重挂动画计时器；暂停恢复由「继续」时重挂。
-    if (!snapshot.paused) {
-      for (const timer of snapshot.timers) {
-        this.timers.set(timer.kind, setTimeout(() => this.onTimerFired(timer.kind), timer.remainingMs));
-      }
+    const paused = !!c?.paused;
+    const ready = c?.state.phase === 'ready';
+    const visibleQuestion = state.questions[state.questionIndex];
+    text('game-task', ready && !state.hintUsed || paused ? '题面已遮住，继续答题后显示。'
+      : visibleQuestion ? `${taskText(visibleQuestion.task)} 使用方向键选择数字块，回车作答。` : '正在结算。');
+    $('pause-overlay').hidden = !paused && (!ready || state.hintUsed);
+    $('board-canvas').style.visibility = paused || ready && !state.hintUsed ? 'hidden' : 'visible';
+    text('pause-title', paused ? 'Ⅱ 冒险休息站' : '准备好了吗？');
+    text('pause-hint', ready && !paused ? '可先使用提醒卡，再继续答题。' : '剩余时间与道具使用情况已保留。');
+    $('btn-resume').hidden = !paused;
+    $('btn-ready').hidden = !ready || paused;
+    text('btn-pause', paused ? '继续' : '暂停');
+  }
+  private syncDialog(): void {
+    const dialog = $('revive-dialog') as HTMLDialogElement;
+    const c = this.profile.challenge;
+    if (this.screen !== 'game' || !c || c.state.phase !== 'interrupted') { if (dialog.open) dialog.close(); return; }
+    text('revive-message', `${c.state.interruption === 'wrong' ? '这次选错了' : '时间到了'}。剩余复活次数 ${2 - c.state.revivals}，已有复活卡 ${this.profile.cards.revive}。`);
+    text('btn-revive', this.profile.cards.revive ? '使用复活卡' : `购买并使用 · 15 金币（余额 ${this.profile.coins}，购买后 ${Math.max(0, this.profile.coins - 15)}）`);
+    ($('btn-revive') as HTMLButtonElement).disabled = !this.store || this.preview || (!this.profile.cards.revive && this.profile.coins < 15);
+    text('revive-reason', !this.store || this.preview ? '临时／预览模式不能消耗正式道具。' : !this.profile.cards.revive && this.profile.coins < 15 ? `还差 ${15 - this.profile.coins} 金币，可以结束挑战并免费学习。` : '复活后重答本题，本题不再获得答题金币。');
+    if (!dialog.open) { dialog.showModal(); ($('btn-end') as HTMLButtonElement).focus(); }
+  }
+  private renderResult(): void {
+    const r = this.lastResult ?? this.profile.records.at(-1);
+    if (!r) return;
+    text('result-title', r.passed ? `通关！${'★'.repeat(r.firstTryCount === 10 ? 3 : r.firstTryCount >= 8 ? 2 : 1)}` : '挑战结束，继续学习吧');
+    text('result-score', `总分 ${r.score} · 已完成 ${r.completed}/${r.total}`);
+    text('result-first-try', `首次答对 ${r.firstTryCount}/${r.total} · 辅助完成 ${r.completed - r.firstTryCount}`);
+    text('result-wrong', `答错 ${r.totalWrongCount} 次 · 超时 ${r.totalTimeoutCount} 次 · 复活 ${r.revivals} 次`);
+    text('result-coins', this.preview || !this.store ? '临时／预览结果不发放正式金币。' : `本局 +${r.coins} 金币：答题 ${r.firstTryCount * 2}，通关 ${r.passed ? 5 : 0}，全首次答对 ${r.passed && r.firstTryCount === r.total ? 5 : 0}。`);
+  }
+  private renderShop(): void {
+    const list = $('shop-list'); list.replaceChildren();
+    for (const product of PRODUCTS) {
+      const card = document.createElement('article'); card.className = 'product-card';
+      const title = document.createElement('h3'); title.textContent = product.name;
+      const info = document.createElement('p');
+      const owned = product.kind === 'avatar' ? this.profile.avatars.includes(product.id as Avatar) : product.kind === 'skin' ? this.profile.skins.includes(product.id as Skin) : false;
+      const description = product.kind === 'card' ? `消耗品 · 库存 ${this.profile.cards[product.id as keyof Profile['cards']]}` : '永久解锁';
+      info.textContent = `${description} · ${product.price} 金币${!owned && this.profile.coins < product.price ? ` · 还差 ${product.price - this.profile.coins}` : ''}`;
+      if (product.kind === 'avatar') { const art = document.createElement('div'); art.className = 'avatar-art'; art.innerHTML = avatarArt(product.id as Avatar); card.append(art); }
+      card.append(title, info);
+      if (product.kind !== 'card') card.append(button('预览', () => this.previewItem(product)));
+      card.append(button(owned ? '已拥有' : `购买 ${product.price} 金币`, () => this.run(async () => {
+        if (!await this.confirm(`购买${product.name}？花费 ${product.price} 金币，购买后余额 ${this.profile.coins - product.price}。`)) return;
+        await this.change(p => buy(p, product.id), true); this.notice(`已购买${product.name}${product.kind === 'card' ? '' : '，可点击装备'}。`);
+      }), owned || !this.store || this.preview || this.profile.coins < product.price));
+      if (product.kind !== 'card' && owned) card.append(button('装备', () => this.run(async () => {
+        await this.change(p => { if (product.kind === 'avatar') p.avatar = product.id as Avatar; else p.skin = product.id as Skin; }, true);
+      })));
+      list.append(card);
     }
+    $('default-equipment').replaceChildren(button('使用默认头像', () => this.run(async () => { await this.change(p => { p.avatar = 'lanlan'; }, true); })), button('使用默认皮肤', () => this.run(async () => { await this.change(p => { p.skin = 'garden'; }, true); })));
   }
-
-  private discardInterruptedRound(): void {
-    this.pendingRestore = null;
-    $('restore-offer').hidden = true;
-    if (this.storage) this.storage.clearInterrupted();
+  private previewItem(product: Product): void {
+    text('preview-title', `${product.name} · ${product.price} 金币`);
+    const body = $('preview-body'); body.replaceChildren();
+    if (product.kind === 'avatar') { body.className = 'avatar-art large'; body.innerHTML = avatarArt(product.id as Avatar); }
+    else {
+      body.className = 'skin-preview';
+      const canvas = document.createElement('canvas'); canvas.width = 360; canvas.height = 620; body.append(canvas);
+      const renderer = new NumberPuzzleRenderer(canvas, { onTileClick: () => {} });
+      const exercise = this.content.select([1]).find(e => e.task.kind === 'number' && e.task.value === 3)!;
+      renderer.reset(createRound({ exercises: [exercise], gradeOf: this.content.gradeOf, rng: createRuntimeRng() }));
+      renderer.setSkin(product.id as Skin); renderer.start();
+      ($('preview-dialog') as HTMLDialogElement).addEventListener('close', () => renderer.stop(), { once: true });
+    }
+    ($('preview-dialog') as HTMLDialogElement).showModal();
   }
-
-  /** 清除本地记录（两击确认）：回到首次使用状态，界面同步复位。 */
-  private wireStorageUi(): void {
-    $('btn-restore').addEventListener('click', () => this.restoreInterruptedRound());
-    $('btn-discard-round').addEventListener('click', () => this.discardInterruptedRound());
-    const clearButton = $('btn-clear-records');
-    clearButton.addEventListener('click', () => {
-      if (!this.clearConfirmArmed) {
-        this.clearConfirmArmed = true;
-        clearButton.textContent = '确认清除？';
-        this.clearConfirmTimer = setTimeout(() => this.resetClearConfirm(), RESTART_CONFIRM_MS);
-        return;
+  private renderProfile(): void {
+    ($('nickname') as HTMLInputElement).value = this.profile.nickname;
+    text('rename-info', this.profile.nickname ? `改名卡库存 ${this.profile.cards.rename}，成功改名消耗一张。` : '首次设置昵称免费，1～8 个字符。');
+    text('collection-summary', `已拥有 ${this.profile.avatars.length}/4 个头像、${this.profile.skins.length}/3 款皮肤。`);
+    const next = PRODUCTS.find(p => p.kind === 'avatar' && !this.profile.avatars.includes(p.id as Avatar) || p.kind === 'skin' && !this.profile.skins.includes(p.id as Skin));
+    text('collection-target', next ? `下一个收藏目标：${next.name}，${next.price} 金币，还差 ${Math.max(0, next.price - this.profile.coins)}。` : '所有首版装扮都已收集！');
+  }
+  private renderCourses(): void {
+    const list = $('courses-list'); list.replaceChildren();
+    const course = COURSES.find(c => c.id === this.courseId);
+    if (!course) {
+      for (const item of COURSES.filter(c => this.profile.grades.includes(c.grade))) {
+        const card = document.createElement('article'); card.className = 'product-card';
+        const progress = this.profile.courses[item.id];
+        const title = document.createElement('h3'); title.textContent = `${item.title} · ${GRADE_NAMES[item.grade]}`;
+        const info = document.createElement('p'); info.textContent = progress?.rewarded ? '已完成 · 可免费再学，不重复领奖' : progress ? '学习中 · 首次完成 +10 金币' : '未学习 · 首次完成 +10 金币';
+        card.append(title, info, button('进入学习', () => this.run(async () => {
+          await this.change(p => { p.courses[item.id] ??= { stage: 'reading', rewarded: false }; });
+          this.courseId = item.id;
+        }))); list.append(card);
       }
-      this.resetClearConfirm();
-      this.performClearRecords();
+      if (!list.children.length) list.textContent = '请在首页选择有课程的年级。当前课程覆盖一年级、二年级。';
+      return;
+    }
+    const stage = this.profile.courses[course.id]?.stage ?? 'reading';
+    const title = document.createElement('h3'); title.textContent = course.title;
+    const paragraph = document.createElement('p'); paragraph.textContent = course.explanation;
+    list.append(title, paragraph);
+    list.append(button('阅读完成，查看示例', () => this.run(async () => {
+      await this.change(p => { p.courses[course.id] = { stage: 'example', rewarded: p.courses[course.id]?.rewarded ?? false }; });
+    })));
+    if (stage !== 'reading') {
+      const example = document.createElement('p'); example.className = 'example'; example.textContent = `${taskText(course.example)}\n${explainTask(course.example)}`; list.append(example);
+      list.append(button('示例已理解，开始三题小练习', () => this.run(async () => {
+        if (!await this.canStartPractice()) return;
+        const exercises = selectCourseExercises(course, this.content.select([course.grade]), createRuntimeRng());
+        await this.change(p => { p.courses[course.id] = { stage: 'practice', rewarded: p.courses[course.id]?.rewarded ?? false };
+          p.challenge = null; p.practice = { courseId: course.id, reviewId: null, exercises, index: 0, correct: 0, revealed: false, answered: false, passed: true }; });
+        this.practiceBoard = null; this.showScreen('game');
+      })));
+    }
+    list.append(button('返回课程列表', () => { this.courseId = null; this.renderCourses(); }));
+  }
+  private async canStartPractice(): Promise<boolean> {
+    return !this.profile.challenge && !this.profile.practice || await this.confirm('开始练习会放弃当前挑战收益或当前小练习进度，是否继续？');
+  }
+  private approvedOriginal(exercise: Exercise, grade: Grade): Exercise | undefined {
+    const id = taskIdentity(exercise.task);
+    return this.content.select([grade]).find(e => taskIdentity(e.task) === id);
+  }
+  private renderReview(): void {
+    const list = $('review-list'); list.replaceChildren();
+    for (const [id, entry] of Object.entries(this.profile.mistakes)) {
+      if (!this.profile.grades.includes(entry.grade)) continue;
+      if (this.reviewFilter === 'mastered' ? !entry.mastered : entry.mastered || (this.reviewFilter === 'timeout' ? entry.wrongs > 0 : entry.wrongs === 0)) continue;
+      const approved = this.approvedOriginal(entry.exercise, entry.grade);
+      const card = document.createElement('article'); card.className = 'product-card';
+      const title = document.createElement('h3'); title.textContent = taskText(entry.exercise.task);
+      const info = document.createElement('p'); info.textContent = `${entry.wrongs ? '错题' : '待练习'} · 答错 ${entry.wrongs} · 超时 ${entry.timeouts} · ${entry.rewarded ? '本题奖励已领取' : entry.wrongs ? '首次独立复习答对 +2 金币' : '超时练习不发金币'}`;
+      card.append(title, info);
+      const explanation = document.createElement('details');
+      const summary = document.createElement('summary'); summary.textContent = '免费查看原题讲解';
+      const paragraph = document.createElement('p'); paragraph.textContent = explainTask(entry.exercise.task);
+      explanation.append(summary, paragraph); card.append(explanation);
+      if (entry.mastered) card.append(button('撤销已学会', () => this.run(async () => { await this.change(p => { p.mistakes[id]!.mastered = false; }); })));
+      card.append(button(approved ? '开始复习' : '历史题暂不在审核范围', () => this.run(async () => {
+        if (!approved || !await this.canStartPractice()) return;
+        await this.change(p => { p.challenge = null; p.practice = { courseId: null, reviewId: id, exercises: [approved], index: 0, correct: 0, revealed: false, answered: false, passed: true }; });
+        this.practiceBoard = null; this.showScreen('game');
+      }), !approved));
+      list.append(card);
+    }
+    if (!list.children.length) list.textContent = '当前所选年级下没有符合条件的记录。';
+  }
+  private async answerPractice(index: number): Promise<void> {
+    const practice = this.profile.practice!; const board = this.practiceBoard;
+    if (!board || practice.answered) return;
+    const value = board.board[index]; if (value === undefined || value === null) return;
+    const exercise = practice.exercises[practice.index]!;
+    if (!this.approvedOriginal(exercise, this.content.gradeOf(exercise))) throw new Error('原题已不在当前审核范围，暂不可练习');
+    const correct = evaluateAnswer(exercise.task, value);
+    let reward = 0;
+    await this.change(p => {
+      const active = p.practice!;
+      active.answered = true;
+      if (correct) active.correct++;
+      else {
+        active.passed = false;
+        if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), 'wrong');
+      }
+      if (correct && active.reviewId && this.store && !this.preview) {
+        reward = rewardReview(p, active.reviewId, !active.revealed);
+      }
     });
+    this.notice(correct ? reward ? '独立复习答对，+2 金币。' : '答对了！本题没有新增金币奖励。' : '再看一遍讲解，下次再试。');
+    this.audio.play(correct ? 'correct' : 'wrong');
   }
-
-  private resetClearConfirm(): void {
-    if (this.clearConfirmTimer !== null) {
-      clearTimeout(this.clearConfirmTimer);
-      this.clearConfirmTimer = null;
+  private async nextPractice(): Promise<void> {
+    const practice = this.profile.practice!;
+    if (practice.reviewId) {
+      await this.change(p => { p.practice!.answered = false; p.practice!.revealed = false; p.practice!.correct = 0; p.practice!.passed = true; });
+      this.practiceBoard = null; return;
     }
-    this.clearConfirmArmed = false;
-    $('btn-clear-records').textContent = '清除本地记录';
+    let message = '';
+    await this.change(p => {
+      const active = p.practice!; active.index++;
+      if (active.index === active.exercises.length) {
+        if (active.passed && active.correct === 3) {
+          const reward = this.store && !this.preview ? rewardCourse(p, active.courseId!) : 0;
+          message = reward ? '课程完成，首次学习 +10 金币！' : this.store ? '复习完成，本课程奖励已领取。' : '临时学习完成，无法持久保存或领取金币。';
+        } else message = '本轮尚未全部独立答对。可重新开始三题小练习，学习始终免费。';
+        p.practice = null;
+      } else { active.answered = false; active.revealed = false; }
+    });
+    if (message) this.notice(message);
+    this.practiceBoard = null;
+    if (!this.profile.practice) this.showScreen('courses');
   }
-
-  private performClearRecords(): void {
-    if (!this.storage) return;
-    this.storage.clearAll();
-    this.previousExerciseIds = [];
-    for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) {
-      input.checked = false;
-    }
-    this.audio.setMuted(false);
-    this.syncSoundButton();
-    this.refreshSelectScreen();
-    this.renderRecords([]);
-    this.discardInterruptedRound();
-    const status = $('restore-status');
-    status.textContent = '本地记录已清除。';
-    status.classList.remove('status-warning');
-    status.hidden = false;
+  private fitBoard(): void {
+    if (this.screen !== 'game') return;
+    this.renderer.fitDisplay($('board-wrap').clientWidth - 20, Math.max(434, window.innerHeight - 260));
   }
-
-  // -------------------------------------------------------------------
-  // M6：离线缓存与版本更新（决策逻辑在 offline.ts，此处只做接线）。
-  // -------------------------------------------------------------------
-
   private swSupported(): boolean {
     return 'serviceWorker' in navigator && window.isSecureContext;
   }
@@ -505,7 +629,7 @@ class NumberPuzzleApp {
   }
 
   private isRoundInProgress(): boolean {
-    return this.session.state === 'running' || this.session.state === 'paused';
+    return this.profile.challenge !== null || this.profile.practice !== null || this.busy;
   }
 
   private updateScreen(): UpdateScreen {
@@ -639,215 +763,17 @@ class NumberPuzzleApp {
     notice.hidden = false;
   }
 
-  /**
-   * 计算画布可用空间并交给渲染层自适应：以视口高度减去画布上方的固定区域
-   * （页眉、音效行、设备内边距）与下方操作区（按钮行、外边距、设备底部内边距）。
-   * 这些区域高度都不依赖画布尺寸，测量结果确定，无 flex 循环。
-   */
-  private fitBoard(): void {
-    if ($('screen-game').hidden) return;
-    const app = document.querySelector<HTMLElement>('.app');
-    const actions = document.querySelector<HTMLElement>('.game-actions');
-    const wrap = $('board-wrap');
-    if (!app || !actions) return;
-    const appRect = app.getBoundingClientRect();
-    const wrapRect = wrap.getBoundingClientRect();
-    const bodyStyle = getComputedStyle(document.body);
-    const appStyle = getComputedStyle(app);
-    const bodyPadding = parseFloat(bodyStyle.paddingTop) + parseFloat(bodyStyle.paddingBottom);
-    const topOffset = wrapRect.top - appRect.top;
-    const wrapStyle = getComputedStyle(wrap);
-    const frameHeight = parseFloat(wrapStyle.paddingTop) + parseFloat(wrapStyle.paddingBottom)
-      + parseFloat(wrapStyle.borderTopWidth) + parseFloat(wrapStyle.borderBottomWidth);
-    const frameWidth = parseFloat(wrapStyle.paddingLeft) + parseFloat(wrapStyle.paddingRight);
-    const bottomReserve = actions.offsetHeight + parseFloat(getComputedStyle(actions).marginTop)
-      + parseFloat(appStyle.paddingBottom) + parseFloat(appStyle.borderBottomWidth);
-    const availH = window.innerHeight - bodyPadding - topOffset - bottomReserve;
-    this.renderer.fitDisplay(wrap.clientWidth - frameWidth, availH - frameHeight);
-  }
-
-  private onRestartClick(): void {
-    if (!this.restartConfirmArmed) {
-      // 第一击只进入确认态：误触不会不可逆地弃掉当前局（docs/design.md「布局与输入」）。
-      this.restartConfirmArmed = true;
-      $('btn-restart').textContent = '确认重开？';
-      this.restartConfirmTimer = setTimeout(() => this.resetRestartConfirm(), RESTART_CONFIRM_MS);
-      return;
-    }
-    this.resetRestartConfirm();
-    this.startRound(this.unionExercises);
-  }
-
-  private resetRestartConfirm(): void {
-    if (this.restartConfirmTimer !== null) {
-      clearTimeout(this.restartConfirmTimer);
-      this.restartConfirmTimer = null;
-    }
-    this.restartConfirmArmed = false;
-    $('btn-restart').textContent = '重新开始';
-  }
-
-  private syncPauseUi(): void {
-    const paused = this.session.isPaused();
-    $('pause-overlay').hidden = !paused;
-    $('btn-pause').textContent = paused ? '继续' : '暂停';
-  }
-
-  private pauseRound(): void {
-    if (this.session.state !== 'running') return; // 幂等：未开局/已暂停/已结束不动作
-    const pending = this.session.pause();
-    for (const timer of pending) {
-      const id = this.timers.get(timer.kind);
-      if (id !== undefined) {
-        clearTimeout(id);
-        this.timers.delete(timer.kind);
-      }
-    }
-    this.renderer.pause();
-    this.syncPauseUi();
-    this.persistSnapshot(); // M5：暂停态与冻结剩余时长一并入快照，关页后可原样恢复
-  }
-
-  private resumeRound(): void {
-    if (!this.session.isPaused()) return; // 幂等：仅暂停态可继续
-    const pending = this.session.resume();
-    for (const timer of pending) {
-      this.timers.set(timer.kind, setTimeout(() => this.onTimerFired(timer.kind), timer.remainingMs));
-    }
-    this.renderer.resume();
-    this.syncPauseUi();
-    this.persistSnapshot();
-  }
-
-  private teardownRound(): void {
-    for (const kind of ['resolve', 'feedback'] as const) {
-      const id = this.timers.get(kind);
-      if (id !== undefined) {
-        clearTimeout(id);
-        this.timers.delete(kind);
-      }
-    }
-    if (this.session.state !== 'idle') {
-      this.session.abandonRound(); // running/paused/finished → idle，保证「再来一局」可重新开局
-    }
-    this.round = null;
-    this.recordId = null;
-    this.roundResults = [];
-    this.renderer.stop();
-    this.resetRestartConfirm();
-    this.syncPauseUi();
-    // 中途放弃当前局：不写成绩，也不保留中断快照（重新开始/返回都走这里）。
-    if (this.storage) this.storage.clearInterrupted();
-  }
-
-  private startRound(exercises: readonly Exercise[]): void {
-    this.teardownRound();
-    // 新一局取代未处理的恢复提供（快照将在下方被覆盖）。
-    this.pendingRestore = null;
-    $('restore-offer').hidden = true;
-    const rng = createRuntimeRng();
-    const selected = this.preview ? exercises
-      : selectRoundExercises(exercises, this.content.gradeOf, rng, this.previousExerciseIds);
-    this.session.beginRound();
-    this.round = { state: createRound({ exercises: selected, gradeOf: this.content.gradeOf, rng }), rng };
-    this.previousExerciseIds = this.round.state.questions.map(question => question.exerciseId);
-    this.storage?.saveRecentExerciseIds(this.previousExerciseIds);
-    // M5：局次身份、年级来源与内容版本随快照/成绩保存；年级取本局题集对应的组合。
-    this.recordId = createRecordId();
-    this.roundGrades = this.unionGrades.length ? this.unionGrades : [...this.selectedGrades];
-    this.roundResults = [];
-    this.roundContentVersion = this.contentVersionFor(this.roundGrades);
-    this.showScreen('game');
-    this.renderer.reset(this.round.state);
-    this.fitBoard();
-    this.renderer.start();
-    this.syncPauseUi();
-    this.persistSnapshot(); // 开局即存：第一题作答前关闭页面也可恢复
-  }
-
-  private onTileClick(tileIndex: number): void {
-    const round = this.round;
-    if (!round || this.session.state !== 'running' || round.state.phase !== 'asking') return; // 反馈/消除窗口内不读取已推进的题目
-    const exerciseId = round.state.questions[round.state.questionIndex]!.exerciseId;
-    const wrongsBefore = round.state.currentWrongCount; // 本题作答前已答错次数
-    const step = clickTile(round.state, tileIndex, round.rng);
-    round.state = step.state;
-    const outcome = step.outcome;
-    if (outcome.type === 'correct') {
-      // 计分与判定在点击瞬间完成；动画只是表现，结束后再切换题目或进入结算。
-      this.roundResults = [...this.roundResults, {
-        exerciseId,
-        firstTry: outcome.firstTry,
-        wrongCount: wrongsBefore,
-        score: outcome.gainedScore,
-      }];
-      this.audio.play('correct');
-      this.renderer.applyCorrect(outcome);
-      const delay = outcome.fill ? ELIMINATE_MS + FILL_MS : ELIMINATE_MS;
-      this.session.scheduleTimer('resolve', delay);
-      this.timers.set('resolve', setTimeout(() => this.onTimerFired('resolve'), delay));
-    } else if (outcome.type === 'wrong') {
-      this.audio.play('wrong');
-      this.renderer.applyWrong(outcome);
-      this.session.scheduleTimer('feedback', WRONG_FEEDBACK_MS);
-      this.timers.set('feedback', setTimeout(() => this.onTimerFired('feedback'), WRONG_FEEDBACK_MS));
-    }
-    this.persistSnapshot(); // 每次规则状态变化后更新快照：任意时刻刷新/关闭都可恢复
-  }
-
-  private onTimerFired(kind: TimerKind): void {
-    this.timers.delete(kind);
-    // 竞态兜底：暂停后仍到点的计时器不推进状态，resume() 会按冻结剩余时长重新调度。
-    if (this.session.state === 'paused') return;
-    this.session.clearTimer(kind);
-    const current = this.round;
-    if (!current) return;
-    if (kind === 'resolve') {
-      current.state = completeResolve(current.state);
-      if (current.state.phase === 'finished') {
-        this.session.finishRound();
-        this.renderer.stop();
-        this.showResult(current.state);
-      } else {
-        this.renderer.advanceQuestion(current.state);
-        this.persistSnapshot();
-      }
-    } else {
-      current.state = endWrongFeedback(current.state);
-      this.persistSnapshot();
-    }
-  }
-
-  private showResult(state: RoundState): void {
-    this.round = null;
-    this.audio.play('finish');
-    $('result-score').textContent = `总分 ${state.score}`;
-    $('result-first-try').textContent = `一次通过 ${state.firstTryCount}/${state.questions.length}`;
-    $('result-wrong').textContent = `答错 ${state.totalWrongCount} 次`;
-    this.recordFinishedRound(state); // M5：写入成绩并清除中断快照（预览局不写）
-    this.showScreen('result');
-  }
 }
 
-function boot(): void {
-  const preview = new URLSearchParams(window.location.search).get('preview') === 'candidate';
+async function boot(): Promise<void> {
+  (window as unknown as Record<string, unknown>).__pixelAcademyBooted = true;
+  document.body.inert = true;
   try {
-    const content = loadGameContent();
-    new NumberPuzzleApp(content, preview);
+    const app = new NumberPuzzleApp(loadGameContent(), new URLSearchParams(location.search).get('preview') === 'candidate');
+    await app.initialize();
   } catch (error) {
-    // createLearningCore 校验失败：不得进入可玩状态，按启动失败处理。
-    console.error(error);
-    const message = $('error-message');
-    message.textContent = '内容数据校验失败，游戏无法启动。请检查练习与教材数据后重试。';
-    for (const screen of ['select', 'availability', 'game', 'result'] as const) {
-      $(`screen-${screen}`).hidden = true;
-    }
-    $('screen-error').hidden = false;
-  } finally {
-    // 主模块已加载执行：置位启动标记，index.html 内联兜底脚本据此区分
-    // 「模块加载失败（离线资源缺失）」与「应用级错误」（M6）。
-    (window as unknown as { __pixelAcademyBooted?: boolean }).__pixelAcademyBooted = true;
-  }
+    $('screen-error').hidden = false; text('error-message', `游戏无法启动：${error instanceof Error ? error.message : String(error)}`);
+    (window as unknown as Record<string, unknown>).__pixelAcademyBooted = true;
+  } finally { document.body.inert = false; }
 }
-
-boot();
+void boot();

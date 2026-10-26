@@ -1,0 +1,333 @@
+{
+  "fixtureCoins": 1000,
+  "courseBalances": [
+    1010,
+    1020,
+    1030,
+    1040,
+    1050
+  ],
+  "purchased": {
+    "schemaVersion": 2,
+    "revision": 67,
+    "coins": 574,
+    "nickname": "雪地园丁",
+    "cards": {
+      "time": 1,
+      "hint": 1,
+      "revive": 0,
+      "rename": 0
+    },
+    "avatars": [
+      "lanlan",
+      "cat",
+      "rabbit",
+      "owl"
+    ],
+    "skins": [
+      "garden",
+      "autumn",
+      "snow"
+    ],
+    "avatar": "lanlan",
+    "skin": "snow",
+    "grades": [
+      1,
+      2
+    ],
+    "soundOn": true,
+    "legacyRecords": [],
+    "records": [],
+    "settledRounds": [],
+    "recentIds": [
+      "generated-v1:MAP-008:3-3",
+      "generated-v1:MAP-011:47-3-7",
+      "generated-v1:MAP-013:3*3",
+      "generated-v1:MAP-008:5-2",
+      "generated-v1:MAP-011:27+3-3",
+      "generated-v1:MAP-010:1+9",
+      "generated-v1:MAP-011:73+3+3",
+      "generated-v1:MAP-007:0+0",
+      "generated-v1:MAP-013:2*5",
+      "generated-v1:MAP-006:6"
+    ],
+    "courses": {
+      "numbers": {
+        "stage": "completed",
+        "rewarded": true
+      },
+      "addition": {
+        "stage": "completed",
+        "rewarded": true
+      },
+      "subtraction": {
+        "stage": "completed",
+        "rewarded": true
+      },
+      "chain": {
+        "stage": "completed",
+        "rewarded": true
+      },
+      "dots": {
+        "stage": "completed",
+        "rewarded": true
+      }
+    },
+    "mistakes": {
+      "binary:-:3:3": {
+        "exercise": {
+          "id": "generated-v1:MAP-008:3-3",
+          "subject": "math",
+          "mappingIds": [
+            "MAP-008"
+          ],
+          "gameIds": [
+            "number-puzzle"
+          ],
+          "task": {
+            "kind": "binary",
+            "operator": "-",
+            "left": 3,
+            "right": 3
+          },
+          "review": {
+            "status": "approved",
+            "reviewer": "Codex（代理规则审核）",
+            "reviewedAt": "2026-10-26T06:11:53Z"
+          }
+        },
+        "grade": 1,
+        "wrongs": 2,
+        "timeouts": 0,
+        "mastered": false,
+        "rewarded": false
+      }
+    },
+    "challenge": {
+      "id": "97aed3f6-6e17-4d09-8593-10638bf0fb76",
+      "grades": [
+        1,
+        2
+      ],
+      "state": {
+        "phase": "ready",
+        "questions": [
+          {
+            "exerciseId": "generated-v1:MAP-008:3-3",
+            "task": {
+              "kind": "binary",
+              "operator": "-",
+              "left": 3,
+              "right": 3
+            },
+            "tier": "A"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-011:47-3-7",
+            "task": {
+              "kind": "chain",
+              "start": 47,
+              "steps": [
+                {
+                  "operator": "-",
+                  "operand": 3
+                },
+                {
+                  "operator": "-",
+                  "operand": 7
+                }
+              ]
+            },
+            "tier": "B"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-013:3*3",
+            "task": {
+              "kind": "binary",
+              "operator": "*",
+              "left": 3,
+              "right": 3
+            },
+            "tier": "B"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-008:5-2",
+            "task": {
+              "kind": "binary",
+              "operator": "-",
+              "left": 5,
+              "right": 2
+            },
+            "tier": "A"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-011:27+3-3",
+            "task": {
+              "kind": "chain",
+              "start": 27,
+              "steps": [
+                {
+                  "operator": "+",
+                  "operand": 3
+                },
+                {
+                  "operator": "-",
+                  "operand": 3
+                }
+              ]
+            },
+            "tier": "B"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-010:1+9",
+            "task": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 1,
+              "right": 9
+            },
+            "tier": "A"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-011:73+3+3",
+            "task": {
+              "kind": "chain",
+              "start": 73,
+              "steps": [
+                {
+                  "operator": "+",
+                  "operand": 3
+                },
+                {
+                  "operator": "+",
+                  "operand": 3
+                }
+              ]
+            },
+            "tier": "B"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-007:0+0",
+            "task": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 0,
+              "right": 0
+            },
+            "tier": "A"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-013:2*5",
+            "task": {
+              "kind": "binary",
+              "operator": "*",
+              "left": 2,
+              "right": 5
+            },
+            "tier": "B"
+          },
+          {
+            "exerciseId": "generated-v1:MAP-006:6",
+            "task": {
+              "kind": "number",
+              "value": 6
+            },
+            "tier": "A"
+          }
+        ],
+        "questionIndex": 0,
+        "board": [
+          0,
+          1,
+          10,
+          4,
+          1,
+          5,
+          10,
+          2,
+          5,
+          2,
+          3,
+          0
+        ],
+        "score": 0,
+        "firstTryCount": 0,
+        "totalWrongCount": 2,
+        "currentWrongCount": 2,
+        "totalTimeoutCount": 0,
+        "revivals": 2,
+        "assisted": true,
+        "hintUsed": true,
+        "timeUsed": true,
+        "interruption": "wrong",
+        "result": null
+      },
+      "rngState": 4116506454,
+      "contentVersion": "generated-v1",
+      "paused": false,
+      "remainingMs": 10000,
+      "deadline": null,
+      "timerKind": null
+    },
+    "practice": null
+  },
+  "sizes": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "readyOutsideBoard": true,
+      "canvasVisible": true
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "readyOutsideBoard": true,
+      "canvasVisible": true
+    },
+    {
+      "width": 412,
+      "scrollWidth": 412,
+      "readyOutsideBoard": true,
+      "canvasVisible": true
+    },
+    {
+      "width": 568,
+      "scrollWidth": 568,
+      "readyOutsideBoard": true,
+      "canvasVisible": true
+    },
+    {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "readyOutsideBoard": true,
+      "canvasVisible": true
+    }
+  ],
+  "timedOut": {
+    "id": "97aed3f6-6e17-4d09-8593-10638bf0fb76",
+    "at": "2026-10-26T07:53:49.218Z",
+    "score": 0,
+    "firstTryCount": 0,
+    "totalWrongCount": 2,
+    "totalTimeoutCount": 1,
+    "revivals": 2,
+    "completed": 0,
+    "total": 10,
+    "passed": false,
+    "coins": 0
+  },
+  "offline": {
+    "id": "e9111b76-7b3d-48a7-a571-d5586ec77705",
+    "at": "2026-10-26T07:54:03.369Z",
+    "score": 100,
+    "firstTryCount": 10,
+    "totalWrongCount": 0,
+    "totalTimeoutCount": 0,
+    "revivals": 0,
+    "completed": 10,
+    "total": 10,
+    "passed": true,
+    "coins": 30
+  },
+  "errors": []
+}

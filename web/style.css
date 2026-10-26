@@ -269,3 +269,40 @@ button:focus-visible, input:focus-visible { outline: 3px solid #0767b4; outline-
 }
 
 .records-list li.records-more { border-style: dashed; color: var(--muted); }
+
+/* 钱包与学习入口沿用数字花园的纸色卡片和实体按钮。 */
+.player-bar { display:flex; gap:12px; align-items:center; padding:8px 0 14px; }
+.avatar-art { display:inline-block; width:52px; height:52px; flex-shrink:0; }
+.avatar-art svg { width:100%; height:100%; }
+.avatar-art.large { width:150px; height:150px; margin:16px auto; display:block; }
+#main-nav { margin-bottom:14px; }
+.card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:14px; margin:16px 0; }
+.product-card { padding:16px; background:#fffbe5; border:2px solid #71522e; border-radius:8px; }
+.product-card h3 { margin:8px 0; }
+.product-card button { margin:5px 6px 5px 0; }
+.countdown { font-weight:700; font-size:1.2rem; margin:8px 0; font-variant-numeric:tabular-nums; }
+.challenge-tools { margin-bottom:12px; }
+.challenge-tools .hint { margin:8px 0; }
+#app-notice { white-space:pre-line; }
+#nickname, #review-filter { font:inherit; padding:12px; max-width:100%; border:2px solid #71522e; border-radius:5px; background:#fffbe5; color:#193b38; }
+#nickname { display:block; width:100%; box-sizing:border-box; margin:8px 0; }
+.example { white-space:pre-line; line-height:1.8; background:#eef3da; padding:14px; }
+dialog { color:#193b38; background:#fffbe5; border:3px solid #71522e; border-radius:10px; padding:22px; width:min(460px,calc(100% - 44px)); max-height:85dvh; overflow:auto; box-sizing:border-box; }
+dialog::backdrop { background:rgb(19 46 41 / 65%); }
+dialog p { line-height:1.7; }
+.skin-preview canvas { display:block; width: min(100%, 240px); height:auto; margin:auto; }
+body[data-skin="autumn"] .app { background:#e8c38c; }
+body[data-skin="snow"] .app { background:#bcdad8; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid #1c6653; outline-offset:4px; }
+[hidden] { display:none !important; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+body[data-screen="game"] .console-label, body[data-screen="game"] .app-header { display:none; }
+body[data-screen="game"] .player-bar { padding:0; gap:8px; }
+body[data-screen="game"] .player-bar .avatar-art { width:28px; height:28px; }
+body[data-screen="game"] #offline-notice:not(.status-warning) { display:none; }
+body[data-screen="game"] .status { padding:6px 10px; margin:6px 0; }
+body[data-screen="game"] .garden-label { display:none; }
+body[data-screen="game"] .game-top { justify-content:flex-end; min-height:32px; }
+body[data-screen="game"] #btn-sound { min-height:36px; font-size:13px; padding:4px 10px; }
+body[data-screen="game"] #game-mode { margin:4px 0; }
+body[data-screen="game"] .challenge-tools { margin-bottom:6px; }

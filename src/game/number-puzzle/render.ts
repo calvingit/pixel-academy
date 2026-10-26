@@ -7,7 +7,7 @@ import { drawNumberGarden } from './garden.js';
 import { answerFor } from '../../learning/evaluation.js';
 import type { MathTask } from '../../learning/models.js';
 import {
-  BOARD_TILES, BOARD_COLUMNS, ELIMINATE_MS, FILL_MS, WRONG_FEEDBACK_MS,
+  BOARD_TILES, BOARD_COLUMNS, ELIMINATE_MS, FILL_MS,
 } from './rules.js';
 import type { ClickOutcome, RoundState } from './rules.js';
 
@@ -34,26 +34,21 @@ const COLOR = {
   tileFill: '#a9e5ff',
   tileStroke: '#193b38',
   tileShadow: '#254342',
-  wrongFill: '#fde3e0',
-  wrongStroke: '#b3271e',
-  wrongText: '#b3271e',
   success: '#1c7c43',
   hintStroke: '#795016',
   muted: '#526b60',
 };
 
-/** 题面下方反馈条：kind 决定 ✓/✗ 形状与颜色，text 提供文案冗余（不依赖颜色单独传达）。 */
-type Feedback = { kind: 'wrong'; text: string } | { kind: 'correct'; text: string };
-
-type Anim =
-  | { type: 'resolve'; start: number; removedValue: number; fill: { index: number; value: number } | null }
-  | { type: 'shake'; start: number };
+type Anim = { start: number; removedValue: number; fill: { index: number; value: number } | null };
 
 export interface RendererCallbacks {
   onTileClick: (tileIndex: number) => void;
 }
 
 export class NumberPuzzleRenderer {
+  private skin: 'garden' | 'autumn' | 'snow' = 'garden';
+  private focusedTile = 0;
+  setSkin(skin: 'garden' | 'autumn' | 'snow'): void { this.skin = skin; }
   private readonly ctx: CanvasRenderingContext2D;
   private readonly canvas: HTMLCanvasElement;
   private readonly callbacks: RendererCallbacks;
@@ -62,11 +57,10 @@ export class NumberPuzzleRenderer {
   private totalQuestions = 0;
   private task: MathTask | null = null;
   private score = 0;
-  private feedback: Feedback | null = null;
+  private feedback: string | null = null;
   private hintActive = false;
   private hintAnswer: number | null = null;
   private readonly anims = new Map<number, Anim>();
-  private pendingGuarantee: { index: number; to: number } | null = null;
   private rafId: number | null = null;
   private pausedAt: number | null = null;
   private lastDisplaySize: { width: number; height: number } | null = null;
@@ -82,6 +76,18 @@ export class NumberPuzzleRenderer {
     canvas.height = LOGICAL_H * ratio;
     ctx.setTransform(canvas.width / LOGICAL_W, 0, 0, canvas.height / LOGICAL_H, 0, 0);
     canvas.addEventListener('pointerdown', event => this.handlePointer(event));
+    canvas.tabIndex = 0;
+    canvas.setAttribute('role', 'group');
+    canvas.setAttribute('aria-describedby', 'game-task');
+    canvas.addEventListener('keydown', event => {
+      const move: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -BOARD_COLUMNS, ArrowDown: BOARD_COLUMNS };
+      if (event.key in move) {
+        event.preventDefault(); this.focusedTile = (this.focusedTile + move[event.key]! + BOARD_TILES) % BOARD_TILES;
+        this.updateAccessibleLabel();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault(); this.callbacks.onTileClick(this.focusedTile);
+      }
+    });
   }
 
   /** 新一局开始：视图整体同步到规则状态，无动画；同时清掉上一局遗留的暂停冻结。 */
@@ -92,55 +98,28 @@ export class NumberPuzzleRenderer {
     this.syncQuestion(state);
     this.score = state.score;
     this.anims.clear();
-    this.pendingGuarantee = null;
     this.pausedAt = null;
+    this.updateAccessibleLabel();
+  }
+
+  private updateAccessibleLabel(): void {
+    this.canvas.setAttribute('aria-label', `数字棋盘，按行排列：${this.slots.map(n => n ?? '空位').join('、')}。当前选择 ${this.slots[this.focusedTile] ?? '空位'}`);
   }
 
   /** 答对：计分即时体现；消除 → 补块动画按规则常量播放；反馈条带 ✓ 与文案。 */
   applyCorrect(outcome: Extract<ClickOutcome, { type: 'correct' }>): void {
     this.score = outcome.score;
     this.anims.set(outcome.tileIndex, {
-      type: 'resolve',
       start: performance.now(),
       removedValue: outcome.removedValue,
       fill: outcome.fill,
     });
-    this.pendingGuarantee = outcome.guarantee ? { index: outcome.guarantee.index, to: outcome.guarantee.to } : null;
-    this.feedback = { kind: 'correct', text: `答对了 +${outcome.gainedScore}` };
-  }
-
-  /** 答错：被点块抖动变色，题目区提示「再想一想」带 ✗；达到阈值时高亮答案块。 */
-  applyWrong(outcome: Extract<ClickOutcome, { type: 'wrong' }>): void {
-    this.anims.set(outcome.tileIndex, { type: 'shake', start: performance.now() });
-    this.feedback = { kind: 'wrong', text: '再想一想' };
-    this.hintActive = outcome.hintActive;
-    if (this.hintActive && this.task) this.hintAnswer = answerFor(this.task);
-  }
-
-  /**
-   * 消除与补块动画结束后：切换题目区、应用保证规则替换（即时生效，无动画）。
-   * 本方法由宿主在动画时长结束后调用，可能先于最后一帧 rAF 执行；必须先落补块值
-   * 并完成补块动画，再应用替换，否则迟到的动画尾帧会用补块值覆盖替换结果，
-   * 在替换位与补块位重合时把下一题答案从棋盘上抹掉（渲染竞态，形成无解局面）。
-   */
-  advanceQuestion(state: RoundState): void {
-    this.questionIndex = Math.min(state.questionIndex, state.questions.length - 1);
-    this.syncQuestion(state);
-    for (const [index, anim] of this.anims) {
-      if (anim.type === 'resolve') {
-        if (anim.fill) this.slots[index] = anim.fill.value;
-        this.anims.delete(index);
-      }
-    }
-    if (this.pendingGuarantee) {
-      this.slots[this.pendingGuarantee.index] = this.pendingGuarantee.to;
-      this.pendingGuarantee = null;
-    }
+    this.feedback = `答对了 +${outcome.gainedScore}`;
   }
 
   /**
    * 暂停：冻结动画时间轴并停止渲染循环。动画起点整体后移由 resume() 完成，
-   * 保证消除/抖动动画从冻结处继续，而宿主计时器（session）冻结同一时刻的剩余时长。
+   * 保证消除动画从冻结处继续，而宿主计时器（session）冻结同一时刻的剩余时长。
    */
   pause(): void {
     if (this.pausedAt === null) {
@@ -200,7 +179,7 @@ export class NumberPuzzleRenderer {
     const question = state.questions[this.questionIndex];
     this.task = question ? question.task : null;
     this.feedback = null;
-    this.hintActive = state.currentWrongCount >= 3;
+    this.hintActive = state.hintUsed;
     this.hintAnswer = this.hintActive && this.task ? answerFor(this.task) : null;
   }
 
@@ -224,7 +203,7 @@ export class NumberPuzzleRenderer {
   private draw(now: number): void {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
-    drawNumberGarden(ctx);
+    drawNumberGarden(ctx, this.skin);
     this.drawHud();
     if (this.task) this.drawTask(this.task);
     this.drawFeedback();
@@ -325,12 +304,12 @@ export class NumberPuzzleRenderer {
     ctx.fillText(text, area.x + area.w / 2, area.y + area.h / 2);
   }
 
-  /** 反馈条：✓/✗ 形状 + 文案双通道（docs/design.md「布局与输入」，不只靠颜色或声音）。 */
+  /** 答对反馈条：✓ 形状 + 文案双通道（docs/design.md「布局与输入」，不只靠颜色或声音）。 */
   private drawFeedback(): void {
     if (!this.feedback) return;
     const ctx = this.ctx;
-    const { kind, text } = this.feedback;
-    const color = kind === 'correct' ? COLOR.success : COLOR.wrongText;
+    const text = this.feedback;
+    const color = COLOR.success;
     ctx.fillStyle = COLOR.card;
     ctx.fillRect(12, FEEDBACK_Y - 12, 336, 25);
     ctx.font = `bold 16px ${FONT_STACK}`;
@@ -347,18 +326,9 @@ export class NumberPuzzleRenderer {
     ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.beginPath();
-    if (kind === 'correct') {
-      // ✓：三段折线。
-      ctx.moveTo(gcx - 6, cy + 1);
-      ctx.lineTo(gcx - 1.5, cy + 6);
-      ctx.lineTo(gcx + 7, cy - 6);
-    } else {
-      // ✗：两段交叉线。
-      ctx.moveTo(gcx - 6, cy - 6);
-      ctx.lineTo(gcx + 6, cy + 6);
-      ctx.moveTo(gcx + 6, cy - 6);
-      ctx.lineTo(gcx - 6, cy + 6);
-    }
+    ctx.moveTo(gcx - 6, cy + 1);
+    ctx.lineTo(gcx - 1.5, cy + 6);
+    ctx.lineTo(gcx + 7, cy - 6);
     ctx.stroke();
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
@@ -380,13 +350,13 @@ export class NumberPuzzleRenderer {
 
   private drawTile(
     x: number, y: number, value: number | null,
-    options: { scale?: number; alpha?: number; dx?: number; dy?: number; wrong?: boolean; hintPhase?: number | undefined } = {},
+    options: { scale?: number; alpha?: number; dy?: number; hintPhase?: number | undefined } = {},
   ): void {
     const ctx = this.ctx;
     const scale = options.scale ?? 1;
     const alpha = options.alpha ?? 1;
     if (value === null || scale <= 0 || alpha <= 0) return;
-    const cx = x + TILE_W / 2 + (options.dx ?? 0);
+    const cx = x + TILE_W / 2;
     const cy = y + TILE_H / 2 + (options.dy ?? 0);
     const w = TILE_W * scale;
     const h = TILE_H * scale;
@@ -397,9 +367,9 @@ export class NumberPuzzleRenderer {
     ctx.fillStyle = COLOR.tileShadow;
     ctx.fill();
     this.roundRect(cx - w / 2, cy - h / 2, w, h, 10 * scale);
-    ctx.fillStyle = options.wrong ? COLOR.wrongFill : COLOR.tileFill;
+    ctx.fillStyle = COLOR.tileFill;
     ctx.fill();
-    if (!options.wrong) {
+    {
       ctx.fillStyle = '#d5f3ff';
       ctx.fillRect(cx - w / 2 + 6 * scale, cy - h / 2 + 6 * scale, w - 12 * scale, 4 * scale);
       ctx.fillStyle = '#69b9d3';
@@ -407,12 +377,12 @@ export class NumberPuzzleRenderer {
     }
     ctx.lineWidth = 3;
     if (options.hintPhase !== undefined) {
-      ctx.strokeStyle = options.wrong ? COLOR.wrongStroke : COLOR.hintStroke;
+      ctx.strokeStyle = COLOR.hintStroke;
       ctx.globalAlpha = alpha * (0.35 + 0.65 * options.hintPhase);
       ctx.lineWidth = 3 + 2 * options.hintPhase;
       ctx.stroke();
     } else {
-      ctx.strokeStyle = options.wrong ? COLOR.wrongStroke : COLOR.tileStroke;
+      ctx.strokeStyle = COLOR.tileStroke;
       ctx.stroke();
     }
     const digits = String(value);
@@ -420,7 +390,7 @@ export class NumberPuzzleRenderer {
     ctx.font = `bold ${Math.round(size * scale)}px ${FONT_STACK}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = options.wrong ? COLOR.wrongStroke : COLOR.panel;
+    ctx.fillStyle = COLOR.panel;
     ctx.fillText(digits, cx, cy + 1);
     ctx.restore();
   }
@@ -433,7 +403,7 @@ export class NumberPuzzleRenderer {
       const x = BOARD_X0 + col * (TILE_W + TILE_GAP);
       const y = BOARD_Y0 + row * (TILE_H + TILE_GAP);
       const anim = this.anims.get(i);
-      if (anim && anim.type === 'resolve') {
+      if (anim) {
         const t = now - anim.start;
         if (t < ELIMINATE_MS) {
           const p = t / ELIMINATE_MS;
@@ -449,16 +419,13 @@ export class NumberPuzzleRenderer {
         }
         continue;
       }
-      if (anim && anim.type === 'shake') {
-        const t = now - anim.start;
-        if (t < WRONG_FEEDBACK_MS) {
-          const dx = Math.sin((t / WRONG_FEEDBACK_MS) * Math.PI * 6) * 7 * (1 - t / WRONG_FEEDBACK_MS);
-          this.drawTile(x, y, this.slots[i] ?? null, { dx, wrong: true });
-          continue;
-        }
-        this.anims.delete(i);
-      }
       this.drawTile(x, y, this.slots[i] ?? null, { hintPhase: this.hintPhaseFor(i, hintPhase) });
+    }
+    if (this.canvas === document.activeElement) {
+      const x = BOARD_X0 + this.focusedTile % BOARD_COLUMNS * (TILE_W + TILE_GAP);
+      const y = BOARD_Y0 + Math.floor(this.focusedTile / BOARD_COLUMNS) * (TILE_H + TILE_GAP);
+      this.ctx.save(); this.ctx.strokeStyle = '#193b38'; this.ctx.lineWidth = 2; this.ctx.setLineDash([4, 4]);
+      this.ctx.strokeRect(x + 6, y + 6, TILE_W - 12, TILE_H - 12); this.ctx.restore();
     }
   }
 

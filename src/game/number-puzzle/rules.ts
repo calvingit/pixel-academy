@@ -1,4 +1,4 @@
-// 数字消除单局规则（docs/gameplay-number-puzzle.md 为唯一权威）。
+// 数字消除单局规则；挑战与经济边界见 docs/gameplay-learning-economy.md。
 // 本模块是纯逻辑：不依赖 DOM、Canvas、存储或计时器；动画时长常量仅作登记，
 // 由渲染层读取使用，判题与计分不依赖动画是否完成。
 import type { Exercise, Grade, MathTask } from '../../learning/models.js';
@@ -15,9 +15,12 @@ export const QUESTIONS_PER_ROUND = 10;
 export const START_THRESHOLD = 5;
 export const FIRST_TRY_SCORE = 10;
 export const RETRY_SCORE = 5;
-export const HINT_THRESHOLD = 3;
+export const HINT_THRESHOLD = 2;
+export const QUESTION_MS = 10_000;
+export const EXTRA_TIME_MS = 5_000;
+export const MAX_REVIVALS = 2;
+export const RULES_VERSION = 'challenge-v1';
 export const SAME_VALUE_CAP = 2;
-export const WRONG_FEEDBACK_MS = 300;
 export const ELIMINATE_MS = 400;
 export const FILL_MS = 200;
 
@@ -47,10 +50,10 @@ export type BoardSlot = number | null;
 /**
  * questionIndex 指向「完成当前消除动画后将展示的题」：
  * asking 期间即当前题；答对后立即指向下一题（终局时等于 questions.length），
- * resoling 动画期间渲染层仍显示上一题，输入由 phase 拦截。
+ * resolving 动画期间渲染层仍显示上一题，输入由 phase 拦截。
  */
 export interface RoundState {
-  readonly phase: 'asking' | 'wrong-feedback' | 'resolving' | 'finished';
+  readonly phase: 'ready' | 'asking' | 'interrupted' | 'resolving' | 'finished';
   readonly questions: readonly RoundQuestion[];
   readonly questionIndex: number;
   readonly board: readonly BoardSlot[];
@@ -58,6 +61,13 @@ export interface RoundState {
   readonly firstTryCount: number;
   readonly totalWrongCount: number;
   readonly currentWrongCount: number;
+  readonly totalTimeoutCount: number;
+  readonly revivals: number;
+  readonly assisted: boolean;
+  readonly hintUsed: boolean;
+  readonly timeUsed: boolean;
+  readonly interruption: 'wrong' | 'timeout' | null;
+  readonly result: 'passed' | 'failed' | null;
 }
 
 export interface RoundSetup {
@@ -155,6 +165,8 @@ export function createRound(setup: RoundSetup): RoundState {
     firstTryCount: 0,
     totalWrongCount: 0,
     currentWrongCount: 0,
+    totalTimeoutCount: 0, revivals: 0, assisted: false, hintUsed: false, timeUsed: false,
+    interruption: null, result: null,
   };
 }
 
@@ -165,7 +177,7 @@ export interface ClickResult {
 
 /**
  * 点选一个数字块。判定发生在点击瞬间，只看被点块的数值；
- * 非 asking 阶段（答错反馈 300ms、答对消除补块约 600ms、已结束）一律忽略，
+ * 非 asking 阶段（准备、复活选择、答对消除补块、已结束）一律忽略，
  * 不计分、不判错、不累计错误数。答对即锁定该题：计分、消除、补块与
  * 下一题的保证规则都在本次转移内完成，动画只是表现。
  */
@@ -181,14 +193,16 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
     return {
       state: {
         ...state,
-        phase: 'wrong-feedback',
+        phase: state.revivals >= MAX_REVIVALS ? 'finished' : 'interrupted',
         currentWrongCount: wrongCount,
         totalWrongCount: state.totalWrongCount + 1,
+        interruption: 'wrong',
+        result: state.revivals >= MAX_REVIVALS ? 'failed' : null,
       },
-      outcome: { type: 'wrong', tileIndex, wrongCount, hintActive: wrongCount >= HINT_THRESHOLD },
+      outcome: { type: 'wrong', tileIndex, wrongCount, hintActive: state.hintUsed },
     };
   }
-  const firstTry = state.currentWrongCount === 0;
+  const firstTry = state.currentWrongCount === 0 && !state.assisted;
   const gainedScore = firstTry ? FIRST_TRY_SCORE : RETRY_SCORE;
   const score = state.score + gainedScore;
   const isLast = state.questionIndex === state.questions.length - 1;
@@ -216,6 +230,7 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
       score,
       firstTryCount: state.firstTryCount + (firstTry ? 1 : 0),
       currentWrongCount: 0,
+      assisted: false, hintUsed: false, timeUsed: false, interruption: null,
     },
     outcome: {
       type: 'correct',
@@ -232,15 +247,48 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
   };
 }
 
-/** 答错反馈窗口（300ms）结束后由宿主调用，恢复本题判定。 */
-export function endWrongFeedback(state: RoundState): RoundState {
-  if (state.phase !== 'wrong-feedback') return state;
-  return { ...state, phase: 'asking' };
+export function timeoutRound(state: RoundState): RoundState {
+  if (state.phase !== 'asking') return state;
+  return { ...state, phase: state.revivals >= MAX_REVIVALS ? 'finished' : 'interrupted',
+    totalTimeoutCount: state.totalTimeoutCount + 1, interruption: 'timeout',
+    result: state.revivals >= MAX_REVIVALS ? 'failed' : null };
+}
+
+export function reviveRound(state: RoundState): RoundState {
+  if (state.phase !== 'interrupted' || state.revivals >= MAX_REVIVALS) throw new Error('当前不能复活');
+  return { ...state, phase: 'ready', revivals: state.revivals + 1, assisted: true };
+}
+
+export function startQuestion(state: RoundState): RoundState {
+  return state.phase === 'ready' ? { ...state, phase: 'asking' } : state;
+}
+
+export function useHint(state: RoundState): RoundState {
+  if (!['ready', 'asking'].includes(state.phase) || state.totalWrongCount < HINT_THRESHOLD || state.hintUsed) {
+    throw new Error('整局答错 2 次后可使用，每题限一张');
+  }
+  return { ...state, hintUsed: true, assisted: true };
+}
+
+export function useExtraTime(state: RoundState): RoundState {
+  if (state.phase !== 'asking' || state.timeUsed) throw new Error('作答期间每题只能加时一次');
+  return { ...state, timeUsed: true };
+}
+
+export function failRound(state: RoundState): RoundState {
+  return { ...state, phase: 'finished', result: 'failed' };
+}
+
+export function roundReward(state: RoundState): number {
+  if (state.phase !== 'finished') throw new Error('本局尚未结算');
+  return state.firstTryCount * 2 + (state.result === 'passed' ? 5
+    + (state.firstTryCount === state.questions.length ? 5 : 0) : 0);
 }
 
 /** 答对消除与补块动画结束后由宿主调用：进入下一题或结算。 */
 export function completeResolve(state: RoundState): RoundState {
   if (state.phase !== 'resolving') return state;
   const finished = state.questionIndex >= state.questions.length;
-  return { ...state, phase: finished ? 'finished' : 'asking' };
+  return { ...state, phase: finished ? 'finished' : state.totalWrongCount >= HINT_THRESHOLD ? 'ready' : 'asking',
+    result: finished ? 'passed' : null };
 }

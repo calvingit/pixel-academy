@@ -1,0 +1,10 @@
+{
+  "version": "assets-v1-d696dfb928dd",
+  "otherPage": "p3",
+  "coinsBefore": 601,
+  "coinsAfterSinglePurchase": 598,
+  "coinsAfterConflictAndAbort": 598,
+  "updateDeferred": true,
+  "abortRolledBack": true,
+  "deniedStorage": true
+}

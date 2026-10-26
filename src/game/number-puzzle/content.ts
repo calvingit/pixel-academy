@@ -41,8 +41,6 @@ export interface GameContent {
   /** 候选预览取题：包含 draft；仅用于显式预览入口，不作为降级路径。 */
   readonly preview: (grades: readonly Grade[]) => readonly Exercise[];
   readonly gradeOf: (exercise: Exercise) => Grade;
-  /** 旧静态局次的内容版本核对；不用于新正式局次。 */
-  readonly legacySelect: (grades: readonly Grade[]) => readonly Exercise[];
 }
 
 /**
@@ -57,7 +55,6 @@ export function loadGameContent(): GameContent {
     select: grades => generatedCore.selectExercises(query(grades)),
     preview: grades => core.previewExercises(query(grades)),
     gradeOf: createExerciseGradeIndex(catalog),
-    legacySelect: grades => core.selectExercises(query(grades)),
   };
 }
 

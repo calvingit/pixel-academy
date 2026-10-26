@@ -220,6 +220,8 @@ test('collectDistClosure: 覆盖入口、游戏、学习核心与内容数据模
     'dist/game/number-puzzle/rules.js',
     'dist/game/number-puzzle/session.js',
     'dist/game/number-puzzle/storage.js',
+    'dist/game/number-puzzle/profile.js',
+    'dist/game/number-puzzle/learning.js',
     'dist/game/number-puzzle/content.js',
     'dist/game/number-puzzle/audio.js',
     'dist/game/number-puzzle/random.js',

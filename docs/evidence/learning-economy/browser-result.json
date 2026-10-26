@@ -1,0 +1,121 @@
+{
+  "version": "assets-v1-82bd9159c335",
+  "initialCoins": 20,
+  "courseCoins": 30,
+  "failed": {
+    "id": "3f8145bb-89a0-43b9-8db7-41fe89c24387",
+    "at": "2026-10-26T07:41:06.534Z",
+    "score": 5,
+    "firstTryCount": 0,
+    "totalWrongCount": 3,
+    "totalTimeoutCount": 0,
+    "revivals": 2,
+    "completed": 1,
+    "total": 10,
+    "passed": false,
+    "coins": 0
+  },
+  "reviewCoins": 2,
+  "passed": {
+    "id": "e7ca23f4-2709-4d75-929b-c46472af0b64",
+    "at": "2026-10-26T07:41:16.898Z",
+    "score": 100,
+    "firstTryCount": 10,
+    "totalWrongCount": 0,
+    "totalTimeoutCount": 0,
+    "revivals": 0,
+    "completed": 10,
+    "total": 10,
+    "passed": true,
+    "coins": 30
+  },
+  "steps": [
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 2,
+        "right": 8
+      },
+      "index": 9
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 1,
+        "right": 2
+      },
+      "index": 6
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "-",
+        "left": 5,
+        "right": 5
+      },
+      "index": 1
+    },
+    {
+      "question": {
+        "kind": "number",
+        "value": 1
+      },
+      "index": 0
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "-",
+        "left": 3,
+        "right": 3
+      },
+      "index": 0
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 3,
+        "right": 5
+      },
+      "index": 1
+    },
+    {
+      "question": {
+        "kind": "number",
+        "value": 10
+      },
+      "index": 11
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "-",
+        "left": 5,
+        "right": 4
+      },
+      "index": 1
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "+",
+        "left": 0,
+        "right": 10
+      },
+      "index": 1
+    },
+    {
+      "question": {
+        "kind": "binary",
+        "operator": "-",
+        "left": 3,
+        "right": 0
+      },
+      "index": 0
+    }
+  ],
+  "errors": []
+}
