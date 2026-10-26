@@ -2,6 +2,12 @@
 
 本文件定义当前工程可执行的检查，以及未来里程碑需要补充的证据。浏览器验证通过人工或代理驱动的浏览器完成，工程内没有自动浏览器测试工具链。
 
+## 模拟器验证与 Cloudflare 部署（2026-10-27）
+
+用户裁决真机验证以模拟器口径执行、部署定 Cloudflare。Android Chrome 模拟器（Android 14 系统镜像、Chrome 113）经 CDP `Input.dispatchTouchEvent` 真实触摸完成四轮完整 10 题局：localhost 在线（含暂停刷新恢复、重开、弃局）、localhost 断源离线、生产 URL https://pixel-academy.pages.dev 在线与飞行模式离线，均 100/10/0、+30 金币、无溢出无错误、离线提示带版本标记；方法、结果与限制见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)。驱动脚本 `docs/evidence/m7/device-simulators/android-round.mjs` 依赖本机模拟器实例与 adb 转发，不直接重放。
+
+部署：Cloudflare Pages 项目 `pixel-academy` 以 git 集成关联本仓库 main 分支（cf CLI `cf pages create`），构建命令 `npm run build:site`（= `npm run build` + `scripts/stage-site.mjs` 合并 web/ 与 dist/ 为单一产物目录 `dist-site/`），推送自动构建部署。生产 URL 的产物 MIME、SW 注册/接管/离线服务已经模拟器实测；生产环境「版本更新自动采用」未以真实内容变更演练。iOS Safari 模拟器验证待补（需本机 `sudo safaridriver --enable` 开启 Safari 远程自动化）。模拟器证据不代表物理真机。
+
 ## 数学题型扩展（2026-10-26）
 
 当前 `npm run check` 84 项通过。新增 `tests/choice.test.mjs` 对 16,381 道选择题独立求解、穷举每道多选的选择集合，并检查设计中的减法判断、加减算式比较、非法任务、存储、复活与奖励。生成回归覆盖全部 53,224 个正式候选、63 种年级组合、题型配额、语义去重、确定性和恢复；课程回归覆盖 21 节课程。
@@ -39,11 +45,11 @@ npm run check
 | npm run check | typecheck 后执行 test |
 | npm run serve | 先执行 build，再用 Node 内置 http 启动本地静态服务（默认 http://127.0.0.1:4173/，`npm run serve -- 端口号` 可改端口），提供数字消除游戏页面；这也是当前的本地验收入口（M7） |
 
-当前没有 dev、preview、lint、浏览器测试或部署脚本；serve 仅用于本地查看与验收，不是部署方案。新增工具时同步本文件和 package.json。
+当前没有 dev、preview、lint 或浏览器测试脚本；serve 仅用于本地查看与验收；`build:site` 供 Cloudflare Pages 构建使用，不是本地部署方案。新增工具时同步本文件和 package.json。
 
 ## 持续集成
 
-[.github/workflows/check.yml](.github/workflows/check.yml)：push 与 pull request 时在 ubuntu-latest（Node 22）执行 `npm ci` + `npm run check`，与本地同一命令。该工作流于 M7 落盘；截至 M7 交付时未获推送授权、未在 GitHub Actions 上实际运行过，其结论以本地执行输出为准，首次推送后应核对 Actions 运行结果。
+[.github/workflows/check.yml](.github/workflows/check.yml)：push 与 pull request 时在 ubuntu-latest（Node 22）执行 `npm ci` + `npm run check`，与本地同一命令。该工作流已随多次推送实际运行且全部成功（2026-10-27 记录：40244249280、40294867768、40417838804 等多次通过）。
 
 ## 按变更选择验证
 
