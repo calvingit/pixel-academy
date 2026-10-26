@@ -1,8 +1,9 @@
-import type { Exercise, Grade } from '../../learning/models.js';
+import type { Exercise, Grade, MathTask, SubmittedAnswer } from '../../learning/models.js';
 import type { RoundState } from './rules.js';
 import { roundReward } from './rules.js';
 import { parseMathTask, parseFinishedRecord } from './storage.js';
 import type { FinishedRoundRecordV1 } from './storage.js';
+import { isMultiple } from '../../learning/choice.js';
 import { taskIdentity } from './learning.js';
 
 export type Card = 'time' | 'hint' | 'revive' | 'rename';
@@ -18,11 +19,12 @@ export const PRODUCTS: readonly Product[] = [
 ];
 export interface Mistake {
   exercise: Exercise; grade: Grade; wrongs: number; timeouts: number;
-  mastered: boolean; rewarded: boolean;
+  mastered: boolean; rewarded: boolean; lastAnswer?: SubmittedAnswer;
 }
 export interface Practice {
   courseId: string | null; reviewId: string | null; exercises: readonly Exercise[];
   index: number; correct: number; revealed: boolean; answered: boolean; passed: boolean;
+  selectedIds?: readonly string[]; answer?: SubmittedAnswer;
 }
 export interface SavedChallenge {
   id: string; grades: readonly Grade[]; state: RoundState; rngState: number; contentVersion: string;
@@ -68,10 +70,14 @@ export function rename(profile: Profile, input: string): void {
   if (profile.nickname) consume(profile, 'rename');
   profile.nickname = name;
 }
-export function collectMistake(profile: Profile, exercise: Exercise, grade: Grade, reason: 'wrong' | 'timeout'): void {
+export function collectMistake(profile: Profile, exercise: Exercise, grade: Grade, reason: 'wrong' | 'timeout', answer?: SubmittedAnswer): void {
   const id = taskIdentity(exercise.task);
   const entry = profile.mistakes[id] ?? { exercise, grade, wrongs: 0, timeouts: 0, mastered: false, rewarded: false };
-  if (reason === 'wrong') { entry.wrongs++; entry.mastered = false; }
+  entry.grade = grade;
+  if (reason === 'wrong') {
+    entry.wrongs++; entry.mastered = false;
+    if (answer !== undefined) entry.lastAnswer = answer;
+  }
   else { entry.timeouts++; if (!entry.wrongs) entry.mastered = false; }
   profile.mistakes[id] = entry;
 }
@@ -114,6 +120,15 @@ function validExercise(x: unknown): x is Exercise {
     && strings(x.gameIds) && parseMathTask(x.task) !== null && object(x.review) && x.review.status === 'approved'
     && typeof x.review.reviewer === 'string' && typeof x.review.reviewedAt === 'string';
 }
+function validSelection(task: MathTask, selected: unknown): boolean {
+  return Array.isArray(selected) && selected.every(id => typeof id === 'string') && new Set(selected).size === selected.length
+    && (selected.length === 0 || task.kind === 'choice' && isMultiple(task) && selected.every(id => task.options.some(o => o.id === id)));
+}
+function validAnswer(task: MathTask, answer: unknown): boolean {
+  if (task.kind !== 'choice') return typeof answer === 'number' && Number.isSafeInteger(answer);
+  if (isMultiple(task)) return validSelection(task, answer) && (answer as string[]).length > 0;
+  return typeof answer === 'string' && task.options.some(o => o.id === answer);
+}
 function validRound(x: unknown): x is RoundState {
   if (!object(x) || !['ready', 'asking', 'interrupted', 'resolving', 'finished'].includes(String(x.phase))
     || !Array.isArray(x.questions) || x.questions.length < 1 || x.questions.length > 10
@@ -128,6 +143,8 @@ function validRound(x: unknown): x is RoundState {
     || (x.currentWrongCount as number) > (x.totalWrongCount as number)
     || x.hintUsed === true && x.assisted !== true
     || x.phase === 'interrupted' && (x.interruption === null || (x.revivals as number) >= 2)) return false;
+  const current = x.questions[Math.min(x.questionIndex as number, x.questions.length - 1)] as { task: MathTask };
+  if (x.selectedIds !== undefined && !validSelection(current.task, x.selectedIds)) return false;
   return x.phase === 'finished' ? x.result !== null : x.result === null && (x.phase === 'resolving' || (x.questionIndex as number) < x.questions.length);
 }
 export function parseProfile(value: unknown): Profile {
@@ -145,7 +162,8 @@ export function parseProfile(value: unknown): Profile {
   for (const progress of Object.values(value.courses)) if (!object(progress) || !['reading', 'example', 'practice', 'completed'].includes(String(progress.stage)) || typeof progress.rewarded !== 'boolean') throw new Error('课程进度损坏');
   for (const [id, entry] of Object.entries(value.mistakes)) {
     if (!object(entry) || !validExercise(entry.exercise) || taskIdentity(entry.exercise.task) !== id || !integer(entry.wrongs) || !integer(entry.timeouts)
-      || !Number.isInteger(entry.grade) || Number(entry.grade) < 1 || Number(entry.grade) > 6 || typeof entry.mastered !== 'boolean' || typeof entry.rewarded !== 'boolean') throw new Error('错题记录损坏');
+      || !Number.isInteger(entry.grade) || Number(entry.grade) < 1 || Number(entry.grade) > 6 || typeof entry.mastered !== 'boolean' || typeof entry.rewarded !== 'boolean'
+      || entry.lastAnswer !== undefined && !validAnswer(entry.exercise.task, entry.lastAnswer)) throw new Error('错题记录损坏');
   }
   if (value.challenge !== null) {
     const c = value.challenge;
@@ -164,6 +182,9 @@ export function parseProfile(value: unknown): Profile {
       || !Array.isArray(p.exercises) || p.exercises.length < 1 || p.exercises.length > 3 || !p.exercises.every(validExercise)
       || !integer(p.index) || p.index >= p.exercises.length || !integer(p.correct) || p.correct > p.exercises.length
       || !['revealed', 'answered', 'passed'].every(k => typeof p[k] === 'boolean')) throw new Error('练习存档损坏');
+    const task = (p.exercises[p.index] as Exercise).task;
+    if (p.selectedIds !== undefined && !validSelection(task, p.selectedIds)
+      || p.answer !== undefined && !validAnswer(task, p.answer)) throw new Error('练习答案损坏');
   }
   return value as unknown as Profile;
 }

@@ -1,6 +1,7 @@
-import type { Exercise, Grade } from '../../learning/models.js';
+import type { Exercise, Grade, ChoiceTask, SubmittedAnswer } from '../../learning/models.js';
+import { correctOptionIds, isMultiple, optionText } from '../../learning/choice.js';
 import { evaluateAnswer } from '../../learning/evaluation.js';
-import { createRound, clickTile, completeResolve, timeoutRound, reviveRound, startQuestion, useHint,
+import { createRound, clickTile, toggleOption, submitChoice, completeResolve, timeoutRound, reviveRound, startQuestion, useHint,
   useExtraTime, failRound, QUESTION_MS, EXTRA_TIME_MS, ELIMINATE_MS, FILL_MS, RULES_VERSION } from './rules.js';
 import type { RoundState, ClickOutcome } from './rules.js';
 import { createRuntimeRng, restoreSeededRng } from './random.js';
@@ -14,7 +15,7 @@ import { LegacyStorage } from './storage.js';
 import { createProfile, openProfileStore, ConflictError, PersistenceError, PRODUCTS, buy, consume, rename,
   collectMistake, rewardCourse, rewardReview, settleChallenge } from './profile.js';
 import type { Profile, ProfileStore, SavedChallenge, Product, Avatar, Skin } from './profile.js';
-import { COURSES, selectCourseExercises, taskIdentity, taskText, explainTask } from './learning.js';
+import { COURSES, selectCourseExercises, taskIdentity, taskText, explainTask, answerFeedback } from './learning.js';
 import { decideUpdateAdoption, describeOfflineStatus, planAdoptionExecution } from './offline.js';
 import type { OfflinePhase, UpdateScreen } from './offline.js';
 
@@ -141,14 +142,19 @@ class NumberPuzzleApp {
     this.session.start(c, kind, milliseconds);
   }
   private wireUi(): void {
+    $('btn-menu').onclick = () => ($('menu-dialog') as HTMLDialogElement).showModal();
+    $('btn-explanation-close').onclick = () => ($('explanation-dialog') as HTMLDialogElement).close();
+    $('btn-menu-close').onclick = () => ($('menu-dialog') as HTMLDialogElement).close();
+    new ResizeObserver(() => this.fitBoard()).observe($('board-wrap'));
     for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) input.addEventListener('change', () => this.run(async () => {
       const grades = ALL_GRADES.filter(g => document.querySelector<HTMLInputElement>(`input[name="grade"][value="${g}"]`)?.checked);
       await this.change(p => { p.grades = grades; });
     }));
-    for (const id of ['shop', 'courses', 'review', 'profile'] as const) $(`btn-open-${id}`).onclick = () => { this.courseId = null; this.showScreen(id); };
+    for (const id of ['shop', 'courses', 'review', 'profile'] as const) $(`btn-open-${id}`).onclick = () => { this.courseId = null; ($('menu-dialog') as HTMLDialogElement).close(); this.showScreen(id); };
     for (const element of document.querySelectorAll<HTMLButtonElement>('[data-home]')) element.onclick = () => this.showScreen('select');
     $('btn-to-availability').onclick = () => this.showScreen('availability');
     $('btn-back-select').onclick = () => this.showScreen('select');
+    $('btn-choice-submit').onclick = () => this.run(() => this.choose());
     $('btn-start').onclick = () => this.run(() => this.startRound());
     $('btn-again').onclick = () => this.run(() => this.startRound());
     $('btn-return').onclick = () => this.showScreen('select');
@@ -187,7 +193,8 @@ class NumberPuzzleApp {
     }); };
     $('review-filter').onchange = () => { this.reviewFilter = ($('review-filter') as HTMLSelectElement).value; this.renderReview(); };
     $('btn-practice-explain').onclick = () => this.run(async () => {
-      await this.change(p => { p.practice!.revealed = true; p.practice!.passed = false; });
+      if (!this.profile.practice!.revealed && !this.profile.practice!.answered) await this.change(p => { p.practice!.revealed = true; p.practice!.passed = false; });
+      ($('explanation-dialog') as HTMLDialogElement).showModal();
     });
     $('btn-practice-next').onclick = () => this.run(() => this.nextPractice());
     $('btn-mastered').onclick = () => this.run(async () => {
@@ -223,6 +230,7 @@ class NumberPuzzleApp {
     if (id === 'result') this.audio.play('finish');
     for (const section of document.querySelectorAll<HTMLElement>('.screen')) section.hidden = section.id !== `screen-${id}`;
     if (id !== 'game') this.renderer.stop();
+    window.scrollTo({ top: 0, behavior: 'instant' });
     this.render();
     if (this.updateWaiting) this.evaluateUpdateAdoption();
   }
@@ -235,10 +243,14 @@ class NumberPuzzleApp {
     $('result-preview-note').hidden = !this.preview;
     $('records-section').hidden = this.preview;
     $('main-nav').hidden = this.preview || this.screen === 'game';
+    for (const [screen, id] of Object.entries({ courses: 'btn-open-courses', review: 'btn-open-review', shop: 'btn-open-shop', profile: 'btn-open-profile' })) {
+      if (this.screen === screen) $(id).setAttribute('aria-current', 'page');
+      else $(id).removeAttribute('aria-current');
+    }
     for (const input of document.querySelectorAll<HTMLInputElement>('input[name="grade"]')) input.checked = this.profile.grades.includes(Number(input.value) as Grade);
     ($('btn-to-availability') as HTMLButtonElement).disabled = !this.profile.grades.length;
     $('select-empty-hint').hidden = this.profile.grades.length > 0;
-    text('select-open-hint', '可任意选择一个或多个年级。当前开放：一年级、二年级（数学）。');
+    text('select-open-hint', '可多选 · 当前开放一、二年级数学');
     $('restore-offer').hidden = !this.profile.challenge && !this.profile.practice;
     text('restore-offer-text', this.profile.practice ? '有尚未完成的课程或复习，可继续学习。' : '新版挑战进度已保存，恢复后手动继续。');
     text('btn-sound', this.profile.soundOn ? '音效 开' : '音效 关');
@@ -287,8 +299,8 @@ class NumberPuzzleApp {
     if (!exercise || taskIdentity(exercise.task) !== taskIdentity(question.task)) throw new Error('题目已不在当前内容范围，无法继续');
     return exercise;
   }
-  private recordInterruption(p: Profile, c: SavedChallenge, reason: 'wrong' | 'timeout', exercise: Exercise): void {
-    if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), reason);
+  private recordInterruption(p: Profile, c: SavedChallenge, reason: 'wrong' | 'timeout', exercise: Exercise, answer?: SubmittedAnswer): void {
+    if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), reason, answer);
     c.timerKind = null; c.deadline = null; c.remainingMs = 0;
     if (c.state.phase === 'finished') this.settle(p);
   }
@@ -304,8 +316,8 @@ class NumberPuzzleApp {
       p.challenge = null;
     }
   }
-  private async answer(index: number): Promise<void> {
-    if (this.profile.practice) { await this.answerPractice(index); return; }
+  private async answer(index: number, choiceAnswer?: SubmittedAnswer): Promise<void> {
+    if (this.profile.practice) { await this.answerPractice(index, choiceAnswer); return; }
     const c = this.profile.challenge;
     if (!c || c.paused || c.state.phase !== 'asking') return;
     let correct = false;
@@ -318,16 +330,42 @@ class NumberPuzzleApp {
       }
       const rng = restoreSeededRng(active.rngState);
       const before = active.state;
-      const step = clickTile(active.state, index, rng); active.state = step.state; active.rngState = rng.snapshotState();
-      if (step.outcome.type === 'wrong') this.recordInterruption(p, active, 'wrong', exercise);
+      const step = choiceAnswer === undefined ? clickTile(active.state, index, rng) : submitChoice(active.state, choiceAnswer, rng); active.state = step.state; active.rngState = rng.snapshotState();
+      if (step.outcome.type === 'wrong') this.recordInterruption(p, active, 'wrong', exercise, choiceAnswer ?? before.board[index] as number);
       if (step.outcome.type === 'correct') {
         animation = { before, outcome: step.outcome, drawn: false };
-        correct = true; this.activate(active, 'resolve', step.outcome.fill ? ELIMINATE_MS + FILL_MS : ELIMINATE_MS);
+        correct = true; this.activate(active, 'resolve', step.outcome.tileIndex === null || step.outcome.fill ? ELIMINATE_MS + FILL_MS : ELIMINATE_MS);
       }
     });
     this.animation = animation;
     this.audio.play(correct ? 'correct' : 'wrong');
     if (!this.profile.challenge) this.showScreen('result');
+  }
+  private async choose(id?: string): Promise<void> {
+    const practice = this.profile.practice;
+    const state = this.profile.challenge?.state;
+    const task = practice ? practice.exercises[practice.index]!.task : state?.questions[state.questionIndex]?.task;
+    if (!task || task.kind !== 'choice' || practice?.answered) return;
+    if (!practice && (!state || state.phase !== 'asking' || this.profile.challenge!.paused)) return;
+    if (id !== undefined && !task.options.some(o => o.id === id)) throw new Error('选项不属于当前题目');
+    if (!isMultiple(task)) { if (id !== undefined) await this.answer(-1, id); return; }
+    const selected = practice ? practice.selectedIds ?? [] : state!.selectedIds ?? [];
+    if (id === undefined) {
+      if (selected.length) await this.answer(-1, selected);
+      return;
+    }
+    await this.change(p => {
+      if (p.practice) {
+        p.practice.selectedIds = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];
+      } else {
+        const c = p.challenge!; this.capture(c);
+        if (c.remainingMs <= 0) {
+          const exercise = this.currentExercise(c); c.state = timeoutRound(c.state);
+          this.recordInterruption(p, c, 'timeout', exercise);
+        } else c.state = toggleOption(c.state, id);
+      }
+    });
+    if (!this.profile.challenge && !this.profile.practice) this.showScreen('result');
   }
   private tick(): void {
     const c = this.profile.challenge;
@@ -384,6 +422,7 @@ class NumberPuzzleApp {
   private renderCountdown(): void {
     const c = this.profile.challenge!;
     const remaining = this.session.remaining(c);
+    $('countdown').dataset.urgent = String(c.state.phase === 'asking' && remaining <= 3000);
     text('countdown', c.state.phase === 'asking' ? `剩余 ${(remaining / 1000).toFixed(1)} 秒` : c.state.phase === 'ready' ? '准备继续 · 暂未计时' : '已停止计时');
   }
   private renderGame(): void {
@@ -401,10 +440,11 @@ class NumberPuzzleApp {
         this.practiceBoard = createRound({ exercises: [exercise], gradeOf: this.content.gradeOf, rng: createRuntimeRng() });
       }
       state = this.practiceBoard;
+      $('countdown').dataset.urgent = 'false';
       text('countdown', `不限时 · 第 ${Math.min(practice.index + 1, practice.exercises.length)}/${practice.exercises.length} 题`);
       const exercise = practice.exercises[Math.min(practice.index, practice.exercises.length - 1)]!;
-      text('practice-feedback', practice.revealed || practice.answered ? explainTask(exercise.task) : '先独立作答，也可以免费查看讲解。');
-      ($('btn-practice-explain') as HTMLButtonElement).disabled = practice.revealed || practice.answered;
+      text('practice-feedback', practice.revealed || practice.answered ? `${answerFeedback(exercise.task, practice.answer)} ${explainTask(exercise.task)}`.trim() : '先独立作答，也可以免费查看讲解。');
+      ($('btn-practice-explain') as HTMLButtonElement).disabled = false;
       $('btn-practice-next').hidden = !practice.answered && !practice.revealed;
       text('btn-practice-next', practice.reviewId ? '再练一次' : '下一题');
       $('btn-mastered').hidden = !practice.reviewId || practice.correct !== 1;
@@ -419,6 +459,7 @@ class NumberPuzzleApp {
       ($('btn-time') as HTMLButtonElement).disabled = !canSpend || state.timeUsed || !this.profile.cards.time || state.phase !== 'asking';
       text('hint-condition', state.totalWrongCount < 2 ? `整局再答错 ${2 - state.totalWrongCount} 次开放提醒卡；超时不计入。` : state.hintUsed ? '本题提醒已使用。' : '提醒卡已开放，每题限一张。');
     }
+    $('btn-hint').title = $('hint-condition').textContent ?? '';
     if (state.phase === 'resolving' && this.animation) {
       if (!this.animation.drawn) {
         this.renderer.reset(this.animation.before); this.renderer.applyCorrect(this.animation.outcome); this.animation.drawn = true;
@@ -439,7 +480,70 @@ class NumberPuzzleApp {
     text('pause-hint', ready && !paused ? '可先使用提醒卡，再继续答题。' : '剩余时间与道具使用情况已保留。');
     $('btn-resume').hidden = !paused;
     $('btn-ready').hidden = !ready || paused;
+    const displayIndex = state.phase === 'resolving' ? Math.max(0, state.questionIndex - 1) : state.questionIndex;
+    const displayTask = state.questions[displayIndex]?.task;
+    const choice = displayTask?.kind === 'choice';
+    $('board-canvas').hidden = choice;
+    $('game-task').hidden = choice;
+    $('choice-board').hidden = !choice || paused || !!ready && !state.hintUsed;
+    if (choice) {
+      this.renderer.stop();
+      this.renderChoice(displayTask, state, displayIndex);
+    }
     text('btn-pause', paused ? '继续' : '暂停');
+  }
+  private renderChoice(task: ChoiceTask, state: RoundState, index: number): void {
+    const practice = this.profile.practice;
+    const multiple = isMultiple(task);
+    const selected = practice?.selectedIds ?? state.selectedIds ?? [];
+    const disabled = practice ? practice.answered : state.phase !== 'asking' || !!this.profile.challenge?.paused;
+    const options = $('choice-options');
+    const identity = taskIdentity(task);
+    const newQuestion = options.dataset.task !== identity;
+    if (newQuestion) {
+      options.dataset.task = identity;
+      options.replaceChildren(...task.options.map(option => {
+        const element = button(optionText(option), () => this.run(() => this.choose(option.id)));
+        element.dataset.optionId = option.id;
+        element.dataset.expression = String(typeof option.value === 'object');
+        const mark = document.createElement('span'); mark.className = 'choice-mark'; mark.setAttribute('aria-hidden', 'true');
+        if (multiple) element.prepend(mark);
+        return element;
+      }));
+    }
+    const diagram = $('choice-diagram');
+    diagram.hidden = task.question.kind !== 'groups';
+    if (newQuestion) {
+      diagram.replaceChildren();
+      if (task.question.kind === 'groups') for (let group = 0; group < task.question.groups; group++) {
+        const row = document.createElement('div'); row.className = 'choice-dot-group';
+        for (let dot = 0; dot < task.question.each; dot++) {
+          const element = document.createElement('span'); element.className = 'choice-dot'; row.append(element);
+        }
+        diagram.append(row);
+      }
+    }
+    text('choice-task', taskText(task));
+    if (newQuestion && !$('choice-board').hidden) $('choice-task').focus();
+    text('choice-progress', practice ? `第 ${practice.index + 1}/${practice.exercises.length} 题` : `第 ${index + 1}/${state.questions.length} 题 · ${state.score} 分`);
+    text('choice-instructions', multiple ? '多选 · 选完再提交，可再次点击取消' : task.question.kind === 'truth' ? '判断 · 点击对或错' : '单选 · 点击一个答案');
+    $('choice-board').dataset.resolving = String(!practice && state.phase === 'resolving');
+    const expected = correctOptionIds(task);
+    for (const element of options.querySelectorAll<HTMLButtonElement>('button')) {
+      const id = element.dataset.optionId!;
+      element.disabled = disabled;
+      if (multiple) {
+        element.setAttribute('aria-pressed', String(selected.includes(id)));
+        element.querySelector('.choice-mark')!.textContent = selected.includes(id) ? '✓' : '□';
+      }
+      element.dataset.hint = String(!practice && state.hintUsed && expected.includes(id));
+      element.dataset.correct = String(expected.includes(id));
+    }
+    const submit = $('btn-choice-submit') as HTMLButtonElement;
+    submit.hidden = !multiple;
+    submit.disabled = disabled || !selected.length;
+    text('choice-feedback', practice?.answered ? evaluateAnswer(task, practice.answer) ? '✓ 答对了' : `✗ ${answerFeedback(task, practice.answer) || '这次选错了'}，可查看讲解。`
+      : state.phase === 'resolving' ? '✓ 答对了' : '');
   }
   private syncDialog(): void {
     const dialog = $('revive-dialog') as HTMLDialogElement;
@@ -546,7 +650,8 @@ class NumberPuzzleApp {
   }
   private approvedOriginal(exercise: Exercise, grade: Grade): Exercise | undefined {
     const id = taskIdentity(exercise.task);
-    return this.content.select([grade]).find(e => taskIdentity(e.task) === id);
+    const approved = this.content.select([grade]).find(e => taskIdentity(e.task) === id);
+    return approved ? { ...approved, task: exercise.task } : undefined;
   }
   private renderReview(): void {
     const list = $('review-list'); list.replaceChildren();
@@ -560,7 +665,7 @@ class NumberPuzzleApp {
       card.append(title, info);
       const explanation = document.createElement('details');
       const summary = document.createElement('summary'); summary.textContent = '免费查看原题讲解';
-      const paragraph = document.createElement('p'); paragraph.textContent = explainTask(entry.exercise.task);
+      const paragraph = document.createElement('p'); paragraph.textContent = `${entry.lastAnswer === undefined ? '' : `${answerFeedback(entry.exercise.task, entry.lastAnswer)} `}${explainTask(entry.exercise.task)}`.trim();
       explanation.append(summary, paragraph); card.append(explanation);
       if (entry.mastered) card.append(button('撤销已学会', () => this.run(async () => { await this.change(p => { p.mistakes[id]!.mastered = false; }); })));
       card.append(button(approved ? '开始复习' : '历史题暂不在审核范围', () => this.run(async () => {
@@ -572,21 +677,21 @@ class NumberPuzzleApp {
     }
     if (!list.children.length) list.textContent = '当前所选年级下没有符合条件的记录。';
   }
-  private async answerPractice(index: number): Promise<void> {
+  private async answerPractice(index: number, choiceAnswer?: SubmittedAnswer): Promise<void> {
     const practice = this.profile.practice!; const board = this.practiceBoard;
     if (!board || practice.answered) return;
-    const value = board.board[index]; if (value === undefined || value === null) return;
+    const value = choiceAnswer ?? board.board[index]; if (value === undefined || value === null) return;
     const exercise = practice.exercises[practice.index]!;
     if (!this.approvedOriginal(exercise, this.content.gradeOf(exercise))) throw new Error('原题已不在当前审核范围，暂不可练习');
     const correct = evaluateAnswer(exercise.task, value);
     let reward = 0;
     await this.change(p => {
       const active = p.practice!;
-      active.answered = true;
+      active.answered = true; active.answer = value;
       if (correct) active.correct++;
       else {
         active.passed = false;
-        if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), 'wrong');
+        if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), 'wrong', value);
       }
       if (correct && active.reviewId && this.store && !this.preview) {
         reward = rewardReview(p, active.reviewId, !active.revealed);
@@ -598,7 +703,7 @@ class NumberPuzzleApp {
   private async nextPractice(): Promise<void> {
     const practice = this.profile.practice!;
     if (practice.reviewId) {
-      await this.change(p => { p.practice!.answered = false; p.practice!.revealed = false; p.practice!.correct = 0; p.practice!.passed = true; });
+      await this.change(p => { p.practice!.answered = false; p.practice!.revealed = false; p.practice!.correct = 0; p.practice!.passed = true; p.practice!.selectedIds = []; delete p.practice!.answer; });
       this.practiceBoard = null; return;
     }
     let message = '';
@@ -610,7 +715,7 @@ class NumberPuzzleApp {
           message = reward ? '课程完成，首次学习 +10 金币！' : this.store ? '复习完成，本课程奖励已领取。' : '临时学习完成，无法持久保存或领取金币。';
         } else message = '本轮尚未全部独立答对。可重新开始三题小练习，学习始终免费。';
         p.practice = null;
-      } else { active.answered = false; active.revealed = false; }
+      } else { active.answered = false; active.revealed = false; active.selectedIds = []; delete active.answer; }
     });
     if (message) this.notice(message);
     this.practiceBoard = null;
@@ -618,7 +723,8 @@ class NumberPuzzleApp {
   }
   private fitBoard(): void {
     if (this.screen !== 'game') return;
-    this.renderer.fitDisplay($('board-wrap').clientWidth - 20, Math.max(434, window.innerHeight - 260));
+    const wrap = $('board-wrap');
+    this.renderer.fitDisplay(wrap.clientWidth - 16, wrap.clientHeight - 16);
   }
   private swSupported(): boolean {
     return 'serviceWorker' in navigator && window.isSecureContext;

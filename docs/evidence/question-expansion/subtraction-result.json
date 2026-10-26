@@ -1,0 +1,14 @@
+[
+  {
+    "name": "subtraction-truth",
+    "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":7,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+    "answerId": "boolean:false",
+    "explanation": "7 − 3 ＝ 5，应选错 ✗。7 − 3 = 4。4 小于 5。"
+  },
+  {
+    "name": "mixed-expression",
+    "id": "choices-v3:1:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":3,\"right\":4},\"right\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":9,\"right\":1}}:string:<,string:=,string:>",
+    "answerId": "string:<",
+    "explanation": "3 ＋ 4 = 7；9 − 1 = 8。比较结果，应选 ＜。"
+  }
+]

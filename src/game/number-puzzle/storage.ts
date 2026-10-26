@@ -1,6 +1,6 @@
 // 旧 localStorage 档案的只读导入及持久化输入校验；新版存储见 profile.ts。
-import { answerFor } from '../../learning/evaluation.js';
-import type { Grade, MathTask } from '../../learning/models.js';
+import { validateTask } from '../../learning/evaluation.js';
+import type { Grade, MathTask, ChoiceQuestion, ChoiceOption, ArithmeticTask } from '../../learning/models.js';
 
 export const STORAGE_SCHEMA_VERSION = 1;
 
@@ -81,9 +81,47 @@ function parseGrades(raw: unknown): Grade[] | null {
 const isTimestamp = (value: unknown): value is string =>
   typeof value === 'string' && !Number.isNaN(Date.parse(value));
 
-/** MathTask 结构校验：口径与 learning/evaluation.ts 的 answerFor 一致（安全整数、白名单运算符、非空链）。 */
+/** 持久化任务先重建白名单结构，再由 validateTask 校验运算、候选和答案可达性。 */
 function parseMathTaskShape(raw: unknown): MathTask | null {
   if (!isRecord(raw)) return null;
+  if (raw.kind === 'choice') {
+    if (!isRecord(raw.question) || !Array.isArray(raw.options)) return null;
+    const q = raw.question;
+    let question: ChoiceQuestion;
+    if (q.kind === 'extreme' && (q.direction === 'max' || q.direction === 'min')) question = { kind: q.kind, direction: q.direction };
+    else if (q.kind === 'symbol' && safeInt(q.left) !== null && safeInt(q.right) !== null) question = { kind: q.kind, left: q.left as number, right: q.right as number };
+    else if (q.kind === 'filter' && (q.relation === '>' || q.relation === '<') && safeInt(q.target) !== null) question = { kind: q.kind, relation: q.relation, target: q.target as number };
+    else if (q.kind === 'missing' && safeInt(q.addend) !== null && safeInt(q.total) !== null) question = { kind: q.kind, addend: q.addend as number, total: q.total as number };
+    else if (q.kind === 'range' && safeInt(q.lower) !== null && safeInt(q.upper) !== null) question = { kind: q.kind, lower: q.lower as number, upper: q.upper as number };
+    else if (q.kind === 'neighbor' && safeInt(q.value) !== null && (q.direction === 'before' || q.direction === 'after')) question = { kind: q.kind, value: q.value as number, direction: q.direction };
+    else if (q.kind === 'sequence' && ['start', 'step', 'length', 'index'].every(k => safeInt(q[k]) !== null)) question = { kind: q.kind, start: q.start as number, step: q.step as number, length: q.length as number, index: q.index as number };
+    else if (q.kind === 'composition' && safeInt(q.total) !== null && safeInt(q.part) !== null) question = { kind: q.kind, total: q.total as number, part: q.part as number };
+    else if (q.kind === 'digit' && safeInt(q.digit) !== null && (q.place === 'ones' || q.place === 'tens')) question = { kind: q.kind, digit: q.digit as number, place: q.place };
+    else if (q.kind === 'equivalent' && safeInt(q.target) !== null) question = { kind: q.kind, target: q.target as number };
+    else if (q.kind === 'groups' && safeInt(q.groups) !== null && safeInt(q.each) !== null) question = { kind: q.kind, groups: q.groups as number, each: q.each as number };
+    else if (q.kind === 'story' && safeInt(q.start) !== null && safeInt(q.change) !== null && (q.operator === '+' || q.operator === '-')) question = { kind: q.kind, start: q.start as number, change: q.change as number, operator: q.operator };
+    else if (q.kind === 'expression-symbol') {
+      const left = isRecord(q.left) && q.left.kind !== 'choice' ? parseMathTaskShape(q.left) as ArithmeticTask | null : null;
+      const right = isRecord(q.right) && q.right.kind !== 'choice' ? parseMathTaskShape(q.right) as ArithmeticTask | null : null;
+      if (!left || !right) return null;
+      question = { kind: q.kind, left, right };
+    }
+    else if (q.kind === 'truth' && (q.relation === '>' || q.relation === '<' || q.relation === '=')) {
+      const left = isRecord(q.left) && q.left.kind !== 'choice' ? parseMathTaskShape(q.left) as ArithmeticTask | null : null;
+      const right = isRecord(q.right) && q.right.kind !== 'choice' ? parseMathTaskShape(q.right) as ArithmeticTask | null : null;
+      if (!left || !right) return null;
+      question = { kind: q.kind, left, right, relation: q.relation as '>' | '<' | '=' };
+    } else return null;
+    const options: ChoiceOption[] = [];
+    for (const o of raw.options) {
+      if (!isRecord(o)) return null;
+      const value = isRecord(o.value) && o.value.kind !== 'choice' ? parseMathTaskShape(o.value) : o.value;
+      if (typeof o.id !== 'string'
+        || !(typeof value === 'boolean' || safeInt(value) !== null || (value === '>' || value === '<' || value === '=') || isRecord(value) && value.kind !== 'choice')) return null;
+      options.push({ id: o.id, value: value as ChoiceOption['value'] });
+    }
+    return { kind: 'choice', question, options };
+  }
   if (raw.kind === 'number') {
     const value = safeInt(raw.value);
     return value === null ? null : { kind: 'number', value };
@@ -114,7 +152,7 @@ function parseMathTaskShape(raw: unknown): MathTask | null {
 export function parseMathTask(raw: unknown): MathTask | null {
   const task = parseMathTaskShape(raw);
   if (!task) return null;
-  try { answerFor(task); return task; }
+  try { validateTask(task); return task; }
   catch (error) { if (error instanceof RangeError || error instanceof TypeError) return null; throw error; }
 }
 

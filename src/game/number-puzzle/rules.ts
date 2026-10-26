@@ -2,6 +2,7 @@
 // 本模块是纯逻辑：不依赖 DOM、Canvas、存储或计时器；动画时长常量仅作登记，
 // 由渲染层读取使用，判题与计分不依赖动画是否完成。
 import type { Exercise, Grade, MathTask } from '../../learning/models.js';
+import { correctOptionIds, isMultiple } from '../../learning/choice.js';
 import { answerFor, evaluateAnswer } from '../../learning/evaluation.js';
 
 /** 随机源接口：返回 [0, 1) 的浮点数；出题与棋盘逻辑不直接调用 Math.random()。 */
@@ -19,7 +20,7 @@ export const HINT_THRESHOLD = 2;
 export const QUESTION_MS = 10_000;
 export const EXTRA_TIME_MS = 5_000;
 export const MAX_REVIVALS = 2;
-export const RULES_VERSION = 'challenge-v1';
+export const RULES_VERSION = 'challenge-v2';
 export const SAME_VALUE_CAP = 2;
 export const ELIMINATE_MS = 400;
 export const FILL_MS = 200;
@@ -57,6 +58,7 @@ export interface RoundState {
   readonly questions: readonly RoundQuestion[];
   readonly questionIndex: number;
   readonly board: readonly BoardSlot[];
+  readonly selectedIds?: readonly string[];
   readonly score: number;
   readonly firstTryCount: number;
   readonly totalWrongCount: number;
@@ -83,11 +85,11 @@ export interface GuaranteeInfo { readonly index: number; readonly from: number; 
 
 export type ClickOutcome =
   | { readonly type: 'ignored' }
-  | { readonly type: 'wrong'; readonly tileIndex: number; readonly wrongCount: number; readonly hintActive: boolean }
+  | { readonly type: 'wrong'; readonly tileIndex: number | null; readonly wrongCount: number; readonly hintActive: boolean }
   | {
     readonly type: 'correct';
-    readonly tileIndex: number;
-    readonly removedValue: number;
+    readonly tileIndex: number | null;
+    readonly removedValue: number | null;
     readonly gainedScore: number;
     readonly score: number;
     readonly firstTry: boolean;
@@ -131,9 +133,10 @@ function ensureAnswerReachable(
 ): GuaranteeInfo | null {
   const question = questions[questionIndex];
   if (!question) throw new RangeError(`No question at index ${questionIndex}`);
+  if (question.task.kind === 'choice') { correctOptionIds(question.task); return null; }
   const answer = answerFor(question.task);
   if (board.some(slot => slot === answer)) return null;
-  const futureAnswers = new Set(questions.slice(questionIndex + 1).map(item => answerFor(item.task)));
+  const futureAnswers = new Set(questions.slice(questionIndex + 1).filter(item => item.task.kind !== 'choice').map(item => answerFor(item.task)));
   let index = board.findIndex(slot => slot !== null && !futureAnswers.has(slot));
   if (index === -1) index = board.findIndex(slot => slot !== null && slot !== answer);
   if (index === -1) throw new Error('Reachability guarantee failed: no replaceable tile');
@@ -187,8 +190,14 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
     throw new RangeError(`tileIndex out of range: ${String(tileIndex)}`);
   }
   const question = state.questions[state.questionIndex]!;
-  const value = state.board[tileIndex] as number;
-  if (!evaluateAnswer(question.task, value)) {
+  if (question.task.kind === 'choice') return { state, outcome: { type: 'ignored' } };
+  return resolveAnswer(state, state.board[tileIndex], tileIndex, rng);
+}
+
+function resolveAnswer(state: RoundState, answer: unknown, tileIndex: number | null, rng: Rng): ClickResult {
+  const question = state.questions[state.questionIndex]!;
+  const value = tileIndex !== null ? state.board[tileIndex] as number : null;
+  if (!evaluateAnswer(question.task, answer)) {
     const wrongCount = state.currentWrongCount + 1;
     return {
       state: {
@@ -207,7 +216,7 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
   const score = state.score + gainedScore;
   const isLast = state.questionIndex === state.questions.length - 1;
   const board: BoardSlot[] = [...state.board];
-  board[tileIndex] = null;
+  if (tileIndex !== null) board[tileIndex] = null;
   let fill: FillInfo | null = null;
   let guarantee: GuaranteeInfo | null = null;
   let nextQuestionIndex = state.questionIndex;
@@ -216,15 +225,18 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
   } else {
     nextQuestionIndex = state.questionIndex + 1;
     const nextRange = TIER_RANGES[state.questions[nextQuestionIndex]!.tier];
-    const filledValue = drawTileValue(board, nextRange, rng);
-    board[tileIndex] = filledValue;
-    fill = { index: tileIndex, value: filledValue };
+    if (tileIndex !== null) {
+      const filledValue = drawTileValue(board, nextRange, rng);
+      board[tileIndex] = filledValue;
+      fill = { index: tileIndex, value: filledValue };
+    }
     guarantee = ensureAnswerReachable(board, state.questions, nextQuestionIndex);
   }
   return {
     state: {
       ...state,
       phase: 'resolving',
+      selectedIds: [],
       board,
       questionIndex: nextQuestionIndex,
       score,
@@ -247,6 +259,23 @@ export function clickTile(state: RoundState, tileIndex: number, rng: Rng): Click
   };
 }
 
+/** 多选只更新选择，提交才判题；单选和对错通过 submitChoice 立即提交。 */
+export function toggleOption(state: RoundState, id: string): RoundState {
+  if (state.phase !== 'asking') return state;
+  const task = state.questions[state.questionIndex]!.task;
+  if (task.kind !== 'choice' || !isMultiple(task) || !task.options.some(o => o.id === id)) throw new RangeError('Invalid option');
+  const selected = state.selectedIds ?? [];
+  return { ...state, selectedIds: selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id] };
+}
+
+export function submitChoice(state: RoundState, answer: unknown, rng: Rng): ClickResult {
+  if (state.phase !== 'asking') return { state, outcome: { type: 'ignored' } };
+  const task = state.questions[state.questionIndex]!.task;
+  if (task.kind !== 'choice') throw new TypeError('Expected choice task');
+  if (isMultiple(task) && Array.isArray(answer) && answer.length === 0) return { state, outcome: { type: 'ignored' } };
+  return resolveAnswer(state, answer, null, rng);
+}
+
 export function timeoutRound(state: RoundState): RoundState {
   if (state.phase !== 'asking') return state;
   return { ...state, phase: state.revivals >= MAX_REVIVALS ? 'finished' : 'interrupted',
@@ -256,7 +285,7 @@ export function timeoutRound(state: RoundState): RoundState {
 
 export function reviveRound(state: RoundState): RoundState {
   if (state.phase !== 'interrupted' || state.revivals >= MAX_REVIVALS) throw new Error('当前不能复活');
-  return { ...state, phase: 'ready', revivals: state.revivals + 1, assisted: true };
+  return { ...state, phase: 'ready', revivals: state.revivals + 1, assisted: true, selectedIds: [] };
 }
 
 export function startQuestion(state: RoundState): RoundState {

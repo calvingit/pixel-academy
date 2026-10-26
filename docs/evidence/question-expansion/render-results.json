@@ -1,0 +1,2774 @@
+[
+  {
+    "name": "pair",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "pair",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "extreme",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "2",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "3",
+        "x": 164,
+        "y": 305.4375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "extreme",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "2",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "3",
+        "x": 18,
+        "y": 199.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 104.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "symbol",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "＜",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "＝",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "＞",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "symbol",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "＜",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "＝",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "＞",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "greater",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□3",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□0",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□6",
+        "x": 24,
+        "y": 240.796875,
+        "right": 156,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□2",
+        "x": 164,
+        "y": 240.796875,
+        "right": 296,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□5",
+        "x": 24,
+        "y": 315.703125,
+        "right": 156,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□4",
+        "x": 164,
+        "y": 315.703125,
+        "right": 296,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 24,
+        "y": 390.609375,
+        "right": 296,
+        "bottom": 437,
+        "width": 272,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "greater",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□3",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□0",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□6",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□2",
+        "x": 18,
+        "y": 174.140625,
+        "right": 146,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□5",
+        "x": 150,
+        "y": 174.140625,
+        "right": 278,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□4",
+        "x": 282,
+        "y": 174.140625,
+        "right": 410,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 18,
+        "y": 257.609375,
+        "right": 410,
+        "bottom": 304,
+        "width": 392,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "smaller",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□5",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□0",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□4",
+        "x": 24,
+        "y": 240.796875,
+        "right": 156,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□1",
+        "x": 164,
+        "y": 240.796875,
+        "right": 296,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□2",
+        "x": 24,
+        "y": 315.703125,
+        "right": 156,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□3",
+        "x": 164,
+        "y": 315.703125,
+        "right": 296,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 24,
+        "y": 390.609375,
+        "right": 296,
+        "bottom": 437,
+        "width": 272,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "smaller",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□5",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□0",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□4",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□1",
+        "x": 18,
+        "y": 174.140625,
+        "right": 146,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□2",
+        "x": 150,
+        "y": 174.140625,
+        "right": 278,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□3",
+        "x": 282,
+        "y": 174.140625,
+        "right": 410,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 18,
+        "y": 257.609375,
+        "right": 410,
+        "bottom": 304,
+        "width": 392,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "comparison-truth",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "对 ✓",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "错 ✗",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "comparison-truth",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "对 ✓",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "错 ✗",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "calculation-truth",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "错 ✗",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "对 ✓",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 271.109375,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "calculation-truth",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "错 ✗",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "对 ✓",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "missing",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "2",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "missing",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "1",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "2",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "0",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "range",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□100",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□95",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□99",
+        "x": 24,
+        "y": 240.796875,
+        "right": 156,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□97",
+        "x": 164,
+        "y": 240.796875,
+        "right": 296,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□98",
+        "x": 24,
+        "y": 315.703125,
+        "right": 156,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□96",
+        "x": 164,
+        "y": 315.703125,
+        "right": 296,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 24,
+        "y": 390.609375,
+        "right": 296,
+        "bottom": 437,
+        "width": 272,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "range",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□100",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□95",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□99",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□97",
+        "x": 18,
+        "y": 174.140625,
+        "right": 146,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□98",
+        "x": 150,
+        "y": 174.140625,
+        "right": 278,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□96",
+        "x": 282,
+        "y": 174.140625,
+        "right": 410,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 18,
+        "y": 257.609375,
+        "right": 410,
+        "bottom": 304,
+        "width": 392,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "neighbor",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "98",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "99",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "97",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "100",
+        "x": 164,
+        "y": 305.4375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "neighbor",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "98",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "99",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "97",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "100",
+        "x": 18,
+        "y": 199.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 104.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "sequence",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 153.390625,
+        "width": 272,
+        "height": 48.59375,
+        "overflow": false
+      },
+      {
+        "id": "83",
+        "x": 24,
+        "y": 190.1875,
+        "right": 156,
+        "bottom": 309.59375,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "84",
+        "x": 164,
+        "y": 190.1875,
+        "right": 296,
+        "bottom": 309.59375,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "85",
+        "x": 24,
+        "y": 317.59375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "86",
+        "x": 164,
+        "y": 317.59375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "sequence",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "83",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "84",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "85",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "86",
+        "x": 18,
+        "y": 199.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 104.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "composition",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "98",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "99",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "100",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "97",
+        "x": 164,
+        "y": 305.4375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "composition",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "98",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "99",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "100",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "97",
+        "x": 18,
+        "y": 199.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 104.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "digit",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□90",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□10",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□11",
+        "x": 24,
+        "y": 240.796875,
+        "right": 156,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□92",
+        "x": 164,
+        "y": 240.796875,
+        "right": 296,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□12",
+        "x": 24,
+        "y": 315.703125,
+        "right": 156,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□91",
+        "x": 164,
+        "y": 315.703125,
+        "right": 296,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 24,
+        "y": 390.609375,
+        "right": 296,
+        "bottom": 437,
+        "width": 272,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "digit",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□90",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□10",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□11",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□92",
+        "x": 18,
+        "y": 174.140625,
+        "right": 146,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□12",
+        "x": 150,
+        "y": 174.140625,
+        "right": 278,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□91",
+        "x": 282,
+        "y": 174.140625,
+        "right": 410,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 18,
+        "y": 257.609375,
+        "right": 410,
+        "bottom": 304,
+        "width": 392,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "expression-symbol",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "＝",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "＜",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 297.4375,
+        "width": 132,
+        "height": 131.546875,
+        "overflow": false
+      },
+      {
+        "id": "＞",
+        "x": 24,
+        "y": 305.4375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 131.5625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "expression-symbol",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "＝",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "＜",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "＞",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 304,
+        "width": 128,
+        "height": 213.328125,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "equivalent",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 129.09375,
+        "width": 272,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□99 ＋ 0",
+        "x": 24,
+        "y": 165.890625,
+        "right": 156,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□98 ＋ 0",
+        "x": 164,
+        "y": 165.890625,
+        "right": 296,
+        "bottom": 232.796875,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□99 ＋ 1",
+        "x": 24,
+        "y": 240.796875,
+        "right": 156,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□97 ＋ 0",
+        "x": 164,
+        "y": 240.796875,
+        "right": 296,
+        "bottom": 307.703125,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□100 ＋ 0",
+        "x": 24,
+        "y": 315.703125,
+        "right": 156,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "□98 ＋ 2",
+        "x": 164,
+        "y": 315.703125,
+        "right": 296,
+        "bottom": 382.609375,
+        "width": 132,
+        "height": 66.90625,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 24,
+        "y": 390.609375,
+        "right": 296,
+        "bottom": 437,
+        "width": 272,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "equivalent",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "□99 ＋ 0",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□98 ＋ 0",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□99 ＋ 1",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 170.140625,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□97 ＋ 0",
+        "x": 18,
+        "y": 174.140625,
+        "right": 146,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□100 ＋ 0",
+        "x": 150,
+        "y": 174.140625,
+        "right": 278,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "□98 ＋ 2",
+        "x": 282,
+        "y": 174.140625,
+        "right": 410,
+        "bottom": 253.609375,
+        "width": 128,
+        "height": 79.46875,
+        "overflow": false
+      },
+      {
+        "id": "btn-choice-submit",
+        "x": 18,
+        "y": 257.609375,
+        "right": 410,
+        "bottom": 304,
+        "width": 392,
+        "height": 46.390625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "groups",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 153.390625,
+        "width": 272,
+        "height": 48.59375,
+        "overflow": false
+      },
+      {
+        "id": "3 × 4",
+        "x": 24,
+        "y": 226.1875,
+        "right": 156,
+        "bottom": 327.59375,
+        "width": 132,
+        "height": 101.40625,
+        "overflow": false
+      },
+      {
+        "id": "2 ＋ 4",
+        "x": 164,
+        "y": 226.1875,
+        "right": 296,
+        "bottom": 327.59375,
+        "width": 132,
+        "height": 101.40625,
+        "overflow": false
+      },
+      {
+        "id": "4 × 2",
+        "x": 24,
+        "y": 335.59375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 101.40625,
+        "overflow": false
+      },
+      {
+        "id": "2 × 4",
+        "x": 164,
+        "y": 335.59375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 101.40625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "groups",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "3 × 4",
+        "x": 18,
+        "y": 122.671875,
+        "right": 146,
+        "bottom": 211.328125,
+        "width": 128,
+        "height": 88.65625,
+        "overflow": false
+      },
+      {
+        "id": "2 ＋ 4",
+        "x": 150,
+        "y": 122.671875,
+        "right": 278,
+        "bottom": 211.328125,
+        "width": 128,
+        "height": 88.65625,
+        "overflow": false
+      },
+      {
+        "id": "4 × 2",
+        "x": 282,
+        "y": 122.671875,
+        "right": 410,
+        "bottom": 211.328125,
+        "width": 128,
+        "height": 88.65625,
+        "overflow": false
+      },
+      {
+        "id": "2 × 4",
+        "x": 18,
+        "y": 215.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 88.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "story",
+    "width": 320,
+    "height": 568,
+    "scrollWidth": 320,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 24,
+        "y": 104.796875,
+        "right": 296,
+        "bottom": 153.390625,
+        "width": 272,
+        "height": 48.59375,
+        "overflow": false
+      },
+      {
+        "id": "94",
+        "x": 24,
+        "y": 190.1875,
+        "right": 156,
+        "bottom": 309.59375,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "93",
+        "x": 164,
+        "y": 190.1875,
+        "right": 296,
+        "bottom": 309.59375,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "95",
+        "x": 24,
+        "y": 317.59375,
+        "right": 156,
+        "bottom": 437,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "96",
+        "x": 164,
+        "y": 317.59375,
+        "right": 296,
+        "bottom": 437,
+        "width": 132,
+        "height": 119.40625,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 8,
+        "y": 459,
+        "right": 312,
+        "bottom": 507,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 8,
+        "y": 514,
+        "right": 312,
+        "bottom": 562,
+        "width": 304,
+        "height": 48,
+        "overflow": false
+      }
+    ]
+  },
+  {
+    "name": "story",
+    "width": 568,
+    "height": 320,
+    "scrollWidth": 568,
+    "controls": [
+      {
+        "id": "choice-task",
+        "x": 18,
+        "y": 39.1875,
+        "right": 410,
+        "bottom": 63.484375,
+        "width": 392,
+        "height": 24.296875,
+        "overflow": false
+      },
+      {
+        "id": "94",
+        "x": 18,
+        "y": 90.671875,
+        "right": 146,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "93",
+        "x": 150,
+        "y": 90.671875,
+        "right": 278,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "95",
+        "x": 282,
+        "y": 90.671875,
+        "right": 410,
+        "bottom": 195.328125,
+        "width": 128,
+        "height": 104.65625,
+        "overflow": false
+      },
+      {
+        "id": "96",
+        "x": 18,
+        "y": 199.328125,
+        "right": 146,
+        "bottom": 304,
+        "width": 128,
+        "height": 104.671875,
+        "overflow": false
+      },
+      {
+        "id": "btn-practice-explain",
+        "x": 428,
+        "y": 152.296875,
+        "right": 560,
+        "bottom": 200.296875,
+        "width": 132,
+        "height": 48,
+        "overflow": false
+      },
+      {
+        "id": "btn-game-return",
+        "x": 428,
+        "y": 269.203125,
+        "right": 560,
+        "bottom": 314,
+        "width": 132,
+        "height": 44.796875,
+        "overflow": false
+      }
+    ]
+  }
+]

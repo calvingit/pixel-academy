@@ -1,0 +1,11 @@
+{
+  "deferredPracticeUnchanged": true,
+  "coinsBefore": 20,
+  "coinsAfter": 20,
+  "state": {
+    "offline": "离线缓存已就绪（版本 assets-v1-c3f7f6144e39），断网也能游玩。",
+    "caches": [
+      "pixel-academy:number-puzzle:assets-v1-c3f7f6144e39"
+    ]
+  }
+}

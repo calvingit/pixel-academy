@@ -1,0 +1,18 @@
+const task=await taskSpace(8),page=task.page('p2');
+const fs=await import('node:fs/promises');const out='/Volumes/Data/Workspace/github/pixel-academy/docs/evidence/question-expansion';
+const assert=(v,m)=>{if(!v)throw new Error(m);};
+const read=()=>page.evaluate(()=>new Promise(resolve=>{const r=indexedDB.open('pixel-academy',1);r.onsuccess=()=>{const db=r.result,q=db.transaction('profiles','readonly').objectStore('profiles').get('local');q.onsuccess=()=>{resolve(q.result);db.close();};};}));
+const before=await read();assert(before.practice!==null,'practice active');
+await page.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update();});
+await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration()).waiting,undefined,{timeout:15000});
+const waiting=await read();assert(JSON.stringify(before.practice)===JSON.stringify(waiting.practice),'practice preserved during update');
+await page.screenshot({path:`${out}/update-deferred.png`});
+console.log({deferred:await page.evaluate(()=>document.querySelector('#offline-notice').textContent)});
+await page.evaluate(()=>document.querySelector('#btn-game-return').click());await page.waitForSelector('#confirm-dialog[open]');
+await page.click('#confirm-dialog button[value="yes"]');
+await page.waitForFunction(()=>!document.body.inert&&document.body.dataset.screen==='select');
+await page.waitForFunction(async()=>!(await navigator.serviceWorker.getRegistration()).waiting,undefined,{timeout:10000});
+const after=await read();assert(after.coins===before.coins&&after.practice===null,'adoption preserves profile');
+const state=await page.evaluate(async()=>({offline:document.querySelector('#offline-notice').textContent,caches:await caches.keys()}));
+await fs.writeFile(`${out}/update-result.json`,JSON.stringify({deferredPracticeUnchanged:true,coinsBefore:before.coins,coinsAfter:after.coins,state},null,2));
+console.log(state);console.log(await page.snapshot());

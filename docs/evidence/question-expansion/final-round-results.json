@@ -1,0 +1,964 @@
+{
+  "runtime": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "generation": "generated-v4",
+    "choices": "choices-v3",
+    "offline": "离线缓存已就绪（版本 assets-v1-9b6c75e3fece），断网也能游玩。"
+  },
+  "results": [
+    {
+      "label": "grade1",
+      "grades": [
+        1
+      ],
+      "record": {
+        "id": "e85c4b99-f0a7-4019-a1b2-6f47eb8587d6",
+        "at": "2026-10-26T12:42:28.040Z",
+        "score": 100,
+        "firstTryCount": 10,
+        "totalWrongCount": 0,
+        "totalTimeoutCount": 0,
+        "revivals": 0,
+        "completed": 10,
+        "total": 10,
+        "passed": true,
+        "coins": 30
+      },
+      "coinsBefore": 109,
+      "coinsAfter": 139,
+      "tasks": [
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 1,
+              "right": 8
+            },
+            "relation": "=",
+            "right": {
+              "kind": "number",
+              "value": 10
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:true",
+              "value": true
+            },
+            {
+              "id": "boolean:false",
+              "value": false
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "composition",
+            "total": 10,
+            "part": 6
+          },
+          "options": [
+            {
+              "id": "number:3",
+              "value": 3
+            },
+            {
+              "id": "number:2",
+              "value": 2
+            },
+            {
+              "id": "number:5",
+              "value": 5
+            },
+            {
+              "id": "number:4",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": ">",
+            "target": 5
+          },
+          "options": [
+            {
+              "id": "number:7",
+              "value": 7
+            },
+            {
+              "id": "number:5",
+              "value": 5
+            },
+            {
+              "id": "number:9",
+              "value": 9
+            },
+            {
+              "id": "number:8",
+              "value": 8
+            },
+            {
+              "id": "number:6",
+              "value": 6
+            },
+            {
+              "id": "number:0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "+",
+          "left": 2,
+          "right": 7
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "story",
+            "start": 1,
+            "change": 0,
+            "operator": "-"
+          },
+          "options": [
+            {
+              "id": "number:2",
+              "value": 2
+            },
+            {
+              "id": "number:1",
+              "value": 1
+            },
+            {
+              "id": "number:0",
+              "value": 0
+            },
+            {
+              "id": "number:3",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "-",
+          "left": 5,
+          "right": 4
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "number",
+              "value": 7
+            },
+            "relation": ">",
+            "right": {
+              "kind": "number",
+              "value": 7
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:false",
+              "value": false
+            },
+            {
+              "id": "boolean:true",
+              "value": true
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "-",
+          "left": 3,
+          "right": 1
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "equivalent",
+            "target": 1
+          },
+          "options": [
+            {
+              "id": "expression:binary:+:2:0",
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": 2,
+                "right": 0
+              }
+            },
+            {
+              "id": "expression:binary:+:0:0",
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": 0,
+                "right": 0
+              }
+            },
+            {
+              "id": "expression:binary:+:1:0",
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": 1,
+                "right": 0
+              }
+            },
+            {
+              "id": "expression:binary:+:3:0",
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": 3,
+                "right": 0
+              }
+            },
+            {
+              "id": "expression:binary:+:0:1",
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": 0,
+                "right": 1
+              }
+            },
+            {
+              "id": "expression:binary:-:2:1",
+              "value": {
+                "kind": "binary",
+                "operator": "-",
+                "left": 2,
+                "right": 1
+              }
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "+",
+          "left": 3,
+          "right": 4
+        }
+      ]
+    },
+    {
+      "label": "grade2",
+      "grades": [
+        2
+      ],
+      "record": {
+        "id": "32e424c2-c4f1-4a02-beff-72ab1133d398",
+        "at": "2026-10-26T12:42:35.939Z",
+        "score": 100,
+        "firstTryCount": 10,
+        "totalWrongCount": 0,
+        "totalTimeoutCount": 0,
+        "revivals": 0,
+        "completed": 10,
+        "total": 10,
+        "passed": true,
+        "coins": 30
+      },
+      "coinsBefore": 139,
+      "coinsAfter": 169,
+      "tasks": [
+        {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 3
+        },
+        {
+          "kind": "chain",
+          "start": 34,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 1
+            },
+            {
+              "operator": "+",
+              "operand": 5
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "number",
+              "value": 99
+            },
+            "relation": "<",
+            "right": {
+              "kind": "number",
+              "value": 98
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:false",
+              "value": false
+            },
+            {
+              "id": "boolean:true",
+              "value": true
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "digit",
+            "place": "ones",
+            "digit": 5
+          },
+          "options": [
+            {
+              "id": "number:35",
+              "value": 35
+            },
+            {
+              "id": "number:3",
+              "value": 3
+            },
+            {
+              "id": "number:4",
+              "value": 4
+            },
+            {
+              "id": "number:2",
+              "value": 2
+            },
+            {
+              "id": "number:25",
+              "value": 25
+            },
+            {
+              "id": "number:45",
+              "value": 45
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 3
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "sequence",
+            "start": 47,
+            "step": 5,
+            "length": 5,
+            "index": 1
+          },
+          "options": [
+            {
+              "id": "number:51",
+              "value": 51
+            },
+            {
+              "id": "number:52",
+              "value": 52
+            },
+            {
+              "id": "number:50",
+              "value": 50
+            },
+            {
+              "id": "number:53",
+              "value": 53
+            }
+          ]
+        },
+        {
+          "kind": "chain",
+          "start": 14,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 2
+            },
+            {
+              "operator": "+",
+              "operand": 6
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": "<",
+            "target": 19
+          },
+          "options": [
+            {
+              "id": "number:16",
+              "value": 16
+            },
+            {
+              "id": "number:20",
+              "value": 20
+            },
+            {
+              "id": "number:18",
+              "value": 18
+            },
+            {
+              "id": "number:19",
+              "value": 19
+            },
+            {
+              "id": "number:17",
+              "value": 17
+            },
+            {
+              "id": "number:21",
+              "value": 21
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "binary",
+              "operator": "-",
+              "left": 70,
+              "right": 5
+            },
+            "relation": "=",
+            "right": {
+              "kind": "number",
+              "value": 66
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:true",
+              "value": true
+            },
+            {
+              "id": "boolean:false",
+              "value": false
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "composition",
+            "total": 36,
+            "part": 0
+          },
+          "options": [
+            {
+              "id": "number:35",
+              "value": 35
+            },
+            {
+              "id": "number:37",
+              "value": 37
+            },
+            {
+              "id": "number:34",
+              "value": 34
+            },
+            {
+              "id": "number:36",
+              "value": 36
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "mixed",
+      "grades": [
+        1,
+        2
+      ],
+      "record": {
+        "id": "3cffca25-2108-4e0f-9aef-f9d79486c9b6",
+        "at": "2026-10-26T12:42:44.739Z",
+        "score": 100,
+        "firstTryCount": 10,
+        "totalWrongCount": 0,
+        "totalTimeoutCount": 0,
+        "revivals": 0,
+        "completed": 10,
+        "total": 10,
+        "passed": true,
+        "coins": 30
+      },
+      "coinsBefore": 169,
+      "coinsAfter": 199,
+      "tasks": [
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": ">",
+            "target": 90
+          },
+          "options": [
+            {
+              "id": "number:0",
+              "value": 0
+            },
+            {
+              "id": "number:92",
+              "value": 92
+            },
+            {
+              "id": "number:91",
+              "value": 91
+            },
+            {
+              "id": "number:1",
+              "value": 1
+            },
+            {
+              "id": "number:2",
+              "value": 2
+            },
+            {
+              "id": "number:90",
+              "value": 90
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "-",
+          "left": 5,
+          "right": 3
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "story",
+            "start": 2,
+            "change": 1,
+            "operator": "+"
+          },
+          "options": [
+            {
+              "id": "number:1",
+              "value": 1
+            },
+            {
+              "id": "number:3",
+              "value": 3
+            },
+            {
+              "id": "number:4",
+              "value": 4
+            },
+            {
+              "id": "number:2",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "+",
+          "left": 5,
+          "right": 5
+        },
+        {
+          "kind": "chain",
+          "start": 4,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 4
+            },
+            {
+              "operator": "-",
+              "operand": 8
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "*",
+          "left": 3,
+          "right": 4
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "number",
+              "value": 7
+            },
+            "relation": ">",
+            "right": {
+              "kind": "number",
+              "value": 8
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:true",
+              "value": true
+            },
+            {
+              "id": "boolean:false",
+              "value": false
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "chain",
+              "start": 40,
+              "steps": [
+                {
+                  "operator": "+",
+                  "operand": 4
+                }
+              ]
+            },
+            "relation": "=",
+            "right": {
+              "kind": "number",
+              "value": 43
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:false",
+              "value": false
+            },
+            {
+              "id": "boolean:true",
+              "value": true
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "sequence",
+            "start": 33,
+            "step": 1,
+            "length": 5,
+            "index": 3
+          },
+          "options": [
+            {
+              "id": "number:34",
+              "value": 34
+            },
+            {
+              "id": "number:37",
+              "value": 37
+            },
+            {
+              "id": "number:36",
+              "value": 36
+            },
+            {
+              "id": "number:35",
+              "value": 35
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": ">",
+            "target": 7
+          },
+          "options": [
+            {
+              "id": "number:0",
+              "value": 0
+            },
+            {
+              "id": "number:8",
+              "value": 8
+            },
+            {
+              "id": "number:9",
+              "value": 9
+            },
+            {
+              "id": "number:7",
+              "value": 7
+            },
+            {
+              "id": "number:1",
+              "value": 1
+            },
+            {
+              "id": "number:10",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "offline",
+      "grades": [
+        1,
+        2
+      ],
+      "record": {
+        "id": "0ca69817-8347-43a8-99af-6506231baa9b",
+        "at": "2026-10-26T12:42:54.448Z",
+        "score": 100,
+        "firstTryCount": 10,
+        "totalWrongCount": 0,
+        "totalTimeoutCount": 0,
+        "revivals": 0,
+        "completed": 10,
+        "total": 10,
+        "passed": true,
+        "coins": 30
+      },
+      "coinsBefore": 199,
+      "coinsAfter": 229,
+      "tasks": [
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": "<",
+            "target": 3
+          },
+          "options": [
+            {
+              "id": "number:5",
+              "value": 5
+            },
+            {
+              "id": "number:2",
+              "value": 2
+            },
+            {
+              "id": "number:6",
+              "value": 6
+            },
+            {
+              "id": "number:3",
+              "value": 3
+            },
+            {
+              "id": "number:4",
+              "value": 4
+            },
+            {
+              "id": "number:1",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "*",
+          "left": 2,
+          "right": 4
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "filter",
+            "relation": ">",
+            "target": 4
+          },
+          "options": [
+            {
+              "id": "number:5",
+              "value": 5
+            },
+            {
+              "id": "number:4",
+              "value": 4
+            },
+            {
+              "id": "number:1",
+              "value": 1
+            },
+            {
+              "id": "number:6",
+              "value": 6
+            },
+            {
+              "id": "number:7",
+              "value": 7
+            },
+            {
+              "id": "number:0",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "-",
+          "left": 2,
+          "right": 1
+        },
+        {
+          "kind": "chain",
+          "start": 41,
+          "steps": [
+            {
+              "operator": "+",
+              "operand": 6
+            },
+            {
+              "operator": "+",
+              "operand": 5
+            }
+          ]
+        },
+        {
+          "kind": "binary",
+          "operator": "+",
+          "left": 1,
+          "right": 3
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "chain",
+              "start": 16,
+              "steps": [
+                {
+                  "operator": "+",
+                  "operand": 0
+                }
+              ]
+            },
+            "relation": "=",
+            "right": {
+              "kind": "number",
+              "value": 17
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:true",
+              "value": true
+            },
+            {
+              "id": "boolean:false",
+              "value": false
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "sequence",
+            "start": 25,
+            "step": 1,
+            "length": 5,
+            "index": 3
+          },
+          "options": [
+            {
+              "id": "number:28",
+              "value": 28
+            },
+            {
+              "id": "number:27",
+              "value": 27
+            },
+            {
+              "id": "number:26",
+              "value": 26
+            },
+            {
+              "id": "number:29",
+              "value": 29
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "extreme",
+            "direction": "min"
+          },
+          "options": [
+            {
+              "id": "number:8",
+              "value": 8
+            },
+            {
+              "id": "number:3",
+              "value": 3
+            },
+            {
+              "id": "number:6",
+              "value": 6
+            },
+            {
+              "id": "number:7",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "kind": "choice",
+          "question": {
+            "kind": "truth",
+            "left": {
+              "kind": "number",
+              "value": 4
+            },
+            "relation": "<",
+            "right": {
+              "kind": "number",
+              "value": 5
+            }
+          },
+          "options": [
+            {
+              "id": "boolean:true",
+              "value": true
+            },
+            {
+              "id": "boolean:false",
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 // 通用原创生成规则；审核范围与限制见 docs/content-review-generation.md。
 import type { Exercise, Grade, MathTask } from '../../learning/models.js';
+import { generateChoiceExercises, choiceCategory } from './choice-generation.js';
+import { taskIdentity } from './learning.js';
 import type { Rng } from './rules.js';
 
-export const GENERATION_VERSION = 'generated-v1';
+export const GENERATION_VERSION = 'generated-v4';
 const review: Exercise['review'] = {
   status: 'approved', reviewer: 'Codex（代理规则审核）', reviewedAt: '2026-10-26T06:11:53Z',
 };
@@ -50,7 +52,7 @@ export function generateExercises(): readonly Exercise[] {
       }
     }
   }
-  return result;
+  return [...result, ...generateChoiceExercises()];
 }
 
 /** 按当前题型配额抽题，优先选上一局未出现的候选；不足时才复用。 */
@@ -64,26 +66,50 @@ export function selectRoundExercises(
   if (!grade1.length && !grade2.length) throw new RangeError('No generated exercises for selected grades');
   const mixed = grade1.length > 0 && grade2.length > 0;
   const result: Exercise[] = [];
+  const chosenKeys = new Set<string>();
+  const previousKeys = new Set(exercises.filter(e => previous.has(e.id)).map(e => taskIdentity(e.task)));
   const take = (candidates: readonly Exercise[], count: number): void => {
-    const fresh = candidates.filter(exercise => !previous.has(exercise.id));
-    const repeated = candidates.filter(exercise => previous.has(exercise.id));
-    if (candidates.length < count) throw new RangeError('Insufficient candidates for question quota');
+    const usable = candidates.filter(e => !chosenKeys.has(taskIdentity(e.task)));
+    const fresh = usable.filter(e => !previousKeys.has(taskIdentity(e.task)));
+    const repeated = usable.filter(e => previousKeys.has(taskIdentity(e.task)));
+    if (usable.length < count) throw new RangeError('Insufficient candidates for question quota');
     for (let i = 0; i < count; i++) {
       const pool = fresh.length ? fresh : repeated;
       const index = Math.floor(rng() * pool.length);
-      result.push(pool[index]!);
+      result.push(pool[index]!); chosenKeys.add(taskIdentity(pool[index]!.task));
       pool[index] = pool[pool.length - 1]!;
       pool.pop();
     }
   };
-  if (grade1.length) {
-    take(grade1.filter(e => e.task.kind === 'number'), mixed ? 1 : 2);
-    take(grade1.filter(e => e.task.kind === 'binary' && e.task.operator === '+'), mixed ? 2 : 4);
-    take(grade1.filter(e => e.task.kind === 'binary' && e.task.operator === '-'), mixed ? 2 : 4);
-  }
-  if (grade2.length) {
-    take(grade2.filter(e => e.task.kind === 'chain'), mixed ? 3 : 6);
-    take(grade2.filter(e => e.task.kind === 'binary' && e.task.operator === '*'), mixed ? 2 : 4);
+  const takeKinds = (candidates: readonly Exercise[], count: number): void => {
+    const families = new Map<string, Exercise[]>();
+    for (const e of candidates) {
+      if (e.task.kind !== 'choice') throw new TypeError('Expected choice pool');
+      const q = e.task.question;
+      const key = q.kind === 'filter' ? `filter:${q.relation}` : q.kind === 'truth' ? `truth:${q.left.kind === 'number' ? 'comparison' : 'calculation'}`
+        : q.kind === 'extreme' ? `extreme:${e.task.options.length}` : q.kind;
+      const list = families.get(key) ?? []; list.push(e); families.set(key, list);
+    }
+    const keys = [...families.keys()];
+    if (keys.length < count) throw new RangeError('Insufficient question families for quota');
+    for (let i = 0; i < count; i++) {
+      const index = Math.floor(rng() * keys.length);
+      take(families.get(keys.splice(index, 1)[0]!)!, 1);
+    }
+  };
+  for (const pool of [grade1, grade2]) {
+    if (!pool.length) continue;
+    const choices = pool.filter(e => e.task.kind === 'choice');
+    if (pool === grade1) {
+      take(pool.filter(e => e.task.kind === 'binary' && e.task.operator === '+'), mixed ? 1 : 2);
+      take(pool.filter(e => e.task.kind === 'binary' && e.task.operator === '-'), mixed ? 1 : 2);
+    } else {
+      take(pool.filter(e => e.task.kind === 'chain'), mixed ? 1 : 2);
+      take(pool.filter(e => e.task.kind === 'binary' && e.task.operator === '*'), mixed ? 1 : 2);
+    }
+    takeKinds(choices.filter(e => e.task.kind === 'choice' && choiceCategory(e.task) === 'single'), mixed ? 1 : 2);
+    takeKinds(choices.filter(e => e.task.kind === 'choice' && choiceCategory(e.task) === 'multiple'), mixed ? 1 : 2);
+    takeKinds(choices.filter(e => e.task.kind === 'choice' && choiceCategory(e.task) === 'truth'), mixed ? 1 : 2);
   }
   return result;
 }

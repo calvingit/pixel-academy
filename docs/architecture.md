@@ -11,20 +11,21 @@
 | src/content/ | 教材、单元、知识点、映射、练习与证据静态数据 |
 | src/learning/models.ts | 数据类型与筛选查询 |
 | src/learning/catalog.ts | 引用检查、Core 创建、正式和候选筛选 |
-| src/learning/evaluation.ts | 安全整数答案计算与判题 |
+| src/learning/arithmetic.ts、evaluation.ts、choice.ts | 安全整数运算、结构化选择题校验、选项答案推导与统一判题；不依赖界面或存储 |
 | src/index.ts | 汇总默认 catalog 与导出 API |
 | src/game/number-puzzle/rules.ts | 数字消除纯规则：单局状态机、局序洗牌、判题、计分、保证规则、注入随机源；无 DOM 依赖 |
 | src/game/number-puzzle/session.ts | 纯计时逻辑 RoundSession：注入时钟、绝对截止时间、剩余时间、暂停冻结和恢复；无 DOM 或真实计时器 |
 | src/game/number-puzzle/random.ts | 种子 PRNG（mulberry32）与运行时熵随机源；M5 支持内部状态快照（snapshotState）与按状态恢复（restoreSeededRng），中断续局的随机序列与连续游玩完全一致 |
 | src/game/number-puzzle/content.ts | 游戏层内容适配：可用性四场景文案、练习 → 年级索引、默认内容装配 |
+| src/game/number-puzzle/choice-generation.ts | 比较、筛选、判断、数列、数位、算式、图示和情境等 17 类选择题候选；范围与审核见扩展审核记录 |
 | src/game/number-puzzle/generation.ts | 数字消除本地生成规则：有限候选构造、按年级及题型配额抽取、上一局优先避重；纯 TypeScript，无 DOM、存储或网络依赖 |
 | src/game/number-puzzle/audio.ts | WebAudio 合成音效（答对/答错/结算）：可关闭，无音频文件、无新增依赖，仅反馈增强不承载规则信息 |
-| src/game/number-puzzle/garden.ts | 数字花园静态 Canvas 装饰：天空、山丘、植被与蓝蓝，无游戏状态或判题依赖；由 render.ts 在题面与棋盘之前绘制，随静态导入进入离线预缓存 |
-| src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：题目区、乘法点阵、棋盘与动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
+| src/game/number-puzzle/garden.ts | 数字花园静态 Canvas 装饰：浅色底、边缘植物、蓝蓝与季节装饰，无游戏状态或判题依赖；由 render.ts 在题面与棋盘之前绘制，随静态导入进入离线预缓存 |
+| src/game/number-puzzle/render.ts | Canvas 2D 游戏区渲染：按容器重排题目区、乘法点阵与十二块棋盘（竖屏三列／低高度横屏四列），绘制／命中／键盘共用布局；包含动画，✓/✗ 形状 + 文案反馈条；只读规则状态，不判题；M4 增加暂停冻结与显示尺寸自适应 |
 | src/game/number-puzzle/main.ts | DOM 页面、Canvas 输入、有限挑战和计时接线、课程／复习、商店和资料、后台暂停、异步事务与错误提示、离线与更新 |
 | src/game/number-puzzle/storage.ts | v1 设置、成绩和避重 ID 的只读导入；持久化 MathTask 输入校验；不恢复旧局次，不写入或清理旧键 |
 | src/game/number-puzzle/profile.ts | 纯金币／道具／奖励／错题操作与档案校验；ProfileStore 隔离异步存储，原生 IndexedDB readwrite 事务和修订号检查提供原子提交及跨页面冲突拒绝 |
-| src/game/number-puzzle/learning.ts | 五节课程、课程范围内动态抽题、稳定题目身份、题面文本和程序化解题说明；无 DOM 或存储依赖 |
+| src/game/number-puzzle/learning.ts | 21 节课程、按映射及题型动态抽题、稳定题目身份、题面文本和程序化解题说明；无 DOM 或存储依赖 |
 | src/game/number-puzzle/offline.ts | 离线状态与版本更新纯逻辑（M6）：缓存名前缀与版本标记格式、旧版本缓存清理决策（staleCacheNames）、更新采用时机（decideUpdateAdoption：仅选择屏且无进行中局次 adopt）与执行决策（planAdoptionExecution：waiting 缺失且新版本已接管则刷新、未接管则收敛——waiting 可被浏览器跳过直通激活）、离线状态文案推导（describeOfflineStatus，含更新提示优先）；无 DOM、无 Service Worker 依赖，浏览器接线在 main.ts，SW 侧策略在 web/sw.source.js（两处头注交叉说明） |
 | web/index.html、web/style.css | 静态 H5 入口页面与样式（M5 增加存储提示、恢复提供、练习记录与清除入口；M6 增加离线状态提示行与主模块加载失败的内联兜底脚本） |
 | web/sw.source.js | 离线 Service Worker 模板（M6，跟踪提交）：install 预缓存清单（任一失败不激活）、不自动 skipWaiting、activate 清理同前缀旧缓存并广播 cache-ready、同源 GET 缓存优先 + 未命中回填、导航回退入口页与离线兜底页；由 build 脚本替换占位符后生成 web/sw.js（构建产物，gitignore） |
@@ -37,7 +38,7 @@ build 先运行 tsc，再由 scripts/build-sw.mjs 生成 web/sw.js（预缓存�
 
 ## 数据关系
 
-数字消除正式内容装配先用 `generateExercises` 构造经规则审核的有限候选，再调用 `createLearningCore` 校验并通过 `selectExercises` 筛选；开局用 `selectRoundExercises` 按配额抽 10 题，再交给原有 `createRound` 洗牌和建立棋盘。生成模块属于本游戏，不扩展为通用引擎；默认 `src/index.ts` 导出的 catalog、selectExercises 仍是首批静态内容。静态题库另用于显式候选预览与旧中断局次的精确指纹兼容检查，不作为动态缺题降级。
+数字消除正式内容装配先用 `generateExercises` 构造经规则审核的有限候选，再调用 `createLearningCore` 校验并通过 `selectExercises` 筛选；开局用 `selectRoundExercises` 按年级及作答类别配额，先选不同题型再选候选，按语义身份去重后抽 10 题，再交给原有 `createRound` 洗牌和建立棋盘。生成模块属于本游戏，不扩展为通用引擎；默认 `src/index.ts` 导出的 catalog、selectExercises 仍是首批静态内容。静态题库另用于显式候选预览与旧中断局次的精确指纹兼容检查，不作为动态缺题降级。
 
 题目 ID 由生成规则版本、映射及参数决定。错题身份另按任务类型、参数与顺序确定，不以生成版本或局次 ID 重置领奖资格。正式题与复习原题都经 selectExercises；撤回审核范围的原题仅保留历史，不自动换题或降级。
 
@@ -45,7 +46,7 @@ build 先运行 tsc，再由 scripts/build-sw.mjs 生成 web/sw.js（预缓存�
 
 首次创建档案时只读导入旧 localStorage 设置、历史成绩与避重信息，不恢复旧中断局，不补发历史金币；后续已有档案不重复导入。清除成绩不清除钱包或领奖资格，明确确认的全部重置使用独立事务；旧 localStorage 键保持不动。
 
-当前挑战保存完整题目、棋盘、RNG 状态、复活与道具标记、剩余时间及绝对截止时间；内容版本组合生成规则版本和挑战规则版本，更新规则应同步升级版本。恢复默认暂停，意外中止留下的运行状态按截止时间扣除经过时间，不刷新题目或重置倒计时。课程小练习保存当前题与独立完成情况。进行中的挑战／小练习阻止本页主动采用等待中的 Service Worker 更新。
+当前挑战保存完整题目、棋盘、RNG 状态、复活与道具标记、剩余时间及绝对截止时间；内容版本组合生成规则版本和挑战规则版本，更新规则应同步升级版本。恢复默认暂停，意外中止留下的运行状态按截止时间扣除经过时间，不刷新题目或重置倒计时。课程小练习保存当前题与独立完成情况。选择题的候选存于任务中；多选未提交选择及实际提交答案随当前局／练习保存。schemaVersion 保持 2，新增字段可选以读取旧档案；金币、课程与领奖凭据不重置。生成与挑战规则版本变化按现有策略提示后放弃不兼容中断挑战，其余档案保留。进行中的挑战／小练习阻止本页主动采用等待中的 Service Worker 更新。
 
 ```mermaid
 flowchart TD
@@ -68,12 +69,13 @@ flowchart TD
 | createLearningCore(catalog) | 检查失败即抛错；成功后返回两个筛选函数 |
 | selectExercises(query) | 只返回 approved，且匹配学科、gameId 与至少一个所选年级关联 |
 | previewExercises(query) | 同样筛选，但包含 draft；不是正式取题的备用路径 |
-| answerFor(task) | 计算安全整数结果；无效任务、运算符或溢出抛错 |
-| evaluateAnswer(task, answer) | 接受安全整数或去除首尾空白后的十进制整数字符串；无效作答返回 false，无效题目仍抛错 |
+| answerFor(task) | 保留原整数 API，只计算整数任务；选择题、无效任务、运算符或溢出抛错 |
+| validateTask(task) | 校验整数或选择题的合法性、固定候选及答案可达性；失败抛错 |
+| evaluateAnswer(task, answer) | 整数任务接受安全整数或十进制整数字符串；选择题接受单个选项 ID 或多选 ID 集合；无效作答返回 false，无效题目仍抛错 |
 
 筛选无随机化、分页或数量限制，保持数据顺序。空年级、非法年级或空白 gameId 抛错；未知游戏、没有内容的年级返回空数组。重复年级不造成结果重复。
 
-当前 Exercise.subject 仅为 math，MathTask 只有 number、binary、chain 三类。语文、英语虽然有索引和知识点，但还没有题型及判题实现。支持三科索引不等于支持三科练习。
+当前 Exercise.subject 仅为 math，MathTask 包含原整数任务 number、binary、chain，以及保存结构化题意和固定候选的 choice。语文、英语虽然有索引和知识点，但还没有题型及判题实现。支持三科索引不等于支持三科练习。
 
 这些 API 面向受信任、经 TypeScript 检查的静态数据。validateCatalog 不是不可信 JSON 的完整 schema 校验器，也不检查全部课程语义、教材真实性或审批权限。
 

@@ -1,5 +1,12 @@
 import type { Skill, Mapping } from '../learning/models.js';
 export const skills: readonly Skill[] = [
+  { id: 'math.number.order', subject: 'math', title: '数的顺序与等步长数列' },
+  { id: 'math.number.composition', subject: 'math', title: '数的组成与分解' },
+  { id: 'math.number.place_value', subject: 'math', title: '数位与数字' },
+  { id: 'math.operations.equivalence', subject: 'math', title: '算式结果的比较与等值' },
+  { id: 'math.operations.simple_story', subject: 'math', title: '加减数量关系' },
+  { id: 'math.number.comparison', subject: 'math', title: '数的大小比较' },
+  { id: 'math.addition.missing_addend', subject: 'math', title: '加法中的未知数' },
   {
     "id": "chinese.character.recognition",
     "subject": "chinese",
@@ -82,6 +89,19 @@ export const skills: readonly Skill[] = [
   }
 ];
 export const mappings: readonly Mapping[] = [
+  { id: 'MAP-021', skillId: 'math.number.order', unitIds: ['MA-01A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-022', skillId: 'math.number.order', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-023', skillId: 'math.number.composition', unitIds: ['MA-01A-U02'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-024', skillId: 'math.number.composition', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-025', skillId: 'math.number.place_value', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-026', skillId: 'math.operations.equivalence', unitIds: ['MA-01A-U04'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-027', skillId: 'math.operations.equivalence', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-028', skillId: 'math.operations.simple_story', unitIds: ['MA-01A-U04'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-029', skillId: 'math.operations.simple_story', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-017', skillId: 'math.number.comparison', unitIds: ['MA-01A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-018', skillId: 'math.number.comparison', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-019', skillId: 'math.addition.missing_addend', unitIds: ['MA-01A-U04'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
+  { id: 'MAP-020', skillId: 'math.addition.missing_addend', unitIds: ['MA-02A-U01'], sourceVerification: 'pending', curriculumVerification: 'pending', evidenceIds: ['handoff-2026-10-25'] },
   {
     "id": "MAP-001",
     "skillId": "chinese.character.recognition",

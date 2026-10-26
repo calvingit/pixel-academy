@@ -1,5 +1,7 @@
 # 数字消除生成规则审核
 
+本文保留 `generated-v1` 的原整数规则及当时验证记录。当前组合版本为 `generated-v4`，扩展题型、当前配额与复审见 [题型扩展审核](content-review-question-expansion.md) 和 [现行玩法](gameplay-number-puzzle.md)；下文旧组卷配额与点阵重复数量不是当前规则。
+
 - 规则版本：`generated-v1`；实现为 `src/game/number-puzzle/generation.ts`。
 - 审核者：Codex（代理规则审核），不是教师、家长或教材专家。
 - 审核开始时间：2026-10-26T06:11:53Z。范围为本次实现、结构化任务、现有知识点映射、判题、题面及数值边界；检查结果随本次变更保留。

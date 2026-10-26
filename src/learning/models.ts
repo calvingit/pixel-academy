@@ -42,10 +42,34 @@ export interface Mapping {
   curriculumVerification: Verification;
   evidenceIds: readonly string[];
 }
-export type MathTask =
+export type ArithmeticTask =
   | { kind: 'number'; value: number }
   | { kind: 'binary'; operator: '+' | '-' | '*'; left: number; right: number }
   | { kind: 'chain'; start: number; steps: readonly { operator: '+' | '-'; operand: number }[] };
+export type Relation = '>' | '<' | '=';
+export type ChoiceQuestion =
+  | { kind: 'extreme'; direction: 'max' | 'min' }
+  | { kind: 'symbol'; left: number; right: number }
+  | { kind: 'filter'; relation: '>' | '<'; target: number }
+  | { kind: 'truth'; left: ArithmeticTask; relation: Relation; right: ArithmeticTask }
+  | { kind: 'missing'; addend: number; total: number }
+  | { kind: 'range'; lower: number; upper: number }
+  | { kind: 'neighbor'; value: number; direction: 'before' | 'after' }
+  | { kind: 'sequence'; start: number; step: number; length: number; index: number }
+  | { kind: 'composition'; total: number; part: number }
+  | { kind: 'digit'; place: 'ones' | 'tens'; digit: number }
+  | { kind: 'expression-symbol'; left: ArithmeticTask; right: ArithmeticTask }
+  | { kind: 'equivalent'; target: number }
+  | { kind: 'groups'; groups: number; each: number }
+  | { kind: 'story'; start: number; change: number; operator: '+' | '-' };
+export interface ChoiceOption { readonly id: string; readonly value: number | boolean | Relation | ArithmeticTask }
+export interface ChoiceTask {
+  readonly kind: 'choice';
+  readonly question: ChoiceQuestion;
+  readonly options: readonly ChoiceOption[];
+}
+export type MathTask = ArithmeticTask | ChoiceTask;
+export type SubmittedAnswer = number | string | readonly string[];
 export interface Exercise {
   id: string;
   subject: 'math';

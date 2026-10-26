@@ -1,39 +1,41 @@
 // 数字消除游戏区渲染（Canvas 2D）。只负责表现：题目区、点阵图示、棋盘与动画；
 // 判题、计分、状态转移全部在 rules.ts（docs/architecture.md「需要保持的边界」：
 // 不在动画代码重复一套判题）。动画期间输入是否忽略由规则层 phase 决定。
+// choice 题卡由 main.ts 的原生控件呈现，Canvas 保留整数棋盘与点阵。
 // M4：答对/答错反馈带形状与文案冗余（✓/✗ + 文字，不依赖颜色或声音单独传达）；
-// 暂停冻结动画时间轴；显示尺寸按容器宽度与视口高度自适应（保持 360:620 逻辑比例）。
+// 暂停冻结动画时间轴；题卡和棋盘按可用空间重排，横屏采用四列。
 import { drawNumberGarden } from './garden.js';
 import { answerFor } from '../../learning/evaluation.js';
 import type { MathTask } from '../../learning/models.js';
 import {
-  BOARD_TILES, BOARD_COLUMNS, ELIMINATE_MS, FILL_MS,
+  BOARD_TILES, ELIMINATE_MS, FILL_MS,
 } from './rules.js';
 import type { ClickOutcome, RoundState } from './rules.js';
 
 const FONT_STACK = '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif';
-const LOGICAL_W = 360;
-const LOGICAL_H = 620;
-const HUD_Y = 30;
-const TASK_AREA = { x: 12, y: 46, w: 336, h: 162 };
-const FEEDBACK_Y = 222;
-const BOARD_X0 = 10;
-const BOARD_Y0 = 238;
-const TILE_W = 108;
-const TILE_H = 88;
-const TILE_GAP = 8;
-// 显示缩放边界：低于 0.7 时 HUD/题面字号低于可读下限，宁可让页面纵向滚动；
-// 高于 1 会放大 360 逻辑宽的位图导致发虚，桌面不做放大。
-const MIN_DISPLAY_SCALE = 0.7;
-const MAX_DISPLAY_SCALE = 1;
+export function boardLayout(availW: number, availH: number) {
+  const landscape = availW / availH > 1.35 && availH < 420;
+  const width = landscape ? 620 : 360;
+  const scale = Math.min(availW / width, 1);
+  const height = Math.min(620, availH / scale);
+  const columns = landscape ? 4 : 3;
+  const task = landscape
+    ? { x: 12, y: 46, w: 210, h: height - 78 }
+    : { x: 12, y: 46, w: 336, h: Math.min(162, height * .23) };
+  const boardX = landscape ? 238 : 10;
+  const boardY = landscape ? 10 : task.y + task.h + 30;
+  const tileW = landscape ? 86 : 108;
+  const tileH = (height - boardY - 10 - (BOARD_TILES / columns - 1) * 8) / (BOARD_TILES / columns);
+  return { width, height, scale, columns, task, boardX, boardY, tileW, tileH };
+}
 
 const COLOR = {
   panel: '#193b38',
-  card: '#fffbe5',
-  cardStroke: '#71522e',
-  tileFill: '#a9e5ff',
-  tileStroke: '#193b38',
-  tileShadow: '#254342',
+  card: '#fffef8',
+  cardStroke: '#d2ddc7',
+  tileFill: '#fffef8',
+  tileStroke: '#b8cbb0',
+  tileShadow: '#a8be9b',
   success: '#1c7c43',
   hintStroke: '#795016',
   muted: '#526b60',
@@ -48,6 +50,7 @@ export interface RendererCallbacks {
 export class NumberPuzzleRenderer {
   private skin: 'garden' | 'autumn' | 'snow' = 'garden';
   private focusedTile = 0;
+  private layout = boardLayout(360, 620);
   setSkin(skin: 'garden' | 'autumn' | 'snow'): void { this.skin = skin; }
   private readonly ctx: CanvasRenderingContext2D;
   private readonly canvas: HTMLCanvasElement;
@@ -72,15 +75,15 @@ export class NumberPuzzleRenderer {
     this.ctx = ctx;
     this.callbacks = callbacks;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.width = LOGICAL_W * ratio;
-    canvas.height = LOGICAL_H * ratio;
-    ctx.setTransform(canvas.width / LOGICAL_W, 0, 0, canvas.height / LOGICAL_H, 0, 0);
+    canvas.width = this.layout.width * ratio;
+    canvas.height = this.layout.height * ratio;
+    ctx.setTransform(canvas.width / this.layout.width, 0, 0, canvas.height / this.layout.height, 0, 0);
     canvas.addEventListener('pointerdown', event => this.handlePointer(event));
     canvas.tabIndex = 0;
     canvas.setAttribute('role', 'group');
     canvas.setAttribute('aria-describedby', 'game-task');
     canvas.addEventListener('keydown', event => {
-      const move: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -BOARD_COLUMNS, ArrowDown: BOARD_COLUMNS };
+      const move: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -this.layout.columns, ArrowDown: this.layout.columns };
       if (event.key in move) {
         event.preventDefault(); this.focusedTile = (this.focusedTile + move[event.key]! + BOARD_TILES) % BOARD_TILES;
         this.updateAccessibleLabel();
@@ -109,6 +112,7 @@ export class NumberPuzzleRenderer {
   /** 答对：计分即时体现；消除 → 补块动画按规则常量播放；反馈条带 ✓ 与文案。 */
   applyCorrect(outcome: Extract<ClickOutcome, { type: 'correct' }>): void {
     this.score = outcome.score;
+    if (outcome.tileIndex === null || outcome.removedValue === null) return;
     this.anims.set(outcome.tileIndex, {
       start: performance.now(),
       removedValue: outcome.removedValue,
@@ -137,18 +141,12 @@ export class NumberPuzzleRenderer {
     this.start();
   }
 
-  /**
-   * 显示尺寸自适应：保持 360:620 逻辑比例，取「可用宽度」与「可用高度」中较小
-   * 的缩放（下限 MIN_DISPLAY_SCALE 保证可读与触摸目标，超出时页面纵向滚动而非
-   * 压缩文字；上限 1 避免位图放大发虚）。可用空间由宿主测量后传入（游戏屏可见
-   * 时调用；隐藏中传 0 时跳过）。
-   */
+  /** 用真实可用空间重排题卡和棋盘，横屏为四列；命中与键盘共用同一几何。 */
   fitDisplay(availW: number, availH: number): void {
     if (availW <= 0 || availH <= 0) return;
-    const scale = Math.min(availW / LOGICAL_W, availH / LOGICAL_H, MAX_DISPLAY_SCALE);
-    const displayScale = Math.max(scale, MIN_DISPLAY_SCALE);
-    const width = Math.round(LOGICAL_W * displayScale);
-    const height = Math.round(LOGICAL_H * displayScale);
+    this.layout = boardLayout(availW, availH);
+    const width = Math.round(this.layout.width * this.layout.scale);
+    const height = Math.round(this.layout.height * this.layout.scale);
     if (this.lastDisplaySize && this.lastDisplaySize.width === width && this.lastDisplaySize.height === height) return;
     this.lastDisplaySize = { width, height };
     this.canvas.style.width = `${width}px`;
@@ -156,7 +154,7 @@ export class NumberPuzzleRenderer {
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     this.canvas.width = Math.round(width * ratio);
     this.canvas.height = Math.round(height * ratio);
-    this.ctx.setTransform(this.canvas.width / LOGICAL_W, 0, 0, this.canvas.height / LOGICAL_H, 0, 0);
+    this.ctx.setTransform(this.canvas.width / this.layout.width, 0, 0, this.canvas.height / this.layout.height, 0, 0);
   }
 
   start(): void {
@@ -180,30 +178,33 @@ export class NumberPuzzleRenderer {
     this.task = question ? question.task : null;
     this.feedback = null;
     this.hintActive = state.hintUsed;
-    this.hintAnswer = this.hintActive && this.task ? answerFor(this.task) : null;
+    this.hintAnswer = this.hintActive && this.task && this.task.kind !== 'choice' ? answerFor(this.task) : null;
   }
 
   private handlePointer(event: PointerEvent): void {
     event.preventDefault();
     const rect = this.canvas.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    const x = (event.clientX - rect.left) * (LOGICAL_W / rect.width);
-    const y = (event.clientY - rect.top) * (LOGICAL_H / rect.height);
-    const col = Math.floor((x - BOARD_X0) / (TILE_W + TILE_GAP));
-    const row = Math.floor((y - BOARD_Y0) / (TILE_H + TILE_GAP));
-    if (col < 0 || col >= BOARD_COLUMNS || row < 0) return;
-    const insideX = (x - BOARD_X0) % (TILE_W + TILE_GAP) <= TILE_W;
-    const insideY = (y - BOARD_Y0) % (TILE_H + TILE_GAP) <= TILE_H;
+    const x = (event.clientX - rect.left) * (this.layout.width / rect.width);
+    const y = (event.clientY - rect.top) * (this.layout.height / rect.height);
+    const col = Math.floor((x - this.layout.boardX) / (this.layout.tileW + 8));
+    const row = Math.floor((y - this.layout.boardY) / (this.layout.tileH + 8));
+    if (col < 0 || col >= this.layout.columns || row < 0) return;
+    const insideX = (x - this.layout.boardX) % (this.layout.tileW + 8) <= this.layout.tileW;
+    const insideY = (y - this.layout.boardY) % (this.layout.tileH + 8) <= this.layout.tileH;
     if (!insideX || !insideY) return;
-    const index = row * BOARD_COLUMNS + col;
+    const index = row * this.layout.columns + col;
     if (index >= BOARD_TILES) return;
     this.callbacks.onTileClick(index);
   }
 
   private draw(now: number): void {
     const ctx = this.ctx;
-    ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+    ctx.clearRect(0, 0, this.layout.width, this.layout.height);
+    ctx.save();
+    ctx.scale(this.layout.width / 360, this.layout.height / 620);
     drawNumberGarden(ctx, this.skin);
+    ctx.restore();
     this.drawHud();
     if (this.task) this.drawTask(this.task);
     this.drawFeedback();
@@ -212,17 +213,20 @@ export class NumberPuzzleRenderer {
 
   private drawHud(): void {
     const ctx = this.ctx;
+    const width = this.layout.columns === 4 ? 234 : this.layout.width;
     ctx.fillStyle = COLOR.card;
-    ctx.fillRect(8, 12, 140, 34);
-    ctx.fillRect(228, 12, 124, 34);
+    this.roundRect(10, 10, width - 20, 30, 10); ctx.fill();
+    ctx.fillStyle = '#d3dfc8';
+    ctx.fillRect(16, 42, width - 32, 3);
+    ctx.fillStyle = '#527b51';
+    ctx.fillRect(16, 42, (width - 32) * this.questionIndex / Math.max(1, this.totalQuestions), 3);
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
     ctx.fillStyle = COLOR.panel;
-    ctx.font = `bold 17px ${FONT_STACK}`;
-    ctx.fillText(`第 ${this.questionIndex + 1} / ${this.totalQuestions} 题`, 14, HUD_Y);
+    ctx.font = `bold 14px ${FONT_STACK}`;
+    ctx.fillText(`第 ${this.questionIndex + 1} / ${this.totalQuestions} 题`, 16, 26);
     ctx.textAlign = 'right';
-    ctx.fillStyle = COLOR.panel;
-    ctx.fillText(`得分 ${this.score}`, LOGICAL_W - 14, HUD_Y);
+    ctx.fillText(`得分 ${this.score}`, width - 16, 26);
   }
 
   private fitFont(text: string, maxWidth: number, size: number, weight = 'bold'): string {
@@ -235,13 +239,14 @@ export class NumberPuzzleRenderer {
   }
 
   private drawTask(task: MathTask): void {
+    if (task.kind === 'choice') return;
     const ctx = this.ctx;
-    const area = TASK_AREA;
+    const area = this.layout.task;
     // 题目卡片：与棋盘块同族的描边卡片，划出稳定的题目区。
     ctx.fillStyle = COLOR.card;
     ctx.strokeStyle = COLOR.cardStroke;
-    ctx.lineWidth = 3;
-    this.roundRect(area.x, area.y, area.w, area.h, 10);
+    ctx.lineWidth = 1.5;
+    this.roundRect(area.x, area.y, area.w, area.h, 18);
     ctx.fill();
     ctx.stroke();
     ctx.textBaseline = 'middle';
@@ -252,8 +257,8 @@ export class NumberPuzzleRenderer {
       // 点阵与配文整块在卡片内垂直居中，配文始终在最后一行点的下方（5 行点阵不与文字重叠）。
       const rows = task.left;
       const cols = task.right;
-      const spacing = 22;
-      const radius = 7;
+      const spacing = Math.min(22, (area.h - 34) / rows);
+      const radius = Math.min(7, spacing * .32);
       const gridH = (rows - 1) * spacing + radius * 2;
       const topGap = Math.max((area.h - gridH - 23) / 2, 4);
       const originX = area.x + (area.w - ((cols - 1) * spacing + radius * 2)) / 2 + radius;
@@ -306,19 +311,26 @@ export class NumberPuzzleRenderer {
 
   /** 答对反馈条：✓ 形状 + 文案双通道（docs/design.md「布局与输入」，不只靠颜色或声音）。 */
   private drawFeedback(): void {
-    if (!this.feedback) return;
+    if (!this.feedback) {
+      this.ctx.fillStyle = COLOR.muted;
+      this.ctx.font = `12px ${FONT_STACK}`;
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText('点选与答案相同的数字', this.layout.task.x + this.layout.task.w / 2, (this.layout.task.y + this.layout.task.h + 16));
+      return;
+    }
     const ctx = this.ctx;
     const text = this.feedback;
     const color = COLOR.success;
     ctx.fillStyle = COLOR.card;
-    ctx.fillRect(12, FEEDBACK_Y - 12, 336, 25);
+    ctx.fillRect(this.layout.task.x, (this.layout.task.y + this.layout.task.h + 16) - 12, this.layout.task.w, 25);
     ctx.font = `bold 16px ${FONT_STACK}`;
     const textWidth = ctx.measureText(text).width;
     const glyphBox = 18;
     const gap = 8;
     const total = glyphBox + gap + textWidth;
-    const left = LOGICAL_W / 2 - total / 2;
-    const cy = FEEDBACK_Y;
+    const left = this.layout.task.x + this.layout.task.w / 2 - total / 2;
+    const cy = (this.layout.task.y + this.layout.task.h + 16);
     const gcx = left + glyphBox / 2;
     ctx.save();
     ctx.strokeStyle = color;
@@ -356,26 +368,24 @@ export class NumberPuzzleRenderer {
     const scale = options.scale ?? 1;
     const alpha = options.alpha ?? 1;
     if (value === null || scale <= 0 || alpha <= 0) return;
-    const cx = x + TILE_W / 2;
-    const cy = y + TILE_H / 2 + (options.dy ?? 0);
-    const w = TILE_W * scale;
-    const h = TILE_H * scale;
+    const cx = x + this.layout.tileW / 2;
+    const cy = y + this.layout.tileH / 2 + (options.dy ?? 0);
+    const w = this.layout.tileW * scale;
+    const h = this.layout.tileH * scale;
     ctx.save();
     ctx.globalAlpha = alpha;
-    // 复古掌机块面：硬投影（无模糊）+ 厚描边，投影随消除动画同步缩放。
-    this.roundRect(cx - w / 2 + 3 * scale, cy - h / 2 + 3 * scale, w, h, 10 * scale);
+    // 浅色实体数字块，投影随消除动画同步缩放。
+    this.roundRect(cx - w / 2 + 3 * scale, cy - h / 2 + 3 * scale, w, h, 16 * scale);
     ctx.fillStyle = COLOR.tileShadow;
     ctx.fill();
-    this.roundRect(cx - w / 2, cy - h / 2, w, h, 10 * scale);
+    this.roundRect(cx - w / 2, cy - h / 2, w, h, 16 * scale);
     ctx.fillStyle = COLOR.tileFill;
     ctx.fill();
-    {
-      ctx.fillStyle = '#d5f3ff';
-      ctx.fillRect(cx - w / 2 + 6 * scale, cy - h / 2 + 6 * scale, w - 12 * scale, 4 * scale);
-      ctx.fillStyle = '#69b9d3';
-      ctx.fillRect(cx - w / 2 + 6 * scale, cy + h / 2 - 10 * scale, w - 12 * scale, 4 * scale);
-    }
-    ctx.lineWidth = 3;
+    ctx.fillStyle = '#e4ecd9';
+    this.roundRect(cx - 12 * scale, cy + h / 2 - 12 * scale, 24 * scale, 3 * scale, 1.5 * scale);
+    ctx.fill();
+    this.roundRect(cx - w / 2, cy - h / 2, w, h, 16 * scale);
+    ctx.lineWidth = 1.5;
     if (options.hintPhase !== undefined) {
       ctx.strokeStyle = COLOR.hintStroke;
       ctx.globalAlpha = alpha * (0.35 + 0.65 * options.hintPhase);
@@ -398,10 +408,10 @@ export class NumberPuzzleRenderer {
   private drawBoard(now: number): void {
     const hintPhase = 0.5 + 0.5 * Math.sin(now / 450); // 缓慢呼吸
     for (let i = 0; i < BOARD_TILES; i++) {
-      const col = i % BOARD_COLUMNS;
-      const row = Math.floor(i / BOARD_COLUMNS);
-      const x = BOARD_X0 + col * (TILE_W + TILE_GAP);
-      const y = BOARD_Y0 + row * (TILE_H + TILE_GAP);
+      const col = i % this.layout.columns;
+      const row = Math.floor(i / this.layout.columns);
+      const x = this.layout.boardX + col * (this.layout.tileW + 8);
+      const y = this.layout.boardY + row * (this.layout.tileH + 8);
       const anim = this.anims.get(i);
       if (anim) {
         const t = now - anim.start;
@@ -422,10 +432,10 @@ export class NumberPuzzleRenderer {
       this.drawTile(x, y, this.slots[i] ?? null, { hintPhase: this.hintPhaseFor(i, hintPhase) });
     }
     if (this.canvas === document.activeElement) {
-      const x = BOARD_X0 + this.focusedTile % BOARD_COLUMNS * (TILE_W + TILE_GAP);
-      const y = BOARD_Y0 + Math.floor(this.focusedTile / BOARD_COLUMNS) * (TILE_H + TILE_GAP);
+      const x = this.layout.boardX + this.focusedTile % this.layout.columns * (this.layout.tileW + 8);
+      const y = this.layout.boardY + Math.floor(this.focusedTile / this.layout.columns) * (this.layout.tileH + 8);
       this.ctx.save(); this.ctx.strokeStyle = '#193b38'; this.ctx.lineWidth = 2; this.ctx.setLineDash([4, 4]);
-      this.ctx.strokeRect(x + 6, y + 6, TILE_W - 12, TILE_H - 12); this.ctx.restore();
+      this.ctx.strokeRect(x + 6, y + 6, this.layout.tileW - 12, this.layout.tileH - 12); this.ctx.restore();
     }
   }
 

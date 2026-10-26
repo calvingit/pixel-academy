@@ -104,7 +104,7 @@ test('course completion requires a clean full attempt and can award only once', 
 
 test('settlement saves wallet and permanent receipt together even if records are cleared', async () => {
   const rng = createSeededRng(3);
-  let state = createRound({ exercises: content.select([1]), gradeOf: content.gradeOf, rng });
+  let state = createRound({ exercises: content.select([1]).filter(e => e.task.kind !== 'choice'), gradeOf: content.gradeOf, rng });
   while (state.phase !== 'finished') state = completeResolve(clickTile(state, state.board.indexOf(answerFor(state.questions[state.questionIndex].task)), rng).state);
   const challenge = { id: 'one', state, grades: [1], rngState: rng.snapshotState(), contentVersion: 'v', paused: true, remainingMs: 0, deadline: null, timerKind: null };
   const db = backend(), store = new ProfileStore(db), initial = await store.load(createProfile);

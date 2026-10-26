@@ -3,24 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#74bfa4">
+  <meta name="theme-color" content="#f7f8f2">
   <title>数字消除 · Pixel Academy</title>
   <link rel="stylesheet" href="/style.css">
   <script type="module" src="/dist/game/number-puzzle/main.js"></script>
 </head>
 <body>
   <main class="app">
-    <p class="console-label">PIXEL ACADEMY · NUMBER GARDEN</p>
-    <header class="app-header">
-      <h1>数字消除</h1>
-      <p class="app-subtitle">点选与题目答案相同的数字块</p>
-    </header>
+    <header class="app-header"><h1>数字消除<span class="title-dot">.</span></h1></header>
 
-    <div class="player-bar"><span id="player-avatar" class="avatar-art"></span><strong id="wallet">正在读取本机档案…</strong></div>
-    <nav id="main-nav" class="actions" aria-label="学习与收藏">
-      <button id="btn-open-courses" type="button">学习课程</button><button id="btn-open-review" type="button">错题复习</button>
-      <button id="btn-open-shop" type="button">金币商店</button><button id="btn-open-profile" type="button">我的收藏</button>
-    </nav>
+    <div class="player-bar"><span id="player-avatar" class="avatar-art"></span><strong id="wallet">正在读取本机档案…</strong><button id="btn-menu" type="button" aria-haspopup="dialog">更多</button></div>
     <p id="app-notice" class="status" role="status" hidden></p>
     <p id="offline-notice" class="status offline-notice" hidden></p>
 
@@ -33,7 +25,17 @@
     </section>
 
     <section id="screen-select" class="screen" hidden>
-      <h2>选择年级</h2>
+      <div class="home-layout"><div class="garden-intro">
+        <svg class="garden-art" viewBox="0 0 400 220" fill="none" aria-hidden="true">
+          <circle cx="316" cy="42" r="24" fill="#edc766"/><path d="M18 166Q95 64 208 151Q310 63 385 162V212H18Z" fill="#dce8cd"/>
+          <path d="M8 191Q111 122 231 179Q321 142 392 190V220H8Z" fill="#b9d1ab"/>
+          <g stroke="#335b49" stroke-width="2.5"><rect x="66" y="92" width="76" height="78" rx="17" fill="#fffdf2"/><rect x="160" y="66" width="76" height="78" rx="17" fill="#f3d383"/><rect x="254" y="104" width="76" height="78" rx="17" fill="#e0eeda"/></g>
+          <g fill="#294e3c" font-family="system-ui,sans-serif" font-size="38" font-weight="700" text-anchor="middle"><text x="104" y="144">3</text><text x="198" y="118">+</text><text x="292" y="156">5</text></g>
+          <g stroke="#557b50" stroke-width="4" stroke-linecap="round"><path d="M42 209v-28m0 15-13-10m13 4 11-13M352 214v-30m0 15 14-13"/></g><g fill="#f2c56b"><circle cx="42" cy="177" r="8"/><circle cx="368" cy="182" r="7"/></g>
+          <g fill="#7da8a8" stroke="#335b49" stroke-width="2.5"><rect x="173" y="164" width="52" height="41" rx="14"/></g><path d="M189 178v5m20-5v5m-16 7h9" stroke="#294e3c" stroke-width="3" stroke-linecap="round"/>
+          <path d="m35 51 3-7 3 7 7 3-7 3-3 7-3-7-7-3ZM266 39l2-5 2 5 5 2-5 2-2 5-2-5-5-2Z" fill="#94b49c"/>
+        </svg>
+      </div><div class="grade-panel"><h2>选择练习年级</h2>
       <p id="select-open-hint" class="hint"></p>
       <fieldset class="grades">
         <legend>年级（可多选）</legend>
@@ -46,8 +48,9 @@
       </fieldset>
       <p id="select-empty-hint" class="hint" hidden>请先选择至少一个年级。</p>
       <div class="actions">
-        <button id="btn-to-availability" type="button" class="primary" disabled>查看可用内容</button>
+        <button id="btn-to-availability" type="button" class="primary" disabled>下一步 · 查看挑战 →</button>
       </div>
+      </div></div>
       <div id="restore-offer" class="restore-offer" hidden>
         <p id="restore-offer-text" class="restore-text"></p>
         <div class="actions">
@@ -56,19 +59,13 @@
         </div>
       </div>
       <p id="restore-status" class="status" hidden></p>
-      <div id="records-section" class="records">
-        <h2>练习记录</h2>
-        <p class="hint">保存在本机浏览器，可随时清除。</p>
-        <ul id="records-list" class="records-list"></ul>
-        <p id="records-empty" class="hint">暂无已保存的练习记录。</p>
-        <div class="actions">
-          <button id="btn-clear-records" type="button">清除成绩</button>
-        </div>
-      </div>
+
     </section>
 
+
+
     <section id="screen-availability" class="screen" hidden>
-      <h2>可用内容</h2>
+      <p class="eyebrow">READY TO GROW</p><h2>准备好了吗？</h2><p class="hint">单选和对错题直接点选；多选题先选出所有符合条件的数，再点“提交答案”。每题 10 秒。</p><div class="round-guide"><span><b>01</b> 看题目</span><span><b>02</b> 找数字</span><span><b>03</b> 点选消除</span></div>
       <p id="availability-status" class="status"></p><p id="availability-inventory" class="hint"></p>
       <div class="actions">
         <button id="btn-back-select" type="button">返回调整年级</button>
@@ -78,21 +75,28 @@
 
     <section id="screen-game" class="screen screen-game" hidden>
       <p id="preview-banner" class="preview-banner" hidden>候选内容预览 · 练习未审核</p>
-      <div class="game-top">
-        <span class="garden-label">和蓝蓝一起，发现数字的秘密</span>
-        <button id="btn-sound" type="button" class="chip" aria-pressed="true">音效 开</button>
-      </div>
-      <p id="game-mode" class="hint"></p><p id="countdown" class="countdown" role="timer" aria-live="off"></p>
-      <div id="challenge-tools" class="challenge-tools"><div class="actions"><button id="btn-hint" type="button">提醒卡</button><button id="btn-time" type="button">加时 +5秒</button></div><p id="hint-condition" class="hint"></p><button id="btn-ready" type="button" class="primary" hidden>继续答题</button></div>
+      <div class="game-status"><button id="btn-sound" type="button" class="chip" aria-pressed="true">音效 开</button><p id="game-mode" class="sr-only"></p><p id="countdown" class="countdown" role="timer" aria-live="off"></p></div>
+
       <div id="board-wrap" class="board-wrap">
-        <p id="game-task" class="sr-only"></p><canvas id="board-canvas" class="board-canvas"></canvas>
+        <p id="game-task" class="sr-only"></p>
+        <div id="choice-board" class="choice-board" hidden>
+          <p id="choice-progress" class="hint"></p>
+          <h2 id="choice-task" tabindex="-1"></h2>
+          <div id="choice-diagram" class="choice-diagram" aria-hidden="true" hidden></div>
+          <p id="choice-instructions" class="hint"></p>
+          <div id="choice-options" class="choice-options" role="group" aria-labelledby="choice-task" aria-describedby="choice-instructions"></div>
+          <p id="choice-feedback" role="status"></p>
+          <button id="btn-choice-submit" class="primary" type="button" hidden>提交答案</button>
+        </div>
+        <canvas id="board-canvas" class="board-canvas"></canvas>
         <div id="pause-overlay" class="pause-overlay" hidden>
           <p id="pause-title" class="pause-title">Ⅱ 冒险休息站</p>
           <p id="pause-hint" class="pause-hint">进度已保留，随时继续。</p>
           <button id="btn-resume" type="button" class="primary">继续游戏</button>
         </div>
       </div>
-      <div id="practice-tools" hidden><p id="practice-feedback" class="status"></p><div class="actions"><button id="btn-practice-explain" type="button">免费查看讲解</button><button id="btn-practice-next" type="button" hidden>下一题</button><button id="btn-mastered" type="button" class="primary" hidden>已学会</button></div></div>
+      <div id="challenge-tools" class="challenge-tools"><div class="actions"><button id="btn-hint" aria-describedby="hint-condition" type="button">提醒卡</button><button id="btn-time" type="button">加时 +5秒</button></div><p id="hint-condition" class="sr-only"></p><button id="btn-ready" type="button" class="primary" hidden>继续答题</button></div>
+      <div id="practice-tools" hidden><div class="actions"><button id="btn-practice-explain" type="button">免费查看讲解</button><button id="btn-practice-next" type="button" hidden>下一题</button><button id="btn-mastered" type="button" class="primary" hidden>已学会</button></div></div>
       <div class="actions game-actions">
         <button id="btn-pause" type="button">暂停</button>
         <button id="btn-restart" type="button">重新开始</button>
@@ -101,7 +105,7 @@
     </section>
 
     <section id="screen-result" class="screen" hidden>
-      <h2 id="result-title">本局完成！</h2>
+      <div class="result-emblem" aria-hidden="true">✦</div><p class="eyebrow">每一次练习，都是成长</p><h2 id="result-title">本局完成！</h2>
       <p id="result-preview-note" class="preview-banner" hidden>候选预览局 · 结果不计入正式记录</p>
       <p id="result-score" class="result-line"></p>
       <p id="result-first-try" class="result-line"></p>
@@ -116,6 +120,22 @@
     <section id="screen-review" class="screen" hidden><h2>错题复习</h2><label for="review-filter">查看记录</label><select id="review-filter"><option value="pending">待复习错题</option><option value="timeout">超时待练习</option><option value="mastered">已学会</option></select><div id="review-list" class="card-grid"></div><button type="button" data-home>返回首页</button></section>
     <section id="screen-profile" class="screen" hidden><h2>我的收藏与资料</h2><p id="collection-summary"></p><p id="collection-target" class="status"></p><form id="nickname-form"><label for="nickname">昵称</label><input id="nickname" name="nickname" autocomplete="nickname" required><p id="rename-info" class="hint"></p><button type="submit">保存昵称</button></form><p class="hint">档案只在本机浏览器保存。清除浏览器数据或更换设备会失去金币、装扮和学习进度。</p><div class="actions"><button id="btn-reset" type="button">重置全部数据</button><button type="button" data-home>返回首页</button></div></section>
   </main>
+  <dialog id="explanation-dialog" aria-labelledby="explanation-title"><h2 id="explanation-title">解题思路</h2><p id="practice-feedback" class="status"></p><button id="btn-explanation-close" type="button">返回练习</button></dialog>
+  <dialog id="menu-dialog" aria-labelledby="menu-title"><div class="menu-heading"><h2 id="menu-title">我的花园</h2><button id="btn-menu-close" type="button">关闭</button></div>
+    <nav id="main-nav" class="actions" aria-label="学习与收藏">
+      <button id="btn-open-courses" type="button"><span aria-hidden="true">▤</span>学习课程<small>先学一学，再试一试</small></button><button id="btn-open-review" type="button"><span aria-hidden="true">↺</span>错题复习<small>慢慢想，把它弄明白</small></button>
+      <button id="btn-open-shop" type="button"><span aria-hidden="true">◇</span>金币商店<small>为下一次挑战做准备</small></button><button id="btn-open-profile" type="button"><span aria-hidden="true">☺</span>我的收藏<small>装扮我的数字花园</small></button>
+    </nav>
+      <details id="records-section" class="records">
+        <summary>练习记录 <span>查看我的收获 ↗</span></summary>
+        <p class="hint">保存在本机浏览器，可随时清除。</p>
+        <ul id="records-list" class="records-list"></ul>
+        <p id="records-empty" class="hint">暂无已保存的练习记录。</p>
+        <div class="actions">
+          <button id="btn-clear-records" type="button">清除成绩</button>
+        </div>
+      </details>
+  </dialog>
   <dialog id="revive-dialog" aria-labelledby="revive-title" closedby="none"><h2 id="revive-title">要继续挑战吗？</h2><p id="revive-message"></p><p id="revive-reason" class="hint"></p><div class="actions"><button id="btn-revive" type="button">使用复活卡</button><button id="btn-end" type="button">结束挑战</button></div></dialog>
   <dialog id="preview-dialog" aria-labelledby="preview-title" closedby="closerequest"><h2 id="preview-title"></h2><div id="preview-body"></div><button id="preview-close" type="button" autofocus>关闭预览</button></dialog>
   <dialog id="confirm-dialog" aria-labelledby="confirm-message" closedby="closerequest"><p id="confirm-message"></p><form method="dialog" class="actions"><button value="no" autofocus>取消</button><button value="yes" class="primary">确认</button></form></dialog>

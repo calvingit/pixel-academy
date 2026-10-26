@@ -1,5 +1,5 @@
 import type { Catalog, Exercise, ExerciseQuery } from './models.js';
-import { answerFor } from './evaluation.js';
+import { validateTask } from './evaluation.js';
 
 /** 校验受 TypeScript 约束的静态数据；不是外部 JSON 的反序列化器。 */
 export function validateCatalog(catalog: Catalog): readonly string[] {
@@ -51,7 +51,7 @@ export function validateCatalog(catalog: Catalog): readonly string[] {
       !exercise.review.reviewer.trim() || !/^\d{4}-\d{2}-\d{2}T/.test(exercise.review.reviewedAt) ||
       !Number.isFinite(Date.parse(exercise.review.reviewedAt))
     )) errors.push(`Invalid approval: ${exercise.id}`);
-    try { answerFor(exercise.task); } catch { errors.push(`Invalid task: ${exercise.id}`); }
+    try { validateTask(exercise.task); } catch { errors.push(`Invalid task: ${exercise.id}`); }
   }
   return errors;
 }

@@ -4,12 +4,14 @@ import { catalog, validateCatalog, answerFor } from '../dist/index.js';
 import { generateExercises, selectRoundExercises } from '../dist/game/number-puzzle/generation.js';
 import { loadGameContent } from '../dist/game/number-puzzle/content.js';
 import { createSeededRng, restoreSeededRng } from '../dist/game/number-puzzle/random.js';
-import { createRound, clickTile, completeResolve } from '../dist/game/number-puzzle/rules.js';
+import { createRound, clickTile, submitChoice, completeResolve } from '../dist/game/number-puzzle/rules.js';
 
 
+import { correctOptionIds, isMultiple } from '../dist/learning/choice.js';
+import { taskIdentity } from '../dist/game/number-puzzle/learning.js';
 const content = loadGameContent();
 const all = content.select([1, 2]);
-const category = task => task.kind === 'binary' ? task.operator : task.kind;
+const category = task => task.kind === 'choice' ? isMultiple(task) ? 'multiple' : task.question.kind === 'truth' ? 'truth' : 'single' : task.kind === 'binary' ? task.operator : task.kind;
 const counts = rows => rows.reduce((result, row) => {
   const key = category(row.task);
   result[key] = (result[key] ?? 0) + 1;
@@ -21,12 +23,12 @@ const sample = (grades, seed, previous = []) =>
 test('all generated candidates satisfy reviewed bounds, associations and canonical uniqueness', () => {
   const generated = generateExercises();
   assert.deepEqual(validateCatalog({ ...catalog, exercises: generated }), []);
-  assert.deepEqual(all, generated);
+  assert.deepEqual(all, generated.filter(e => e.review.status === 'approved'));
   assert.equal(new Set(all.map(e => e.id)).size, all.length);
-  assert.equal(new Set(all.map(e => JSON.stringify(e.task))).size, all.length);
-  assert.deepEqual(counts(content.select([1])), { number: 11, '+': 36, '-': 21 });
+  for (const grade of [1,2]) { const pool = content.select([grade]); assert.equal(new Set(pool.map(e => taskIdentity(e.task))).size, pool.length); }
+  assert.deepEqual(counts(content.select([1])), { number: 11, '+': 36, '-': 21, single: 555, truth: 425, multiple: 37 });
   assert.equal(all.filter(e => e.task.kind === 'binary' && e.task.operator === '*').length, 5);
-  for (const exercise of all) {
+  for (const exercise of all.filter(e => e.task.kind !== 'choice')) {
     const task = exercise.task, grade = content.gradeOf(exercise), answer = answerFor(task);
     assert.equal(exercise.review.status, 'approved');
     assert.ok(answer >= 0 && answer <= (grade === 1 ? 10 : 100));
@@ -77,11 +79,12 @@ test('quotas, within-round uniqueness, adjacent-round minimum overlap and seeded
       assert.deepEqual(rows, sample(grades, seed, previous));
       assert.equal(rows.length, 10);
       assert.equal(new Set(rows.map(e => e.id)).size, 10);
+      assert.equal(new Set(rows.map(e => taskIdentity(e.task))).size, 10);
       const mixed = grades.includes(1) && grades.includes(2);
-      assert.deepEqual(counts(rows), mixed ? { number: 1, '+': 2, '-': 2, chain: 3, '*': 2 }
-        : grades.includes(1) ? { number: 2, '+': 4, '-': 4 } : { chain: 6, '*': 4 });
+      assert.deepEqual(counts(rows), mixed ? { '+': 1, '-': 1, single: 2, multiple: 2, truth: 2, chain: 1, '*': 1 }
+        : grades.includes(1) ? { '+': 2, '-': 2, single: 2, multiple: 2, truth: 2 } : { chain: 2, '*': 2, single: 2, multiple: 2, truth: 2 });
       const overlap = rows.filter(e => previous.includes(e.id));
-      assert.equal(overlap.length, previous.length && !mixed && grades.includes(2) ? 3 : 0);
+      assert.equal(overlap.length, 0);
       previous = rows.map(e => e.id);
     }
   }
@@ -93,8 +96,10 @@ test('dynamic rounds resume exactly from persisted tasks and RNG', () => {
   const finish = (initial, rng) => {
     let state = initial;
     while (state.phase !== 'finished') {
-      const answer = answerFor(state.questions[state.questionIndex].task);
-      state = completeResolve(clickTile(state, state.board.indexOf(answer), rng).state);
+      const task = state.questions[state.questionIndex].task;
+      const ids = task.kind === 'choice' ? correctOptionIds(task) : null;
+      const step = ids ? submitChoice(state, isMultiple(task) ? ids : ids[0], rng) : clickTile(state, state.board.indexOf(answerFor(task)), rng);
+      state = completeResolve(step.state);
     }
     assert.equal(state.score, 100);
     return state;
@@ -107,4 +112,21 @@ test('dynamic rounds resume exactly from persisted tasks and RNG', () => {
     const restoredRng = restoreSeededRng(rng.snapshotState());
     assert.deepEqual(finish(round, rng), finish(copied, restoredRng));
   }
+});
+
+test('family-first sampling gives every implemented family a real chance without duplicate semantics', () => {
+  const seen = new Set();
+  for (let seed = 0; seed < 100; seed++) {
+    const rows = sample([2], seed);
+    const choices = rows.filter(e => e.task.kind === 'choice');
+    const family = e => e.task.question.kind === 'extreme' ? `extreme:${e.task.options.length}` : e.task.question.kind === 'filter' ? `filter:${e.task.question.relation}`
+      : e.task.question.kind === 'truth' ? `truth:${e.task.question.left.kind === 'number' ? 'number' : 'calculation'}` : e.task.question.kind;
+    for (const e of choices) seen.add(family(e));
+    for (const categoryName of ['single', 'multiple', 'truth']) {
+      const group = choices.filter(e => category(e.task) === categoryName);
+      assert.equal(group.length, 2);
+      assert.equal(new Set(group.map(family)).size, 2);
+    }
+  }
+  assert.deepEqual([...seen].sort(), ['extreme:2','extreme:4','symbol','missing','filter:>','filter:<','truth:number','truth:calculation','range','neighbor','sequence','composition','digit','expression-symbol','equivalent','groups','story'].sort());
 });

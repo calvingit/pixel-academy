@@ -1,0 +1,27 @@
+{
+  "record": {
+    "id": "54a81fc7-bffb-4025-a117-faeedf7a43b4",
+    "at": "2026-10-26T12:20:06.573Z",
+    "score": 100,
+    "firstTryCount": 10,
+    "totalWrongCount": 0,
+    "totalTimeoutCount": 0,
+    "revivals": 0,
+    "completed": 10,
+    "total": 10,
+    "passed": true,
+    "coins": 30
+  },
+  "coinsBefore": 100,
+  "coinsAfter": 130,
+  "restoredInThisRun": false,
+  "seen": [
+    "binary",
+    "truth",
+    "story",
+    "digit",
+    "chain",
+    "extreme",
+    "equivalent"
+  ]
+}

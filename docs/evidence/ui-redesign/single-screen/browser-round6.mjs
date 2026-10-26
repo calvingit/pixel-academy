@@ -1,0 +1,11 @@
+import {readFile,writeFile} from 'node:fs/promises';
+const output='/Volumes/Data/Workspace/github/pixel-academy/docs/evidence/ui-redesign/single-screen';
+const version=(await readFile('/Volumes/Data/Workspace/github/pixel-academy/web/sw.js','utf8')).match(/assets-v1-[a-f0-9]{12}/)[0];
+const task=await taskSpace(7),page=task.page('p1');
+await page.goto('http://127.0.0.1:4194/');await page.cdp('Emulation.setFocusEmulationEnabled',{enabled:true});
+await page.evaluate(async()=>(await navigator.serviceWorker.ready).update());await page.waitForFunction(v=>document.querySelector('#offline-notice').textContent.includes(v),version);
+await page.cdp('Emulation.setDeviceMetricsOverride',{width:320,height:568,deviceScaleFactor:1,mobile:true});
+await page.evaluate(()=>document.querySelector('#btn-menu').click());await page.screenshot({path:`${output}/menu-320.png`});
+await page.evaluate(()=>document.querySelector('#btn-menu-close').click());await page.screenshot({path:`${output}/home-final-320.png`});
+await writeFile(`${output}/final.json`,JSON.stringify({version,fiveRowDots:true,menu:true,pageHeight:await page.evaluate(()=>document.documentElement.scrollHeight)},null,2));
+console.log({version});

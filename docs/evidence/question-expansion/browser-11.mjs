@@ -1,0 +1,20 @@
+const task=await taskSpace(8),page=task.page('p1');
+const assert=(v,m)=>{if(!v)throw new Error(m);};
+await page.cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+const read=()=>page.evaluate(()=>new Promise(resolve=>{const r=indexedDB.open('pixel-academy',1);r.onsuccess=()=>{const db=r.result,q=db.transaction('profiles','readonly').objectStore('profiles').get('local');q.onsuccess=()=>{resolve(q.result);db.close();};};}));
+const idle=()=>page.waitForFunction(()=>!document.body.hasAttribute('aria-busy'));
+const solve=async()=>{const p=await read(),t=p.practice.exercises[p.practice.index].task,q=t.question;
+  for(const o of t.options.filter(o=>q.relation==='>'?o.value>q.target:o.value<q.target)){await page.click(`#choice-options button[data-option-id=${JSON.stringify(o.id)}]`);await idle();}
+  await page.click('#btn-choice-submit');await idle();};
+await page.click('loc=role:button[name="开始复习"]');await idle();
+const before=await read();await solve();const rewarded=await read();assert(rewarded.coins===before.coins+2,'review reward +2');
+await page.click('#btn-practice-next');await idle();await solve();
+assert((await read()).coins===rewarded.coins,'review reward only once');
+await page.click('#btn-mastered');await idle();
+assert(Object.values((await read()).mistakes)[0].mastered,'mastered saved');
+console.log({reviewFirstReward:2,repeatReward:0,mastered:true});
+await page.click('button[data-home]');
+await page.waitForFunction(()=>!document.body.inert && document.body.dataset.screen==='select');
+await page.click('#btn-menu');await page.click('#btn-open-courses');
+await page.click('#courses-list article:nth-child(5) button');await idle();
+console.log(await page.snapshot());

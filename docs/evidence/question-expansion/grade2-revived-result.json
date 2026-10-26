@@ -1,0 +1,22 @@
+{
+  "record": {
+    "id": "d35c9498-fb83-45b6-a93e-9c05dfa66cc8",
+    "at": "2026-10-26T12:14:18.465Z",
+    "score": 95,
+    "firstTryCount": 9,
+    "totalWrongCount": 0,
+    "totalTimeoutCount": 1,
+    "revivals": 1,
+    "completed": 10,
+    "total": 10,
+    "passed": true,
+    "coins": 23
+  },
+  "coinsBefore": 47,
+  "coinsAfter": 70,
+  "restored": true,
+  "seen": [
+    "expression-symbol",
+    "range"
+  ]
+}

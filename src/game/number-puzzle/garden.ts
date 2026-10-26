@@ -1,56 +1,34 @@
-/** 数字花园的静态装饰；沿用棋盘坐标，题面与反馈由渲染器覆盖在上方。 */
+/** 数字花园的静态底色与边缘植物；装饰不表达答案或游戏状态。 */
 export function drawNumberGarden(ctx: CanvasRenderingContext2D, skin: 'garden' | 'autumn' | 'snow' = 'garden'): void {
   ctx.save();
-  const rect = (x: number, y: number, w: number, h: number, color: string): void => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
-  };
-  rect(0, 0, 360, 620, skin === 'autumn' ? '#f5d49b' : skin === 'snow' ? '#badde7' : '#64cff6');
-  for (const [x, y] of [[0, 65], [288, 110], [78, 184]] as const) {
-    rect(x, y + 8, 58, 14, '#e9fbff');
-    rect(x + 12, y, 30, 26, '#fffef3');
-  }
-  ctx.fillStyle = skin === 'autumn' ? '#cfaa68' : skin === 'snow' ? '#e4f1ec' : '#85ccba';
-  ctx.beginPath();
-  ctx.moveTo(0, 280);
-  ctx.lineTo(72, 174);
-  ctx.lineTo(170, 274);
-  ctx.lineTo(268, 166);
-  ctx.lineTo(360, 250);
-  ctx.lineTo(360, 620);
-  ctx.lineTo(0, 620);
-  ctx.closePath();
-  ctx.fill();
-  rect(0, 314, 360, 306, skin === 'autumn' ? '#bc9b57' : skin === 'snow' ? '#e7f4f3' : '#8ccd59');
-  rect(0, 314, 360, 6, skin === 'autumn' ? '#ecd49c' : skin === 'snow' ? '#ffffff' : '#c2e87c');
-  for (const x of [0, 348]) {
-    rect(x + 3, 340, 6, 260, '#76503a');
-    for (let y = 348; y < 590; y += 62) {
-      rect(x, y, 12, 30, '#429858');
-      rect(x, y, 7, 16, '#80c95b');
+  const palette = {
+    garden: { ground: '#edf2e6', leaf: '#a7bd95', flower: '#e5c777' },
+    autumn: { ground: '#f5eddb', leaf: '#c5ab7e', flower: '#cb8e52' },
+    snow: { ground: '#e9f2f2', leaf: '#abc5c8', flower: '#fffef8' },
+  }[skin];
+  ctx.fillStyle = palette.ground;
+  ctx.fillRect(0, 0, 360, 620);
+  for (const x of [3, 354]) {
+    for (const y of [80, 190, 330, 480, 598]) {
+      ctx.fillStyle = palette.leaf;
+      ctx.fillRect(x, y, 2, 15);
+      ctx.fillRect(x - 2, y + 5, 6, 3);
+      ctx.fillStyle = palette.flower;
+      ctx.fillRect(x - 1, y - 2, 4, 4);
     }
   }
-  for (let i = 0; i < 24; i++) {
-    const x = (i * 43 + 4) % 354;
-    const y = 338 + (i * 37) % 276;
-    rect(x, y, 3, 6, '#3e8e51');
-    rect(x - 2, y - 2, 7, 3, i % 2 ? '#ffcb58' : '#f59dba');
-    rect(x, y - 4, 3, 7, '#fff5c1');
-  }
-  // 蓝蓝只作装饰，不表达生命值、判题或分数。
-  const palette: Record<string, string> = { b: '#2688cd', c: '#adefff', k: '#163849', p: '#ff9caf' };
-  const sprite = ['..bbbbbbbb..', '.bccccccccb.', 'bccccccccccb', 'bcckccckcccb', 'bcckccckcccb', 'bppcckcccppb', '.bccccccccb.', '..bb..bb....'];
-  if (skin === 'garden') sprite.forEach((row, y) => [...row].forEach((pixel, x) => {
-    const color = palette[pixel];
-    if (color) rect(162 + x * 3, 8 + y * 3, 3, 3, color);
-  }));
-  if (skin === 'snow') {
-    rect(170, 15, 32, 25, '#80583f'); rect(164, 10, 44, 8, '#fffef3');
-    rect(182, 26, 8, 14, '#513f32'); rect(194, 22, 5, 6, '#fffbe5');
-  }
+  const rect = (x: number, y: number, w: number, h: number, color: string): void => {
+    ctx.fillStyle = color; ctx.fillRect(x, y, w, h);
+  };
   if (skin === 'autumn') {
-    rect(184, 25, 6, 16, '#76503a'); rect(171, 8, 32, 23, '#b66c31');
-    rect(177, 15, 6, 6, '#a33d2e'); rect(192, 20, 6, 6, '#a33d2e');
+    rect(188, 22, 4, 16, '#89734c'); rect(177, 10, 26, 19, '#c79256');
+    rect(181, 16, 4, 4, '#9b5038'); rect(195, 21, 4, 4, '#9b5038');
+  } else if (skin === 'snow') {
+    rect(176, 17, 28, 21, '#ac8a67'); rect(172, 11, 36, 7, '#fffef8');
+    rect(187, 26, 6, 12, '#71644e'); rect(197, 22, 4, 5, '#fffef8');
+  } else {
+    rect(178, 13, 24, 22, '#7da8a8'); rect(182, 19, 3, 5, '#294e3c');
+    rect(195, 19, 3, 5, '#294e3c'); rect(187, 28, 6, 2, '#294e3c');
   }
   ctx.restore();
 }

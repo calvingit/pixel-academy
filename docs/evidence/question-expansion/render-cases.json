@@ -1,0 +1,912 @@
+[
+  {
+    "name": "pair",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:0,number:1",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "extreme",
+          "direction": "max"
+        },
+        "options": [
+          {
+            "id": "number:1",
+            "value": 1
+          },
+          {
+            "id": "number:0",
+            "value": 0
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "number:1"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "extreme",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:0,number:1,number:2,number:3",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "extreme",
+          "direction": "max"
+        },
+        "options": [
+          {
+            "id": "number:1",
+            "value": 1
+          },
+          {
+            "id": "number:0",
+            "value": 0
+          },
+          {
+            "id": "number:2",
+            "value": 2
+          },
+          {
+            "id": "number:3",
+            "value": 3
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "number:3"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "symbol",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"symbol\",\"left\":0,\"right\":0}:string:<,string:=,string:>",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "symbol",
+          "left": 0,
+          "right": 0
+        },
+        "options": [
+          {
+            "id": "string:<",
+            "value": "<"
+          },
+          {
+            "id": "string:=",
+            "value": "="
+          },
+          {
+            "id": "string:>",
+            "value": ">"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "string:="
+    ],
+    "multiple": false
+  },
+  {
+    "name": "greater",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"filter\",\"relation\":\">\",\"target\":2}:number:0,number:2,number:3,number:4,number:5,number:6",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "filter",
+          "relation": ">",
+          "target": 2
+        },
+        "options": [
+          {
+            "id": "number:3",
+            "value": 3
+          },
+          {
+            "id": "number:0",
+            "value": 0
+          },
+          {
+            "id": "number:6",
+            "value": 6
+          },
+          {
+            "id": "number:2",
+            "value": 2
+          },
+          {
+            "id": "number:5",
+            "value": 5
+          },
+          {
+            "id": "number:4",
+            "value": 4
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "number:3",
+      "number:6",
+      "number:5",
+      "number:4"
+    ],
+    "multiple": true
+  },
+  {
+    "name": "smaller",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"filter\",\"relation\":\"<\",\"target\":2}:number:0,number:1,number:2,number:3,number:4,number:5",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "filter",
+          "relation": "<",
+          "target": 2
+        },
+        "options": [
+          {
+            "id": "number:5",
+            "value": 5
+          },
+          {
+            "id": "number:0",
+            "value": 0
+          },
+          {
+            "id": "number:4",
+            "value": 4
+          },
+          {
+            "id": "number:1",
+            "value": 1
+          },
+          {
+            "id": "number:2",
+            "value": 2
+          },
+          {
+            "id": "number:3",
+            "value": 3
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "number:0",
+      "number:1"
+    ],
+    "multiple": true
+  },
+  {
+    "name": "comparison-truth",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":0},\"relation\":\">\",\"right\":{\"kind\":\"number\",\"value\":0}}:boolean:false,boolean:true",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "truth",
+          "left": {
+            "kind": "number",
+            "value": 0
+          },
+          "relation": ">",
+          "right": {
+            "kind": "number",
+            "value": 0
+          }
+        },
+        "options": [
+          {
+            "id": "boolean:true",
+            "value": true
+          },
+          {
+            "id": "boolean:false",
+            "value": false
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "boolean:false"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "calculation-truth",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"truth\",\"left\":{\"kind\":\"chain\",\"start\":0,\"steps\":[{\"operator\":\"+\",\"operand\":0}]},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":0}}:boolean:false,boolean:true",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-011"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "truth",
+          "left": {
+            "kind": "chain",
+            "start": 0,
+            "steps": [
+              {
+                "operator": "+",
+                "operand": 0
+              }
+            ]
+          },
+          "relation": "=",
+          "right": {
+            "kind": "number",
+            "value": 0
+          }
+        },
+        "options": [
+          {
+            "id": "boolean:false",
+            "value": false
+          },
+          {
+            "id": "boolean:true",
+            "value": true
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "boolean:true"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "missing",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"missing\",\"total\":0,\"addend\":0}:number:0,number:1,number:2",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-020"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "missing",
+          "total": 0,
+          "addend": 0
+        },
+        "options": [
+          {
+            "id": "number:1",
+            "value": 1
+          },
+          {
+            "id": "number:2",
+            "value": 2
+          },
+          {
+            "id": "number:0",
+            "value": 0
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T11:41:43Z"
+      }
+    },
+    "ids": [
+      "number:0"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "range",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"range\",\"lower\":95,\"upper\":99}:number:100,number:95,number:96,number:97,number:98,number:99",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-018"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "range",
+          "lower": 95,
+          "upper": 99
+        },
+        "options": [
+          {
+            "id": "number:100",
+            "value": 100
+          },
+          {
+            "id": "number:95",
+            "value": 95
+          },
+          {
+            "id": "number:99",
+            "value": 99
+          },
+          {
+            "id": "number:97",
+            "value": 97
+          },
+          {
+            "id": "number:98",
+            "value": 98
+          },
+          {
+            "id": "number:96",
+            "value": 96
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:97",
+      "number:98",
+      "number:96"
+    ],
+    "multiple": true
+  },
+  {
+    "name": "neighbor",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"neighbor\",\"value\":99,\"direction\":\"after\"}:number:100,number:97,number:98,number:99",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-022"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "neighbor",
+          "value": 99,
+          "direction": "after"
+        },
+        "options": [
+          {
+            "id": "number:98",
+            "value": 98
+          },
+          {
+            "id": "number:99",
+            "value": 99
+          },
+          {
+            "id": "number:97",
+            "value": 97
+          },
+          {
+            "id": "number:100",
+            "value": 100
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:100"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "sequence",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"sequence\",\"start\":80,\"step\":5,\"length\":5,\"index\":1}:number:83,number:84,number:85,number:86",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-022"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "sequence",
+          "start": 80,
+          "step": 5,
+          "length": 5,
+          "index": 1
+        },
+        "options": [
+          {
+            "id": "number:83",
+            "value": 83
+          },
+          {
+            "id": "number:84",
+            "value": 84
+          },
+          {
+            "id": "number:85",
+            "value": 85
+          },
+          {
+            "id": "number:86",
+            "value": 86
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:85"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "composition",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"composition\",\"total\":100,\"part\":0}:number:100,number:97,number:98,number:99",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-024"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "composition",
+          "total": 100,
+          "part": 0
+        },
+        "options": [
+          {
+            "id": "number:98",
+            "value": 98
+          },
+          {
+            "id": "number:99",
+            "value": 99
+          },
+          {
+            "id": "number:100",
+            "value": 100
+          },
+          {
+            "id": "number:97",
+            "value": 97
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:100"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "digit",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"digit\",\"place\":\"tens\",\"digit\":9}:number:10,number:11,number:12,number:90,number:91,number:92",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-025"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "digit",
+          "place": "tens",
+          "digit": 9
+        },
+        "options": [
+          {
+            "id": "number:90",
+            "value": 90
+          },
+          {
+            "id": "number:10",
+            "value": 10
+          },
+          {
+            "id": "number:11",
+            "value": 11
+          },
+          {
+            "id": "number:92",
+            "value": 92
+          },
+          {
+            "id": "number:12",
+            "value": 12
+          },
+          {
+            "id": "number:91",
+            "value": 91
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:90",
+      "number:92",
+      "number:91"
+    ],
+    "multiple": true
+  },
+  {
+    "name": "expression-symbol",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":50,\"right\":50},\"right\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":99,\"right\":0}}:string:<,string:=,string:>",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-027"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "expression-symbol",
+          "left": {
+            "kind": "binary",
+            "operator": "+",
+            "left": 50,
+            "right": 50
+          },
+          "right": {
+            "kind": "binary",
+            "operator": "+",
+            "left": 99,
+            "right": 0
+          }
+        },
+        "options": [
+          {
+            "id": "string:=",
+            "value": "="
+          },
+          {
+            "id": "string:<",
+            "value": "<"
+          },
+          {
+            "id": "string:>",
+            "value": ">"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "string:>"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "equivalent",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"equivalent\",\"target\":100}:expression:binary:+:100:0,expression:binary:+:97:0,expression:binary:+:98:0,expression:binary:+:98:2,expression:binary:+:99:0,expression:binary:+:99:1",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-027"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "equivalent",
+          "target": 100
+        },
+        "options": [
+          {
+            "id": "expression:binary:+:99:0",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 99,
+              "right": 0
+            }
+          },
+          {
+            "id": "expression:binary:+:98:0",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 98,
+              "right": 0
+            }
+          },
+          {
+            "id": "expression:binary:+:99:1",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 99,
+              "right": 1
+            }
+          },
+          {
+            "id": "expression:binary:+:97:0",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 97,
+              "right": 0
+            }
+          },
+          {
+            "id": "expression:binary:+:100:0",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 100,
+              "right": 0
+            }
+          },
+          {
+            "id": "expression:binary:+:98:2",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 98,
+              "right": 2
+            }
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "expression:binary:+:99:1",
+      "expression:binary:+:100:0",
+      "expression:binary:+:98:2"
+    ],
+    "multiple": true
+  },
+  {
+    "name": "groups",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"groups\",\"groups\":4,\"each\":2}:expression:binary:*:2:4,expression:binary:*:3:4,expression:binary:*:4:2,expression:binary:+:2:4",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-013"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "groups",
+          "groups": 4,
+          "each": 2
+        },
+        "options": [
+          {
+            "id": "expression:binary:*:3:4",
+            "value": {
+              "kind": "binary",
+              "operator": "*",
+              "left": 3,
+              "right": 4
+            }
+          },
+          {
+            "id": "expression:binary:+:2:4",
+            "value": {
+              "kind": "binary",
+              "operator": "+",
+              "left": 2,
+              "right": 4
+            }
+          },
+          {
+            "id": "expression:binary:*:4:2",
+            "value": {
+              "kind": "binary",
+              "operator": "*",
+              "left": 4,
+              "right": 2
+            }
+          },
+          {
+            "id": "expression:binary:*:2:4",
+            "value": {
+              "kind": "binary",
+              "operator": "*",
+              "left": 2,
+              "right": 4
+            }
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "expression:binary:*:2:4"
+    ],
+    "multiple": false
+  },
+  {
+    "name": "story",
+    "exercise": {
+      "id": "choices-v2:2:{\"kind\":\"story\",\"start\":100,\"change\":5,\"operator\":\"-\"}:number:93,number:94,number:95,number:96",
+      "subject": "math",
+      "mappingIds": [
+        "MAP-029"
+      ],
+      "gameIds": [
+        "number-puzzle"
+      ],
+      "task": {
+        "kind": "choice",
+        "question": {
+          "kind": "story",
+          "start": 100,
+          "change": 5,
+          "operator": "-"
+        },
+        "options": [
+          {
+            "id": "number:94",
+            "value": 94
+          },
+          {
+            "id": "number:93",
+            "value": 93
+          },
+          {
+            "id": "number:95",
+            "value": 95
+          },
+          {
+            "id": "number:96",
+            "value": 96
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex（代理规则与内容审核）",
+        "reviewedAt": "2026-10-26T12:04:55Z"
+      }
+    },
+    "ids": [
+      "number:95"
+    ],
+    "multiple": false
+  }
+]

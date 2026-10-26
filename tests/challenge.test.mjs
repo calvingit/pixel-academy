@@ -7,7 +7,7 @@ import { createSeededRng } from '../dist/game/number-puzzle/random.js';
 import { answerFor } from '../dist/index.js';
 const content = loadGameContent();
 const rng = createSeededRng(7);
-const create = () => createRound({ exercises: content.select([1]), gradeOf: content.gradeOf, rng });
+const create = () => createRound({ exercises: content.select([1]).filter(e => e.task.kind !== 'choice'), gradeOf: content.gradeOf, rng });
 
 test('two revivals cap all interruptions and no automatic answer hint is activated', () => {
   let s = create(); const wrong = s.board.findIndex(n => n !== answerFor(s.questions[0].task));

@@ -14,6 +14,7 @@
 | 单元和插入板块 | src/content/units.ts | U 为主单元，PRE/P/A/R 为其他板块；order 单独排序 |
 | 知识点和映射 | src/content/skills.ts | 能力 ID 与教材分离，Mapping 引用具体单元 |
 | 练习 | src/content/exercises.ts | 当前仅数学；稳定 ID、mappingIds、gameIds、结构化 task |
+| 动态规则 | src/game/number-puzzle/generation.ts、choice-generation.ts | 整数与结构化选择题；固定数域、候选、版本及真实审核范围，经正式筛选后组卷 |
 | 来源 | src/content/evidence.ts | 当前仅支持会话交接；新增来源种类时同步模型与校验 |
 
 修改展示名称或排序不更换稳定 ID。发现错误内容时先移出正式范围并记录原因；引用仍存在的 ID 不应直接删除或复用。
