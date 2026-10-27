@@ -1,7 +1,9 @@
 // 汉字勇者纯规则模块：单局状态机、抽题、计分、快照恢复；无 DOM/存储依赖。
-// 玩法说明：docs/gameplay-hanzi-hero.md（每局 5 题、首答 10 分/重试 5 分、不限时、无经济规则）。
+// 玩法说明：docs/gameplay-hanzi-hero.md（每局 5 题、候选排列组卷时局内洗牌——答案不恒在
+// 前几位、首答 10 分/重试 5 分、不限时、无经济规则）。
 import type { Exercise, Grade, Task } from '../../learning/models.js';
 import { evaluateAnswer } from '../../learning/evaluation.js';
+import { isHanziTask } from '../../learning/hanzi.js';
 
 export const GAME_ID = 'hanzi-hero';
 export const QUESTIONS_PER_ROUND = 5;
@@ -67,7 +69,18 @@ export function createRound(
   if (new Set(picked.map(e => e.id)).size < QUESTIONS_PER_ROUND) {
     throw new RangeError('Insufficient exercises for a round');
   }
-  const questions: RoundQuestion[] = shuffle(picked, rng).map(e => ({ exerciseId: e.id, task: e.task }));
+  const questions: RoundQuestion[] = shuffle(picked, rng).map(e => {
+    // 池类型为宽泛 Exercise<Task>：汉字勇者只接受语文任务，非语文任务在此快速失败。
+    if (!isHanziTask(e.task)) throw new TypeError(`hanzi-hero pool contains non-Chinese task: ${e.id}`);
+    return {
+      exerciseId: e.id,
+      // 候选顺序在组卷时用局内 rng 洗牌：目标字/正确部件不恒在前几位，不能靠位置、
+      // 颜色或固定排列猜中（M8 验收原则）。洗牌结果随 RoundState 进入快照，恢复后
+      // 排列一致；判题按字/部件身份（单选按字、组字按集合），与渲染位置无关。
+      // 内容模块的原始排列不变。
+      task: { ...e.task, options: shuffle(e.task.options, rng) },
+    };
+  });
   return {
     phase: 'asking', questions, questionIndex: 0, score: 0, firstTryCount: 0,
     totalWrongCount: 0, currentWrong: false, selectedParts: [], result: null,

@@ -24,6 +24,56 @@ test('insufficient pool throws instead of starting a short round', () => {
   assert.throws(() => createRound(hanziHeroExercises.slice(0, 4), [], seed(2).rng), RangeError);
 });
 
+test('候选局内洗牌：目标字/正确部件位置分布不恒定（不能靠位置或固定排列猜中）', () => {
+  // 固定种子集 → 断言确定（非随机测试）；60 局 × 5 题的抽题样本。
+  const choosePositions = new Set();
+  const partsCorrectPairs = new Set();
+  for (let s = 101; s <= 160; s++) {
+    const round = createRound(hanziHeroExercises, [], seed(s).rng);
+    for (const q of round.questions) {
+      if (q.task.kind === 'hanzi-choose') {
+        const index = q.task.options.indexOf(q.task.target);
+        assert.ok(index >= 0, '目标字必须在候选内');
+        choosePositions.add(index);
+      } else {
+        const indices = q.task.parts.map(p => q.task.options.indexOf(p)).sort((a, b) => a - b);
+        assert.ok(indices.every(i => i >= 0), '正确部件必须在候选内');
+        partsCorrectPairs.add(indices.join(','));
+      }
+    }
+  }
+  assert.deepEqual([...choosePositions].sort((a, b) => a - b), [0, 1, 2, 3],
+    `目标字应覆盖全部四种候选位，实际 ${[...choosePositions]}`);
+  assert.ok([...partsCorrectPairs].some(pair => !pair.startsWith('0,1')),
+    `正确部件不应恒为前两张候选卡，实际 ${[...partsCorrectPairs]}`);
+});
+
+test('判题与渲染排列无关：打乱 options 后单选与组字集合答案仍判对', () => {
+  for (const e of hanziHeroExercises) {
+    const t = e.task;
+    const reversed = { ...t, options: [...t.options].reverse() };
+    const answer = t.kind === 'hanzi-choose' ? t.target : t.parts;
+    assert.equal(evaluateAnswer(reversed, answer), true, `${e.id} 打乱排列后仍判对`);
+    assert.equal(evaluateAnswer(reversed, t.kind === 'hanzi-choose'
+      ? t.options.find(o => o !== t.target)
+      : t.options.filter(o => !t.parts.includes(o)).slice(0, t.parts.length)), false, `${e.id} 非答案仍判错`);
+    assert.deepEqual([...reversed.options].sort(), [...t.options].sort(), '打乱不改变候选集合');
+  }
+});
+
+test('快照往返保留洗牌后的候选排列', () => {
+  const handle = seed(181);
+  const state = createRound(hanziHeroExercises, [], handle.rng);
+  const snapshot = {
+    version: 1, gameId: 'hanzi-hero', roundId: 'r', state,
+    rngState: handle.snapshot(), previousIds: [],
+  };
+  const parsed = parseSnapshot(JSON.parse(JSON.stringify(snapshot)));
+  assert.ok(parsed, '合法快照必须通过校验');
+  assert.deepEqual(parsed.state.questions.map(q => q.task.options),
+    state.questions.map(q => q.task.options), '恢复后排列与快照一致');
+});
+
 test('scoring: first try 10, after wrong 5; wrong does not score', () => {
   const { rng } = seed(3);
   const round = createRound(hanziHeroExercises, [], rng);

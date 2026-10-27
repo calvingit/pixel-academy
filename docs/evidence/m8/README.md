@@ -123,3 +123,9 @@ iOS 环境观察（非阻塞）：`xcrun simctl terminate com.apple.mobilesafari
 4. **教学有效性未验证**：28 题为代理内容审核（题意/正确性/适配性），学生可读性、图文认知效果、组字教学价值需教师/学生实测；审核记录已声明撤回条件（图示混淆即撤出）。
 5. **抽题覆盖为随机抽样**：V1–V3 每局 5 题（约 3 局 ×5 = 15 题次），未穷举全部 28 题；全部任务已由 `tests/hanzi-hero.test.mjs`「自身答案判对」与窄路径测试覆盖判题面。
 6. 验证脚本 `docs/evidence/m8/hanzi-browser.mjs`、`nav-browser.mjs` 与 `device-simulators/{android-round,ios-round}.mjs` 依赖本机 Chrome/CDP、Android 模拟器（adb reverse）、iOS 模拟器（WebDriver）与本地 serve，不直接重放；断言含时序等待（轮询），在更慢环境可能需放宽超时。
+
+## 候选排列缺陷修复（2026-10-27）
+
+M9 拼音冒险验收轮（[拼音验证记录](../m9/README.md)）发现「正确答案恒为第一个候选卡」缺陷（内容层 `options[0]` 恒为答案、渲染层不洗牌，辨认题干扰项失效），汉字勇者存在**同款缺陷**：`src/content/hanzi-hero.ts` 的 choose/parts 任务同样把目标字/正确部件放在 `options[0]`，渲染按原序——目标字恒在首位，干扰项失效。合并修复轮在 `src/game/hanzi-hero/rules.ts` 的 `createRound` 以局内 rng 对每题 `options` 洗牌（choose 与 parts 同路径；parts 判题按部件集合身份、与排列无关；洗牌结果随 RoundState 进入快照、恢复后排列一致；内容数据零改动）。
+
+**修复复验**（2026-10-27，复验脚本与证据见 [拼音验证记录 · 缺陷修复复验轮](../m9/README.md)：`docs/evidence/m9/pinyin-fix-verify.mjs`、`pinyin-browser-results.json` 的 `fixVerification` 字段、截图 `fx-3-*`）：汉字勇者完整 2 局（首局含答对 2 题刷新→恢复续打）共 10 题，渲染候选与内容原始序不同的题 10/10，正确选项位置分布 `[2,0,2,0,3,2,0,2,3,3]`（3 个不同位置、首位 3 题）——不再恒在首位；每题经 `/dist/learning/hanzi.js` `correctHanziIds` 对洗牌后 task 自算正确选项（choose 按字身份、parts 按部件集合身份勾选+提交），全部首答判对；组字多选照常（勾选态、提交按钮）；结算「总分 50 · 首次答对 5/5 · 答错 0 次」、记录 id=roundId 恰 1 条；刷新恢复后逐题洗牌排列与刷新前一致；金币与 JS 错误口径同拼音复验（零收支、全程 0）。`npm run check` 重跑 167 项通过（含新增 hanzi-hero 洗牌测试）。
