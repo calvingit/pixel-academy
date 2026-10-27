@@ -1,0 +1,221 @@
+{
+  "generatedAt": "2026-10-27T14:24:30.394Z",
+  "phase": "online",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S1 在线完整局（辨认点击 + 首道辨认题答错重试档 + 听辨播放尝试/降级跳过 + 记录金币）",
+      "pass": true,
+      "result": "菜单「拼音冒险」入口（href=/pinyin.html、装饰字 aria-hidden，与汉字勇者/算术地下城锚点并存）进入拼音冒险；勾一年级→「本局题库：一年级 94 道，共 94 道」与 dist 层一致（94 题全 approved：辨认 47 + 听辨 47）；完整局 5 题（辨认 3 + 听辨 2，题目 PY-C-012、PY-C-003、PY-L-017、PY-C-011、PY-L-013）：第 1 题辨认「找出字母「j」…」先答错（✗ 得分不变）→「再试一次」→答对 答对了 +5→第 2 题辨认「找出字母「m」…」答对 答对了 +10→第 3 题听辨「听一听，是哪个字母？…」播放尝试（事件 []）→「当前无法播放声音」提示 + 跳过入口 → 跳过不计分→第 4 题辨认「找出字母「h」…」答对 答对了 +10→第 5 题听辨「听一听，是哪个字母？…」播放尝试（事件 []）→「当前无法播放声音」提示 + 跳过入口 → 跳过不计分；听辨题面泄露扫描 2/2 无拉丁字母；音频缓存命中 2/2 题（CacheStorage 命中 200）；结算「总分 25」「作答 3 题 · 首答 2 · 重试 1 次 · 跳过 2 题」「辨认 2/3 题首答 · 听辨 0/2 题首答」与逐题档位吻合；练习记录新增 1 条（gameId=pinyin-adventure、recordId=roundId、score=25、逐题 mode 序列与局内观察一致、跳过题 answered=false）且列表显示「25 分 · 首答 2/3 · 跳过 2」；recent-ids 含本局全部题目 ID；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0、无横向溢出【听辨 playing 断言在 iOS 受阻，见 README】",
+      "checks": {
+        "entry": {
+          "pinyin": {
+            "text": "音拼音冒险听声音认拼音字母",
+            "href": "/pinyin.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "hanzi": {
+            "text": "字汉字勇者切换到语文挑战",
+            "href": "/hanzi.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "text": "钥算术地下城用算术开门探洞",
+            "href": "/dungeon.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "availability": "本局题库：一年级 94 道，共 94 道",
+        "poolCount": 94,
+        "roundId": "22ac7b9e-19f5-4f19-afed-000cd7aaae6c",
+        "play": [
+          {
+            "index": 0,
+            "id": "PY-C-012",
+            "mode": "choose",
+            "prompt": "找出字母「j」",
+            "audio": null,
+            "letter": "j",
+            "playEvents": null,
+            "cacheHit": null,
+            "played": false,
+            "skipped": false,
+            "wrongFirst": true,
+            "gained": 5,
+            "leakOk": true
+          },
+          {
+            "index": 1,
+            "id": "PY-C-003",
+            "mode": "choose",
+            "prompt": "找出字母「m」",
+            "audio": null,
+            "letter": "m",
+            "playEvents": null,
+            "cacheHit": null,
+            "played": false,
+            "skipped": false,
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          },
+          {
+            "index": 2,
+            "id": "PY-L-017",
+            "mode": "listen",
+            "prompt": "听一听，是哪个字母？",
+            "audio": "audio/pinyin/sh.wav",
+            "letter": "sh",
+            "playEvents": [],
+            "cacheHit": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "played": false,
+            "skipped": true,
+            "wrongFirst": false,
+            "gained": 0,
+            "leakOk": true
+          },
+          {
+            "index": 3,
+            "id": "PY-C-011",
+            "mode": "choose",
+            "prompt": "找出字母「h」",
+            "audio": null,
+            "letter": "h",
+            "playEvents": null,
+            "cacheHit": null,
+            "played": false,
+            "skipped": false,
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          },
+          {
+            "index": 4,
+            "id": "PY-L-013",
+            "mode": "listen",
+            "prompt": "听一听，是哪个字母？",
+            "audio": "audio/pinyin/q.wav",
+            "letter": "q",
+            "playEvents": [],
+            "cacheHit": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "played": false,
+            "skipped": true,
+            "wrongFirst": false,
+            "gained": 0,
+            "leakOk": true
+          }
+        ],
+        "result": {
+          "score": "总分 25",
+          "answer": "作答 3 题 · 首答 2 · 重试 1 次 · 跳过 2 题",
+          "modes": "辨认 2/3 题首答 · 听辨 0/2 题首答"
+        },
+        "audio": {
+          "playedCount": 0,
+          "listenCount": 2,
+          "cacheHitCount": 2,
+          "degradedCount": 2
+        },
+        "recOk": true,
+        "recentOk": true,
+        "modesSequenceOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsOk": true,
+        "allApproved": true,
+        "errors": [],
+        "overflow": false
+      }
+    },
+    {
+      "name": "S2 返回路径与四入口并存",
+      "pass": true,
+      "result": "拼音冒险顶栏「返回数字消除」返回数字消除首页；勾选一年级→下一步按钮启用（可选年级），取消复原；菜单弹层内「汉字勇者」（href=/hanzi.html）、「算术地下城」（href=/dungeon.html）与「拼音冒险」（href=/pinyin.html）三锚点并存可见（数字消除为当前页，共四入口）；无溢出、JS 错误 0",
+      "checks": {
+        "npOk": true,
+        "fourOk": true,
+        "menu": {
+          "hanzi": {
+            "text": "字汉字勇者切换到语文挑战",
+            "href": "/hanzi.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "text": "钥算术地下城用算术开门探洞",
+            "href": "/dungeon.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "pinyin": {
+            "text": "音拼音冒险听声音认拼音字母",
+            "href": "/pinyin.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        }
+      }
+    }
+  ],
+  "blocked": [
+    {
+      "item": "听辨题 Audio playing 断言（在线与离线）",
+      "status": "受阻（验证环境，非游戏缺陷）",
+      "evidence": [
+        "safaridriver 对 iOS 模拟器无有效 HID 注入（M7 实测；本轮再证：WebDriver 原生 element click 端点调用成功但 onclick 从未触发）",
+        "合成 el.click() 的 isTrusted=false 且 navigator.userActivation.isActive=false → WebKit 拒绝 play()（NotAllowedError）",
+        "MediaPlaybackRequiresUserAction=0 默认值在 iOS 18.6 模拟器冷重启后仍不生效",
+        "idb 未安装；AppleScript System Events 无辅助功能权限（AppleEvent 超时 -1712）；simctl 无触摸注入",
+        "游戏自身对播放失败的处置（audio-notice 提示 + 跳过入口 + 跳过不计分）已在本轮实测为按设计工作"
+      ]
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-在线首页",
+      "overflow": false
+    },
+    {
+      "where": "S1-拼音选择屏",
+      "overflow": false
+    },
+    {
+      "where": "结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-记录列表",
+      "overflow": false
+    },
+    {
+      "where": "S2-返回后首页",
+      "overflow": false
+    },
+    {
+      "where": "S2-菜单四入口",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

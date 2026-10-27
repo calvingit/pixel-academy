@@ -1,0 +1,210 @@
+{
+  "generatedAt": "2026-10-27T14:02:02.351Z",
+  "phase": "offline",
+  "origin": "http://localhost:4273",
+  "scenarios": [
+    {
+      "name": "S3 离线断源（缓存打开 + 断网完成整局含听辨播放缓存命中）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45 受控且预缓存含 /pinyin.html（含 /pinyin.css、拼音 dist 模块、音频 47 条，/audio/pinyin/b.wav 命中 status=200）；杀 serve 4273（源站 fetch 确认失败）后刷新同一标签页：首页由缓存打开；菜单进 /pinyin.html 由缓存正常加载（6 年级卡、boot-fail 隐藏）；断网下题库模块经 SW 预缓存 import 成功（94 题）；选一年级（本局题库：一年级 94 道，共 94 道）完成断网整局 5 题（辨认 2 + 听辨 3）：听辨 audio/pinyin/ao.wav playing 事件触发（canplay/playing）且 CacheStorage 命中 200（pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45）；听辨 audio/pinyin/ong.wav playing 事件触发（canplay/playing）且 CacheStorage 命中 200（pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45）；听辨 audio/pinyin/in.wav playing 事件触发（canplay/playing）且 CacheStorage 命中 200（pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45），全部首答答对，结算「总分 50」「作答 5 题 · 首答 5 · 重试 0 次」（断网听辨播放走通且缓存命中成立）；离线练习记录新增 1 条（gameId=pinyin-adventure、score=50、5 题全 firstTry）且列表显示「50 分 · 首答 5/5」；recent-ids 含本局全部题目 ID；结算返回后中断快照清除；离线金币 20 = 20（零收支）；返回首页正常；全程 JS 错误 0、无横向溢出",
+      "checks": {
+        "swInfo": {
+          "name": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+          "pinyinCached": true,
+          "pinyinCssCached": true,
+          "mainJsCached": true,
+          "audioCached": 200,
+          "audioCount": 47
+        },
+        "sourceDead": true,
+        "serverWasAlive": true,
+        "poolInfo": {
+          "count": 94,
+          "kinds": {
+            "pinyin-choose": 47,
+            "pinyin-listen": 47
+          },
+          "statuses": [
+            "approved"
+          ]
+        },
+        "avail": "本局题库：一年级 94 道，共 94 道",
+        "offAttempts": 1,
+        "offlinePlayOk": true,
+        "listenQuestions": [
+          {
+            "id": "PY-L-033",
+            "audio": "audio/pinyin/ao.wav",
+            "url": "audio/pinyin/ao.wav",
+            "events": [
+              "canplay",
+              "playing"
+            ],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            }
+          },
+          {
+            "id": "PY-L-047",
+            "audio": "audio/pinyin/ong.wav",
+            "url": "audio/pinyin/ong.wav",
+            "events": [
+              "canplay",
+              "playing"
+            ],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            }
+          },
+          {
+            "id": "PY-L-041",
+            "audio": "audio/pinyin/in.wav",
+            "url": "audio/pinyin/in.wav",
+            "events": [
+              "canplay",
+              "playing"
+            ],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            }
+          }
+        ],
+        "result": {
+          "score": "总分 50",
+          "answer": "作答 5 题 · 首答 5 · 重试 0 次",
+          "modes": "辨认 2/2 题首答 · 听辨 3/3 题首答"
+        },
+        "scoreOk": true,
+        "answerOk": true,
+        "roundId3": "fa77ca66-f75d-409b-a6b1-8de454ed9a76",
+        "recRaw": {
+          "schemaVersion": 1,
+          "recordId": "fa77ca66-f75d-409b-a6b1-8de454ed9a76",
+          "gameId": "pinyin-adventure",
+          "finishedAt": "2026-10-27T14:02:00.584Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "score": 50,
+          "answer": {
+            "questions": [
+              {
+                "exerciseId": "PY-L-033",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-047",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-041",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-018",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-014",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          }
+        },
+        "recOk": true,
+        "recentOk": true,
+        "snapCleared": true,
+        "coins": [
+          20,
+          20
+        ]
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S3-SW就绪首页(在线)",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S3-离线拼音选择屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S3-离线结算屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S3-离线返回首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    }
+  ],
+  "networkAudio": [
+    {
+      "url": "http://localhost:4273/audio/pinyin/ao.wav",
+      "status": 200,
+      "fromDiskCache": true
+    },
+    {
+      "url": "http://localhost:4273/audio/pinyin/ong.wav",
+      "status": 200,
+      "fromDiskCache": true
+    },
+    {
+      "url": "http://localhost:4273/audio/pinyin/in.wav",
+      "status": 200,
+      "fromDiskCache": true
+    }
+  ],
+  "networkFailed": [],
+  "allPassed": true
+}

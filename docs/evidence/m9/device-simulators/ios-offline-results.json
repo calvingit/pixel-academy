@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-10-27T14:24:54.156Z",
+  "phase": "offline",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S3 离线断源刷新（缓存打开 + 断网整局：听辨音频缓存命中 + 降级跳过 + 辨认作答）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45 受控且预缓存含 /pinyin.html（含 /pinyin.css、拼音 dist 模块、音频 47 条，/audio/pinyin/b.wav 命中 status=200）；杀源服务（源站 fetch 确认失败）后Safari 刷新同一标签页（非冷导航）：首页由缓存打开；菜单进 /pinyin.html 由缓存正常加载（6 年级卡、boot-fail 隐藏）；断网下题库模块经 SW 预缓存 import 成功（94 题）；选一年级（本局题库：一年级 94 道，共 94 道）完成断网整局 5 题（辨认 2 + 听辨 3）：听辨 audio/pinyin/m.wav CacheStorage 命中 200（断网下 200 只能来自缓存），播放被拒（iOS 手势受阻）→「当前无法播放声音」提示 + 跳过不计分；听辨 audio/pinyin/s.wav CacheStorage 命中 200（断网下 200 只能来自缓存），播放被拒（iOS 手势受阻）→「当前无法播放声音」提示 + 跳过不计分；听辨 audio/pinyin/h.wav CacheStorage 命中 200（断网下 200 只能来自缓存），播放被拒（iOS 手势受阻）→「当前无法播放声音」提示 + 跳过不计分，结算「总分 15」「作答 2 题 · 首答 1 · 重试 1 次 · 跳过 3 题」（跳过题不计分不计作答，辨认首答/重试档位照常）；离线练习记录新增 1 条（gameId=pinyin-adventure、score=15、跳过题 answered=false 如实标注）且列表含「15 分 · 首答 1/2 · 跳过 3」；recent-ids 含本局全部题目 ID；结算返回后中断快照清除；离线金币 20 = 20（零收支）；返回首页正常；全程无溢出、JS 错误 0",
+      "checks": {
+        "swInfo": {
+          "pinyinCssCached": true,
+          "mainJsCached": true,
+          "audioCached": 200,
+          "name": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+          "audioCount": 47,
+          "pinyinCached": true
+        },
+        "sourceDead": true,
+        "serverWasAlive": true,
+        "poolInfo": {
+          "count": 94,
+          "kinds": {
+            "pinyin-choose": 47,
+            "pinyin-listen": 47
+          },
+          "statuses": [
+            "approved"
+          ]
+        },
+        "avail": "本局题库：一年级 94 道，共 94 道",
+        "listenQuestions": [
+          {
+            "id": "PY-L-003",
+            "audio": "audio/pinyin/m.wav",
+            "url": "audio/pinyin/m.wav",
+            "events": [],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "skipped": true
+          },
+          {
+            "id": "PY-L-021",
+            "audio": "audio/pinyin/s.wav",
+            "url": "audio/pinyin/s.wav",
+            "events": [],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "skipped": true
+          },
+          {
+            "id": "PY-L-011",
+            "audio": "audio/pinyin/h.wav",
+            "url": "audio/pinyin/h.wav",
+            "events": [],
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "skipped": true
+          }
+        ],
+        "cacheOk": true,
+        "result": {
+          "score": "总分 15",
+          "answer": "作答 2 题 · 首答 1 · 重试 1 次 · 跳过 3 题",
+          "modes": "辨认 1/2 题首答 · 听辨 0/3 题首答"
+        },
+        "roundId3": "d5a302f6-7648-4302-bc9a-0c05fbec6adc",
+        "recRaw": {
+          "gameId": "pinyin-adventure",
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ],
+          "score": 15,
+          "answer": {
+            "questions": [
+              {
+                "exerciseId": "PY-L-003",
+                "firstTry": false,
+                "wrongs": 0,
+                "answered": false,
+                "mode": "listen"
+              },
+              {
+                "exerciseId": "PY-C-025",
+                "firstTry": false,
+                "wrongs": 1,
+                "answered": true,
+                "mode": "choose"
+              },
+              {
+                "exerciseId": "PY-L-021",
+                "firstTry": false,
+                "wrongs": 0,
+                "answered": false,
+                "mode": "listen"
+              },
+              {
+                "exerciseId": "PY-L-011",
+                "firstTry": false,
+                "wrongs": 0,
+                "answered": false,
+                "mode": "listen"
+              },
+              {
+                "exerciseId": "PY-C-047",
+                "firstTry": true,
+                "wrongs": 0,
+                "answered": true,
+                "mode": "choose"
+              }
+            ]
+          },
+          "recordId": "d5a302f6-7648-4302-bc9a-0c05fbec6adc",
+          "contentVersion": "pinyin-static-v1",
+          "finishedAt": "2026-10-27T14:24:52.919Z"
+        },
+        "recOk": true,
+        "recentOk": true,
+        "snapCleared": true,
+        "coins": [
+          20,
+          20
+        ]
+      }
+    }
+  ],
+  "blocked": [
+    {
+      "item": "听辨题 Audio playing 断言（在线与离线）",
+      "status": "受阻（验证环境，非游戏缺陷）",
+      "evidence": [
+        "safaridriver 对 iOS 模拟器无有效 HID 注入（M7 实测；本轮再证：WebDriver 原生 element click 端点调用成功但 onclick 从未触发）",
+        "合成 el.click() 的 isTrusted=false 且 navigator.userActivation.isActive=false → WebKit 拒绝 play()（NotAllowedError）",
+        "MediaPlaybackRequiresUserAction=0 默认值在 iOS 18.6 模拟器冷重启后仍不生效",
+        "idb 未安装；AppleScript System Events 无辅助功能权限（AppleEvent 超时 -1712）；simctl 无触摸注入",
+        "游戏自身对播放失败的处置（audio-notice 提示 + 跳过入口 + 跳过不计分）已在本轮实测为按设计工作"
+      ]
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S3-SW就绪首页(在线)",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线拼音选择屏",
+      "overflow": false
+    },
+    {
+      "where": "结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线结算与记录",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线返回首页",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

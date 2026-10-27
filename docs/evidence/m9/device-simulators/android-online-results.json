@@ -1,0 +1,285 @@
+{
+  "generatedAt": "2026-10-27T14:01:32.737Z",
+  "phase": "online",
+  "origin": "http://localhost:4273",
+  "scenarios": [
+    {
+      "name": "S1 在线完整局（辨认真实触摸 + 听辨播放后作答 + 第 2 题答错重试档）",
+      "pass": true,
+      "result": "菜单「拼音冒险」入口（href=/pinyin.html、装饰字 aria-hidden，与汉字勇者/算术地下城锚点并存）进入拼音冒险；勾一年级→「本局题库：一年级 94 道，共 94 道」与 dist 层一致（94 题全 approved：辨认 47 + 听辨 47）；完整局 5 题（辨认 2 + 听辨 3，题目 PY-C-006、PY-L-037、PY-L-019、PY-C-023、PY-L-013）：第 1 题辨认「找出字母「t」…」答对 答对了 +10→第 2 题听辨（播放 audio/pinyin/ve.wav，事件 canplay/playing）「听一听，是哪个字母？…」先答错（✗ 得分不变）→「再试一次」→答对 答对了 +5→第 3 题听辨（播放 audio/pinyin/z.wav，事件 canplay/playing）「听一听，是哪个字母？…」答对 答对了 +10→第 4 题辨认「找出字母「w」…」答对 答对了 +10→第 5 题听辨（播放 audio/pinyin/q.wav，事件 canplay/playing）「听一听，是哪个字母？…」答对 答对了 +10；听辨题面泄露扫描 3/3 无拉丁字母；结算「总分 45」「作答 5 题 · 首答 4 · 重试 1 次」「辨认 2/2 题首答 · 听辨 2/3 题首答」与逐题档位（4×10+5=45）吻合；音频断言：playing 3/3 题、请求 200（CDP 3 条 /audio/pinyin/ 响应）与缓存命中（3 题命中 200）双通道成立；练习记录新增 1 条（gameId=pinyin-adventure、recordId=roundId、score=45、逐题 mode 序列与局内观察一致、第 2 题 wrongs=1）且列表显示「45 分 · 首答 4/5」；recent-ids 含本局全部题目 ID；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0、无横向溢出",
+      "checks": {
+        "entry": {
+          "pinyin": {
+            "href": "/pinyin.html",
+            "text": "音拼音冒险听声音认拼音字母",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "availability": "本局题库：一年级 94 道，共 94 道",
+        "poolCount": 94,
+        "roundId": "818fe676-aa49-4d63-b1ee-46d1edf81578",
+        "play": [
+          {
+            "index": 0,
+            "id": "PY-C-006",
+            "mode": "choose",
+            "prompt": "找出字母「t」",
+            "audio": null,
+            "letter": "t",
+            "playEvents": null,
+            "cacheHit": null,
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          },
+          {
+            "index": 1,
+            "id": "PY-L-037",
+            "mode": "listen",
+            "prompt": "听一听，是哪个字母？",
+            "audio": "audio/pinyin/ve.wav",
+            "letter": "üe",
+            "playEvents": [
+              "canplay",
+              "playing"
+            ],
+            "cacheHit": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "wrongFirst": true,
+            "gained": 5,
+            "leakOk": true
+          },
+          {
+            "index": 2,
+            "id": "PY-L-019",
+            "mode": "listen",
+            "prompt": "听一听，是哪个字母？",
+            "audio": "audio/pinyin/z.wav",
+            "letter": "z",
+            "playEvents": [
+              "canplay",
+              "playing"
+            ],
+            "cacheHit": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          },
+          {
+            "index": 3,
+            "id": "PY-C-023",
+            "mode": "choose",
+            "prompt": "找出字母「w」",
+            "audio": null,
+            "letter": "w",
+            "playEvents": null,
+            "cacheHit": null,
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          },
+          {
+            "index": 4,
+            "id": "PY-L-013",
+            "mode": "listen",
+            "prompt": "听一听，是哪个字母？",
+            "audio": "audio/pinyin/q.wav",
+            "letter": "q",
+            "playEvents": [
+              "canplay",
+              "playing"
+            ],
+            "cacheHit": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            "wrongFirst": false,
+            "gained": 10,
+            "leakOk": true
+          }
+        ],
+        "result": {
+          "score": "总分 45",
+          "answer": "作答 5 题 · 首答 4 · 重试 1 次",
+          "modes": "辨认 2/2 题首答 · 听辨 2/3 题首答"
+        },
+        "audio": {
+          "playedCount": 3,
+          "networkAudio": [
+            {
+              "url": "http://localhost:4273/audio/pinyin/ve.wav",
+              "status": 200,
+              "fromDiskCache": true
+            },
+            {
+              "url": "http://localhost:4273/audio/pinyin/z.wav",
+              "status": 200,
+              "fromDiskCache": true
+            },
+            {
+              "url": "http://localhost:4273/audio/pinyin/q.wav",
+              "status": 200,
+              "fromDiskCache": true
+            }
+          ],
+          "cacheHits": [
+            {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            },
+            {
+              "cache": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+              "status": 200
+            }
+          ]
+        },
+        "recOk": true,
+        "recentOk": true,
+        "modesSequenceOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 10
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 10
+        },
+        "coinsOk": true,
+        "allApproved": true,
+        "errors": [],
+        "overflow": false
+      }
+    },
+    {
+      "name": "S2 返回路径与四入口并存",
+      "pass": true,
+      "result": "拼音冒险顶栏「返回数字消除」返回数字消除首页；勾选一年级→下一步按钮启用（可选年级），取消复原；菜单弹层内「汉字勇者」（href=/hanzi.html）、「算术地下城」（href=/dungeon.html）与「拼音冒险」（href=/pinyin.html）三锚点并存可见（数字消除为当前页，共四入口）；JS 错误 0、无横向溢出",
+      "checks": {
+        "npOk": true,
+        "fourOk": true,
+        "menu": {
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "pinyin": {
+            "href": "/pinyin.html",
+            "text": "音拼音冒险听声音认拼音字母",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "errors": [],
+        "overflow": false
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-在线首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-拼音选择屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-结算屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-记录列表",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S2-返回后首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S2-菜单四入口",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    }
+  ],
+  "networkAudio": [
+    {
+      "url": "http://localhost:4273/audio/pinyin/ve.wav",
+      "status": 200,
+      "fromDiskCache": true
+    },
+    {
+      "url": "http://localhost:4273/audio/pinyin/z.wav",
+      "status": 200,
+      "fromDiskCache": true
+    },
+    {
+      "url": "http://localhost:4273/audio/pinyin/q.wav",
+      "status": 200,
+      "fromDiskCache": true
+    }
+  ],
+  "networkFailed": [],
+  "allPassed": true
+}

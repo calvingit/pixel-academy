@@ -18,6 +18,7 @@ const MIME_TYPES = new Map([
   ['.svg', 'image/svg+xml'],
   ['.png', 'image/png'],
   ['.ico', 'image/x-icon'],
+  ['.wav', 'audio/wav'],
 ]);
 
 function resolveFile(pathname) {
@@ -42,6 +43,8 @@ const server = createServer(async (request, response) => {
     const body = await readFile(file);
     response.writeHead(200, {
       'content-type': MIME_TYPES.get(extname(file)) ?? 'application/octet-stream',
+      // WebKit 媒体栈要求 Content-Length 才肯加载 <audio> 源（对齐生产静态托管行为）。
+      'content-length': String(body.byteLength),
       'cache-control': 'no-store',
     });
     response.end(body);
