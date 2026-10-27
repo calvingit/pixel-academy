@@ -79,7 +79,7 @@ flowchart TD
 
 筛选无随机化、分页或数量限制，保持数据顺序。空年级、非法年级或空白 gameId 抛错；未知游戏、没有内容的年级返回空数组。重复年级不造成结果重复。
 
-Exercise 泛型化（Exercise<T extends Task = Task>）；MathTask 包含原整数任务 number、binary、chain 与 choice；ChineseTask（M8）包含 hanzi-choose（shape/meaning 单选）与 hanzi-parts（部件集合多选），判题在 src/learning/hanzi.ts。英语只有索引和知识点，尚无题型及判题实现。支持三科索引不等于支持三科练习。数字消除的取题与棋盘仅接受 Exercise<MathTask>。
+Exercise 泛型化（Exercise<T extends Task = Task>）；MathTask 包含原整数任务 number、binary、chain 与 choice；ChineseTask（M8）包含 hanzi-choose（shape/meaning 单选）与 hanzi-parts（部件集合多选），判题在 src/learning/hanzi.ts；PinyinTask（M9）包含 pinyin-choose 与 pinyin-listen（听辨题结构级防泄露），判题在 src/learning/pinyin.ts；EnglishDeliveryTask（M10）为「取包裹→送达角色」两步复合判定（vocab/sentence 模式、可接受答案集合按规范词身份），判题在 src/learning/english.ts。支持三科索引不等于支持三科练习。数字消除的取题与棋盘仅接受 Exercise<MathTask>。
 
 这些 API 面向受信任、经 TypeScript 检查的静态数据。validateCatalog 不是不可信 JSON 的完整 schema 校验器，也不检查全部课程语义、教材真实性或审批权限。
 

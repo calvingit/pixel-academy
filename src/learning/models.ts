@@ -115,7 +115,24 @@ export interface PinyinListenTask {
   readonly answer: string;
 }
 export type PinyinTask = PinyinChooseTask | PinyinListenTask;
-export type Task = MathTask | ChineseTask | PinyinTask;
+/** 英语快递任务：读指令 → 取对应地址包裹 → 送达对应角色；两步分开判定（双对才算送达）。 */
+export interface EnglishDeliveryTask {
+  readonly kind: 'english-delivery';
+  /** 任务类别：vocab 词汇识别（指令点名词，考词形辨认）/ sentence 句意理解（短句解析定指向）。 */
+  readonly mode: 'vocab' | 'sentence';
+  /** 英语指令（固定文案随构建交付；表述正确性由内容审核记录支撑）。 */
+  readonly prompt: string;
+  /** 包裹候选：地址标签词（含正确词与干扰词，取自英语词表）。 */
+  readonly parcels: readonly string[];
+  /** 收件角色候选：身份词（家庭任务取家庭词表、情绪任务取情绪词表；角色卡不带英语文字标签）。 */
+  readonly recipients: readonly string[];
+  /** 正确包裹的可接受标签词集合（同义表达同指一个规范词，如 ['mum','mother']）。 */
+  readonly parcelAnswers: readonly string[];
+  /** 正确收件人的可接受身份词集合。 */
+  readonly recipientAnswers: readonly string[];
+}
+export type EnglishTask = EnglishDeliveryTask;
+export type Task = MathTask | ChineseTask | PinyinTask | EnglishTask;
 export type SubmittedAnswer = number | string | readonly string[];
 export interface Exercise<T extends Task = Task> {
   id: string;

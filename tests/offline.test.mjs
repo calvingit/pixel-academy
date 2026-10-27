@@ -277,6 +277,19 @@ test('collectDistClosure: 覆盖入口、游戏、学习核心与内容数据模
   ]) {
     assert.ok(pinyinModules.includes(module), `拼音冒险预缓存闭包缺少 ${module}`);
   }
+  // 英语快递员入口闭包：页面主模块、配送局规则、存储与内容适配、英语判题与题库必须随构建进入预缓存。
+  assert.equal(SW_ENTRY_MODULES[4], 'dist/game/english-courier/main.js');
+  const englishModules = await collectDistClosure(SW_ENTRY_MODULES[4]);
+  for (const module of [
+    'dist/game/english-courier/main.js',
+    'dist/game/english-courier/rules.js',
+    'dist/game/english-courier/storage.js',
+    'dist/game/english-courier/content.js',
+    'dist/learning/english.js',
+    'dist/content/english-exercises.js',
+  ]) {
+    assert.ok(englishModules.includes(module), `英语快递员预缓存闭包缺少 ${module}`);
+  }
 });
 
 test('buildPrecacheUrls: 全部为同源路径且对应文件真实存在', async () => {
@@ -319,14 +332,14 @@ test('生成的 web/sw.js: 版本格式、缓存名前缀与清单一致性', as
   assert.ok(swPrefixMatch, 'sw.js 应声明缓存名前缀');
   assert.equal(`${swPrefixMatch[1]}${version}`, buildCacheName(version));
 
-  // 清单与构建脚本重算结果一致（构建取四入口闭包并集，见 build-sw.mjs main()），
+  // 清单与构建脚本重算结果一致（构建取五入口闭包并集，见 build-sw.mjs main()），
   // 且模板占位符已全部替换。
   const distModules = [...new Set((await Promise.all(SW_ENTRY_MODULES.map(entry => collectDistClosure(entry)))).flat())].sort();
   const urls = buildPrecacheUrls(distModules);
-  // 四入口清单级断言：静态入口页不可从 STATIC_PRECACHE_URLS 悄悄移除。
+  // 五入口清单级断言：静态入口页不可从 STATIC_PRECACHE_URLS 悄悄移除。
   assert.ok(urls.includes('/') && urls.includes('/hanzi.html') && urls.includes('/dungeon.html')
-    && urls.includes('/pinyin.html'),
-    '预缓存清单必须包含数字消除、汉字勇者、算术地下城与拼音冒险四个入口页');
+    && urls.includes('/pinyin.html') && urls.includes('/english.html'),
+    '预缓存清单必须包含数字消除、汉字勇者、算术地下城、拼音冒险与英语快递员五个入口页');
   // 听辨音频随内容缓存（M9 验收）：47 条 WAV 全部在清单内。
   assert.equal(PINYIN_AUDIO_URLS.length, 47, '拼音听辨音频应为 47 条');
   for (const url of PINYIN_AUDIO_URLS) {
@@ -340,7 +353,7 @@ test('生成的 web/sw.js: 版本格式、缓存名前缀与清单一致性', as
   assert.ok(!swSource.includes('__PRECACHE_URLS__'));
 });
 
-test('生成的 web/sw.js: 四入口导航回退分支（/ 与 /hanzi.html、/dungeon.html、/pinyin.html 及无扩展名路径）', async () => {
+test('生成的 web/sw.js: 五入口导航回退分支（/ 与 /hanzi.html、/dungeon.html、/pinyin.html、/english.html 及无扩展名路径）', async () => {
   const swSource = await readFile(join(root, 'web/sw.js'), 'utf8');
   // 单引号字面量只出现在导航回退分支；预缓存清单用 JSON.stringify 的双引号，
   // 两者可区分：分支缺失时页面将无法在离线状态下经缓存打开对应入口。
@@ -348,6 +361,7 @@ test('生成的 web/sw.js: 四入口导航回退分支（/ 与 /hanzi.html、/du
   assert.ok(swSource.includes("url.pathname === '/hanzi.html' || url.pathname === '/hanzi'"), 'sw.js 导航回退分支应匹配 /hanzi.html 与 /hanzi 入口');
   assert.ok(swSource.includes("url.pathname === '/dungeon.html' || url.pathname === '/dungeon'"), 'sw.js 导航回退分支应匹配 /dungeon.html 与 /dungeon 入口');
   assert.ok(swSource.includes("url.pathname === '/pinyin.html' || url.pathname === '/pinyin'"), 'sw.js 导航回退分支应匹配 /pinyin.html 与 /pinyin 入口');
+  assert.ok(swSource.includes("url.pathname === '/english.html' || url.pathname === '/english'"), 'sw.js 导航回退分支应匹配 /english.html 与 /english 入口');
   // 托管平台 308 规范化会让缓存条目带 redirected 标记；导航 respondWith 禁止 redirected，
   // 命中必须重包一层（缺失时生产 /hanzi.html 导航稳定落网络错误页）。
   assert.ok(swSource.includes('hit.redirected ? new Response(hit.body'), 'sw.js 导航回退应对 redirected 缓存条目重新包装');

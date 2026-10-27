@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-10-27T18:29:52.294Z",
+  "phase": "online",
+  "origin": "http://localhost:4273",
+  "scenarios": [
+    {
+      "name": "S1 在线完整局（两步送达真实触摸 + 第 2 任务错送纠正重试档）",
+      "pass": true,
+      "result": "菜单「英语快递员」入口（href=/english.html、装饰字 aria-hidden，与汉字勇者/算术地下城/拼音冒险锚点并存）进入英语快递员；勾一年级→「本局题库：一年级 18 个任务，共 18 个」与 dist 层一致（18 任务全 approved：词汇 10 + 句意 8）；完整局 5 任务（EN-C-013:sentence、EN-C-005:vocab、EN-C-002:vocab、EN-C-008:vocab、EN-C-011:sentence）：第 1 任务「This one is for Grandpa.」送达完成 10 分→第 2 任务「Deliver the parcel to Brother.」先对包裹错对象（✗ 对象不对，得分不变）→送达完成 5 分→第 3 任务「Deliver the parcel to Dad.」送达完成 10 分→第 4 任务「Deliver the parcel to the sad one.」送达完成 10 分→第 5 任务「Dad wants his parcel.」送达完成 10 分；结算「总分 45」「完成 5 个任务 · 首次一次完成 4 · 错送 1 次 · 送达尝试 6 次」「词汇识别 2/3 题首答 · 句意理解 2/2 题首答」与逐题档位（4×10+5=45、尝试 6）吻合；练习记录新增 1 条（gameId=english-courier、recordId=roundId、score=45、逐题 mode 序列与局内观察一致、第 2 任务 wrongs=1）且列表显示「45 分 · 首答 4/5」；recent-ids 含本局全部任务 ID；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0、无横向溢出",
+      "checks": {
+        "entry": {
+          "english": {
+            "href": "/english.html",
+            "text": "递英语快递员读英语指令送包裹",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "pinyin": {
+            "href": "/pinyin.html",
+            "text": "音拼音冒险听声音认拼音字母",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "availability": "本局题库：一年级 18 个任务，共 18 个",
+        "poolCount": 18,
+        "roundId": "0f78cd8e-6f84-4765-b533-c720c71af37d",
+        "tasks": [
+          {
+            "index": 0,
+            "id": "EN-C-013",
+            "mode": "sentence",
+            "prompt": "This one is for Grandpa.",
+            "wrongFirst": false,
+            "gained": 10
+          },
+          {
+            "index": 1,
+            "id": "EN-C-005",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Brother.",
+            "wrongFirst": true,
+            "gained": 5
+          },
+          {
+            "index": 2,
+            "id": "EN-C-002",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Dad.",
+            "wrongFirst": false,
+            "gained": 10
+          },
+          {
+            "index": 3,
+            "id": "EN-C-008",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to the sad one.",
+            "wrongFirst": false,
+            "gained": 10
+          },
+          {
+            "index": 4,
+            "id": "EN-C-011",
+            "mode": "sentence",
+            "prompt": "Dad wants his parcel.",
+            "wrongFirst": false,
+            "gained": 10
+          }
+        ],
+        "result": {
+          "score": "总分 45",
+          "answer": "完成 5 个任务 · 首次一次完成 4 · 错送 1 次 · 送达尝试 6 次",
+          "modes": "词汇识别 2/3 题首答 · 句意理解 2/2 题首答"
+        },
+        "recOk": true,
+        "recentOk": true,
+        "modesSequenceOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 12
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 12
+        },
+        "coinsOk": true,
+        "allApproved": true,
+        "errors": [],
+        "overflow": false
+      }
+    },
+    {
+      "name": "S2 返回路径与五入口并存",
+      "pass": true,
+      "result": "英语快递员顶栏「返回数字消除」返回数字消除首页；勾选一年级→下一步按钮启用（可选年级），取消复原；菜单弹层内「汉字勇者」「算术地下城」「拼音冒险」「英语快递员」四锚点并存可见（数字消除为当前页，共五入口）；JS 错误 0、无横向溢出",
+      "checks": {
+        "npOk": true,
+        "fiveOk": true,
+        "menu": {
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "pinyin": {
+            "href": "/pinyin.html",
+            "text": "音拼音冒险听声音认拼音字母",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "english": {
+            "href": "/english.html",
+            "text": "递英语快递员读英语指令送包裹",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "errors": [],
+        "overflow": false
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-在线首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-英语选择屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-结算屏",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S1-记录列表",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S2-返回后首页",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    },
+    {
+      "where": "S2-菜单五入口",
+      "overflow": false,
+      "viewport": {
+        "w": 412,
+        "h": 790,
+        "dpr": 2.625
+      }
+    }
+  ],
+  "allPassed": true
+}

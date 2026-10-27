@@ -1,0 +1,175 @@
+{
+  "generatedAt": "2026-10-27T18:33:30.920Z",
+  "phase": "offline",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S3 离线断源刷新（缓存打开 + 断网整局两步送达）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-7b3cf359a863 受控且预缓存含 /english.html（含 /english.css、英语 dist 模块、角色 SVG 12 张，/img/english-courier/mum.svg 命中 status=200）；杀 serve 4373（源站 fetch 确认失败）后Safari 刷新同一标签页（非冷导航）：首页由缓存打开；菜单进 /english.html 由缓存正常加载（6 年级卡、boot-fail 隐藏）；断网下题库模块经 SW 预缓存 import 成功（18 任务）；选一年级（本局题库：一年级 18 个任务，共 18 个）完成断网整局 5 任务两步送达，全部首答完成，结算「总分 50」「完成 5 个任务 · 首次一次完成 5 · 错送 0 次 · 送达尝试 5 次」（断网局内站位角色图全部加载）；离线练习记录新增 1 条（gameId=english-courier、score=50、5 任务全 firstTry）且列表显示「50 分 · 首答 5/5」；recent-ids 含本局全部任务 ID；结算返回后中断快照清除；离线金币 20 = 20（零收支）；返回首页正常；全程无溢出、JS 错误 0",
+      "checks": {
+        "swInfo": {
+          "mainJsCached": true,
+          "englishCached": true,
+          "name": "pixel-academy:number-puzzle:assets-v1-7b3cf359a863",
+          "svgCached": 200,
+          "svgCount": 12
+        },
+        "sourceDead": true,
+        "serverWasAlive": true,
+        "poolInfo": {
+          "count": 18,
+          "modes": {
+            "vocab": 10,
+            "sentence": 8
+          },
+          "statuses": [
+            "approved"
+          ]
+        },
+        "avail": "本局题库：一年级 18 个任务，共 18 个",
+        "result": {
+          "score": "总分 50",
+          "answer": "完成 5 个任务 · 首次一次完成 5 · 错送 0 次 · 送达尝试 5 次",
+          "modes": "词汇识别 4/4 题首答 · 句意理解 1/1 题首答"
+        },
+        "roundId": "a29f3017-9c05-4afc-8eca-5dcc2094bc2f",
+        "tasks": [
+          {
+            "index": 0,
+            "id": "EN-C-003",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Grandma.",
+            "wrongFirst": false,
+            "gained": 10,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "index": 1,
+            "id": "EN-C-004",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Grandpa.",
+            "wrongFirst": false,
+            "gained": 10,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "index": 2,
+            "id": "EN-C-010",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to the hungry one.",
+            "wrongFirst": false,
+            "gained": 10,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "index": 3,
+            "id": "EN-C-005",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Brother.",
+            "wrongFirst": false,
+            "gained": 10,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "index": 4,
+            "id": "EN-C-014",
+            "mode": "sentence",
+            "prompt": "Sister asks for her parcel.",
+            "wrongFirst": false,
+            "gained": 10,
+            "feedback": "✓ 送达完成 +10"
+          }
+        ],
+        "recRaw": {
+          "gameId": "english-courier",
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ],
+          "score": 50,
+          "answer": {
+            "tasks": [
+              {
+                "exerciseId": "EN-C-003",
+                "firstTry": true,
+                "wrongs": 0,
+                "mode": "vocab",
+                "attempts": 1
+              },
+              {
+                "exerciseId": "EN-C-004",
+                "firstTry": true,
+                "wrongs": 0,
+                "mode": "vocab",
+                "attempts": 1
+              },
+              {
+                "exerciseId": "EN-C-010",
+                "firstTry": true,
+                "wrongs": 0,
+                "mode": "vocab",
+                "attempts": 1
+              },
+              {
+                "exerciseId": "EN-C-005",
+                "firstTry": true,
+                "wrongs": 0,
+                "mode": "vocab",
+                "attempts": 1
+              },
+              {
+                "exerciseId": "EN-C-014",
+                "firstTry": true,
+                "wrongs": 0,
+                "mode": "sentence",
+                "attempts": 1
+              }
+            ]
+          },
+          "recordId": "a29f3017-9c05-4afc-8eca-5dcc2094bc2f",
+          "contentVersion": "english-static-v1",
+          "finishedAt": "2026-10-27T18:33:29.667Z"
+        },
+        "recOk": true,
+        "recentOk": true,
+        "snapCleared": true,
+        "coins": [
+          20,
+          20
+        ]
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S3-SW就绪首页(在线)",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线英语选择屏",
+      "overflow": false
+    },
+    {
+      "where": "结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线结算与记录",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线返回首页",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

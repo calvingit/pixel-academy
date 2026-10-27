@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>英语快递员 · Pixel Academy</title>
+  <link rel="stylesheet" href="/english.css">
+  <script>
+    // 主模块加载失败兜底（与其他游戏同口径）：保持不可玩并提示，不假装正常。
+    window.__englishBootFailed = setTimeout(function () {
+      var el = document.getElementById('boot-fail');
+      if (el) el.hidden = false;
+    }, 6000);
+  </script>
+</head>
+<body>
+  <main id="app" class="app">
+    <h1 class="app-title">英语快递员<span class="app-title-dot">·</span></h1>
+
+    <section id="screen-select" class="screen">
+      <div class="profile-bar">
+        <span class="profile-name">读英语指令，把包裹送到对的人</span>
+        <a class="btn-ghost" href="/">返回数字消除</a>
+      </div>
+      <div class="card">
+        <h2>选择练习年级</h2>
+        <p class="hint">可多选 · 当前开放一年级英语</p>
+        <div id="grade-grid" class="grade-grid" role="group" aria-label="年级多选"></div>
+        <button id="btn-start" class="btn-primary" disabled>开始配送 →</button>
+        <p id="availability-status" class="availability" role="status"></p>
+        <p id="storage-notice" class="storage-notice" hidden>本地存储不可用，本次练习不会保存记录，游戏仍可正常游玩。</p>
+      </div>
+      <p id="restore-incompatible" class="storage-notice" hidden>发现旧版本的练习进度，与当前内容不兼容，已安全放弃，不影响其他游戏数据。</p>
+      <div id="restore-offer" class="card restore" hidden>
+        <p id="restore-offer-text">有未完成的配送任务，可以继续。</p>
+        <div class="restore-actions">
+          <button id="btn-restore" class="btn-primary">继续配送</button>
+          <button id="btn-discard-round" class="btn-ghost">放弃上局</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>练习记录</h2>
+        <ul id="records-list" class="records"></ul>
+        <p id="records-empty" class="hint">还没有练习记录。</p>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen" hidden>
+      <div class="game-hud">
+        <button id="btn-game-return" class="btn-ghost">返回</button>
+        <span id="hud-progress" class="hud-progress">第 1/5 个任务</span>
+        <span id="hud-score" class="hud-score">得分 0</span>
+        <button id="btn-pause" class="btn-ghost" aria-pressed="false">暂停</button>
+      </div>
+      <div id="question-card" class="card question">
+        <p class="q-head"><span id="q-mode" class="mode-chip"></span></p>
+        <p id="q-prompt" class="q-prompt" lang="en"></p>
+        <p id="carrying-status" class="carrying-status" role="status"></p>
+        <p class="group-label">包裹架</p>
+        <div id="parcels" class="parcels" role="group" aria-label="包裹架"></div>
+        <p class="group-label">收件角色</p>
+        <div id="stations" class="stations" role="group" aria-label="收件角色（点选送达）"></div>
+        <div id="feedback" class="feedback" role="status" hidden></div>
+      </div>
+    </section>
+
+    <section id="screen-result" class="screen" hidden>
+      <div class="card result">
+        <h2>本局配送完成！</h2>
+        <p id="result-score" class="result-score"></p>
+        <p id="result-answer" class="result-line"></p>
+        <p id="result-modes" class="result-line"></p>
+        <div class="restore-actions">
+          <button id="btn-again" class="btn-primary">再来一局</button>
+          <button id="btn-result-return" class="btn-ghost">返回选择</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="pause-overlay" class="pause-overlay" hidden>
+      <div class="pause-card">
+        <p>快递员中途休息</p>
+        <button id="btn-resume" class="btn-primary">继续配送</button>
+      </div>
+    </div>
+
+    <dialog id="confirm-dialog" class="confirm-dialog">
+      <p id="confirm-text">确定吗？</p>
+      <div class="restore-actions">
+        <button id="btn-confirm-yes" class="btn-primary" value="yes">确定</button>
+        <button id="btn-confirm-no" class="btn-ghost" value="no">取消</button>
+      </div>
+    </dialog>
+
+    <div id="boot-fail" class="boot-fail" hidden>页面资源加载失败，请刷新重试。</div>
+  </main>
+  <script type="module" src="/dist/game/english-courier/main.js"></script>
+</body>
+</html>

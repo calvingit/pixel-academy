@@ -1,0 +1,1149 @@
+{
+  "generatedAt": "2026-10-27T18:25:29.205Z",
+  "origin": "http://127.0.0.1:4173/",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "viewport": {
+    "w": 1280,
+    "h": 813,
+    "dpr": 1
+  },
+  "scenarios": [
+    {
+      "name": "E1 首页菜单五入口",
+      "pass": true,
+      "result": "菜单弹层内「英语快递员」入口 href=/english.html 可见（文本含「读英语指令送包裹」），装饰字 span aria-hidden=true；与汉字勇者/算术地下城/拼音冒险三入口并存（共 8 项）；Tab 可达英语入口（路径 [\"btn-menu-close\",\"btn-open-courses\",\"btn-open-review\",\"btn-open-shop\",\"btn-open-profile\",\"a:字汉字勇者切换到语文\",\"a:钥算术地下城用算术开\",\"a:音拼音冒险听声音认拼\"]）；AX 角色 link、名称「英语快递员」；JS 错误 0 个",
+      "checks": {
+        "englishAnchor": {
+          "href": "/english.html",
+          "text": "递英语快递员读英语指令送包裹",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "navItems": [
+          {
+            "tag": "BUTTON",
+            "text": "▤学习课程先学一学，再试一试"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "↺错题复习慢慢想，把它弄明白"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "◇金币商店为下一次挑战做准备"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "☺我的收藏装扮我的数字花园"
+          },
+          {
+            "tag": "A",
+            "text": "字汉字勇者切换到语文挑战"
+          },
+          {
+            "tag": "A",
+            "text": "钥算术地下城用算术开门探洞"
+          },
+          {
+            "tag": "A",
+            "text": "音拼音冒险听声音认拼音字母"
+          },
+          {
+            "tag": "A",
+            "text": "递英语快递员读英语指令送包裹"
+          }
+        ],
+        "keyboardReached": true,
+        "axName": "英语快递员",
+        "axRole": "link",
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E2 进入 english.html",
+      "pass": true,
+      "result": "真实点击菜单入口后 URL=http://127.0.0.1:4173/english.html，标题「英语快递员 · Pixel Academy」正常加载：h1=英语快递员·、6 张年级卡、boot-fail 隐藏、存储提示隐藏=true、「返回数字消除」锚点可见，JS 错误 0 个",
+      "checks": {
+        "backLink": {
+          "href": "/",
+          "text": "返回数字消除",
+          "visible": true
+        },
+        "gradeCards": [
+          {
+            "text": "一年级",
+            "pressed": "false",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "二年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "三年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "四年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "五年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "六年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          }
+        ],
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E3 年级筛选",
+      "pass": true,
+      "result": "dist 层 selectEnglishExercises([1])=18 个任务（词汇 10 + 句意 8，全部 approved），二~六年级各 0/0/0/0/0 个；UI 初始未选年级开始禁用 → 勾一年级→「本局题库：一年级 18 个任务，共 18 个」（与 dist 一致）、开始可用；二年级卡禁用置灰（点击无效，提示不变）——未开放年级不混入；dist 层 describeAvailability([2])=「二年级暂无已审核的英语练习。当前开放：一年级（英语）。」；JS 错误 0 个",
+      "checks": {
+        "poolInfo": {
+          "count": 18,
+          "modes": {
+            "vocab": 10,
+            "sentence": 8
+          },
+          "statuses": [
+            "approved"
+          ]
+        },
+        "perGrade": {
+          "1": 18,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "descG2": {
+          "startable": false,
+          "statusText": "二年级暂无已审核的英语练习。当前开放：一年级（英语）。",
+          "rangeText": "，共 0 个"
+        },
+        "g1Status": "本局题库：一年级 18 个任务，共 18 个",
+        "g2Card": {
+          "text": "二年级",
+          "pressed": "false",
+          "disabled": true,
+          "title": "暂未开放"
+        },
+        "settings": {
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ]
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E4 完整局 5 任务（未取件提示 + 错送纠正 + 记录/金币）",
+      "pass": true,
+      "result": "roundId=c9bd52bc-cf4a-469c-9734-4106431236b6，5 任务构成 3 词汇 + 2 句意（EN-C-009:vocab、EN-C-017:sentence、EN-C-004:vocab、EN-C-016:sentence、EN-C-006:vocab）；未取件点选角色→提示「先在包裹架上点选一个包裹」且快照 attempts 保持 0；第 3 任务对包裹错对象→✗「对象不对」（attempts=1、wrongs=1、携带保留）→纠正送达 +5；其余 4 任务自算首答 +10；结算「总分 45」「完成 5 个任务 · 首次一次完成 4 · 错送 1 次 · 送达尝试 6 次」「词汇识别 2/3 题首答 · 句意理解 2/2 题首答」与逐题档位（4×10 + 5、尝试 6 = 5+1）吻合；记录 gameId=english-courier、score=45、模式序列=[\"vocab\",\"sentence\",\"vocab\",\"sentence\",\"vocab\"]、首答 4/5、错送任务 wrongs=1；recent-ids 含本局全部任务 ID=true；金币 20 = 20（零收支）；JS 错误 0 个",
+      "checks": {
+        "roundId": "c9bd52bc-cf4a-469c-9734-4106431236b6",
+        "tasks": [
+          {
+            "id": "EN-C-009",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to the tired one.",
+            "pickedParcel": "tired",
+            "stationIndex": 3,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "id": "EN-C-017",
+            "mode": "sentence",
+            "prompt": "The thirsty child wants a drink.",
+            "pickedParcel": "thirsty",
+            "stationIndex": 3,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "id": "EN-C-004",
+            "mode": "vocab",
+            "wrong": true,
+            "feedback": {
+              "wrongFb": "✗ 对象不对，再看看这位是谁",
+              "okFb": "✓ 送达完成 +5"
+            }
+          },
+          {
+            "id": "EN-C-016",
+            "mode": "sentence",
+            "prompt": "The tired one needs a rest.",
+            "pickedParcel": "tired",
+            "stationIndex": 2,
+            "feedback": "✓ 送达完成 +10"
+          },
+          {
+            "id": "EN-C-006",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Sister.",
+            "pickedParcel": "sister",
+            "stationIndex": 3,
+            "feedback": "✓ 送达完成 +10"
+          }
+        ],
+        "noCarryHint": "先取一个包裹，再送到角色这里",
+        "expect": {
+          "score": 45,
+          "firstTry": 4,
+          "attempts": 6
+        },
+        "result": {
+          "score": "总分 45",
+          "answer": "完成 5 个任务 · 首次一次完成 4 · 错送 1 次 · 送达尝试 6 次",
+          "modes": "词汇识别 2/3 题首答 · 句意理解 2/2 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "c9bd52bc-cf4a-469c-9734-4106431236b6",
+          "gameId": "english-courier",
+          "finishedAt": "2026-10-27T18:25:04.889Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "english-static-v1",
+          "score": 45,
+          "answer": {
+            "tasks": [
+              {
+                "exerciseId": "EN-C-009",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-017",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-004",
+                "mode": "vocab",
+                "attempts": 2,
+                "wrongs": 1,
+                "firstTry": false
+              },
+              {
+                "exerciseId": "EN-C-016",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-006",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              }
+            ]
+          }
+        },
+        "recentOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E5 反馈矩阵（包裹不对 / 都不对）与弃局不记成绩",
+      "pass": true,
+      "result": "开局第 1 任务「The sad child is waiting.」（sentence）：错包裹「happy」送对收件人→✗「✗ 包裹不对，再读一读指令」（attempts=1 wrongs=1）；保持错包裹再送错站位→✗「✗ 都不对，重新读指令试试」（attempts=2 wrongs=2，携带保留）；「返回」确认弹窗「返回将放弃本局配送进度，确定吗？」→放弃后快照清除=true、成绩记录 1→1 条（不新增）；JS 错误 0 个",
+      "checks": {
+        "ex": {
+          "id": "EN-C-015",
+          "mode": "sentence",
+          "prompt": "The sad child is waiting."
+        },
+        "fb1": "✗ 包裹不对，再读一读指令",
+        "fb2": "✗ 都不对，重新读指令试试",
+        "row1": {
+          "roundId": "486abbf2-3a5e-4363-a47f-eb5024ce0e9f",
+          "qi": 0,
+          "question": {
+            "exerciseId": "EN-C-015",
+            "task": {
+              "kind": "english-delivery",
+              "mode": "sentence",
+              "prompt": "The sad child is waiting.",
+              "parcels": [
+                "sad",
+                "happy",
+                "hungry",
+                "thirsty"
+              ],
+              "recipients": [
+                "sad",
+                "happy",
+                "hungry",
+                "thirsty"
+              ],
+              "parcelAnswers": [
+                "sad"
+              ],
+              "recipientAnswers": [
+                "sad"
+              ]
+            },
+            "parcels": [
+              "happy",
+              "thirsty",
+              "sad",
+              "hungry"
+            ],
+            "stations": [
+              "sad",
+              "hungry",
+              "thirsty",
+              "happy"
+            ]
+          },
+          "carrying": "happy",
+          "score": 0,
+          "attempts": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrongs": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "row2": {
+          "roundId": "486abbf2-3a5e-4363-a47f-eb5024ce0e9f",
+          "qi": 0,
+          "question": {
+            "exerciseId": "EN-C-015",
+            "task": {
+              "kind": "english-delivery",
+              "mode": "sentence",
+              "prompt": "The sad child is waiting.",
+              "parcels": [
+                "sad",
+                "happy",
+                "hungry",
+                "thirsty"
+              ],
+              "recipients": [
+                "sad",
+                "happy",
+                "hungry",
+                "thirsty"
+              ],
+              "parcelAnswers": [
+                "sad"
+              ],
+              "recipientAnswers": [
+                "sad"
+              ]
+            },
+            "parcels": [
+              "happy",
+              "thirsty",
+              "sad",
+              "hungry"
+            ],
+            "stations": [
+              "sad",
+              "hungry",
+              "thirsty",
+              "happy"
+            ]
+          },
+          "carrying": "happy",
+          "score": 0,
+          "attempts": [
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrongs": [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "confirmText": "返回将放弃本局配送进度，确定吗？",
+        "recordsBefore": 1,
+        "recordsAfter": 1,
+        "snapshotDiscarded": true,
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E6 暂停/恢复与刷新恢复（排列一致不重复计分）",
+      "pass": true,
+      "result": "开局取件（包裹「thirsty」）后暂停：覆盖层出现、得分 0 不变、携带进快照，继续后正常；完成 2 任务（得分 20）后 Page.reload：恢复提供「有未完成的配送任务，可以继续（包裹、站位与得分都会恢复）。…」→继续配送→第 3/5 个任务、得分 20、roundId/任务序/每任务包裹与站位排列/尝试计数与刷新前逐项一致（快照恢复），DOM 包裹排列与快照一致=true→续答 3 任务全对→结算「总分 50」（= 刷新前 20 + 新增 30；若前两题重计应为 70）；记录 recordId=roundId 幂等恰 1 条、5 任务全 firstTry=true；JS 错误 0 个",
+      "checks": {
+        "beforeSnap": {
+          "version": 1,
+          "gameId": "english-courier",
+          "roundId": "f4efe8a9-46b5-4676-a8f5-9bb102c384c8",
+          "state": {
+            "phase": "asking",
+            "questions": [
+              {
+                "exerciseId": "EN-C-010",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "vocab",
+                  "prompt": "Deliver the parcel to the hungry one.",
+                  "parcels": [
+                    "hungry",
+                    "thirsty",
+                    "tired",
+                    "happy"
+                  ],
+                  "recipients": [
+                    "hungry",
+                    "thirsty",
+                    "tired",
+                    "happy"
+                  ],
+                  "parcelAnswers": [
+                    "hungry"
+                  ],
+                  "recipientAnswers": [
+                    "hungry"
+                  ]
+                },
+                "parcels": [
+                  "thirsty",
+                  "hungry",
+                  "tired",
+                  "happy"
+                ],
+                "stations": [
+                  "happy",
+                  "hungry",
+                  "tired",
+                  "thirsty"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-018",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "The sleepy child is going to bed.",
+                  "parcels": [
+                    "sleepy",
+                    "tired",
+                    "sad",
+                    "happy"
+                  ],
+                  "recipients": [
+                    "sleepy",
+                    "tired",
+                    "sad",
+                    "happy"
+                  ],
+                  "parcelAnswers": [
+                    "sleepy"
+                  ],
+                  "recipientAnswers": [
+                    "sleepy"
+                  ]
+                },
+                "parcels": [
+                  "happy",
+                  "sleepy",
+                  "sad",
+                  "tired"
+                ],
+                "stations": [
+                  "sleepy",
+                  "happy",
+                  "sad",
+                  "tired"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-013",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "This one is for Grandpa.",
+                  "parcels": [
+                    "grandpa",
+                    "grandma",
+                    "dad",
+                    "brother"
+                  ],
+                  "recipients": [
+                    "grandpa",
+                    "grandma",
+                    "dad",
+                    "brother"
+                  ],
+                  "parcelAnswers": [
+                    "grandpa"
+                  ],
+                  "recipientAnswers": [
+                    "grandpa"
+                  ]
+                },
+                "parcels": [
+                  "brother",
+                  "dad",
+                  "grandma",
+                  "grandpa"
+                ],
+                "stations": [
+                  "dad",
+                  "grandma",
+                  "brother",
+                  "grandpa"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-011",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "Dad wants his parcel.",
+                  "parcels": [
+                    "dad",
+                    "mum",
+                    "brother",
+                    "grandpa"
+                  ],
+                  "recipients": [
+                    "dad",
+                    "mum",
+                    "brother",
+                    "grandpa"
+                  ],
+                  "parcelAnswers": [
+                    "dad"
+                  ],
+                  "recipientAnswers": [
+                    "dad"
+                  ]
+                },
+                "parcels": [
+                  "dad",
+                  "grandpa",
+                  "mum",
+                  "brother"
+                ],
+                "stations": [
+                  "dad",
+                  "brother",
+                  "grandpa",
+                  "mum"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-014",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "Sister asks for her parcel.",
+                  "parcels": [
+                    "sister",
+                    "brother",
+                    "mum",
+                    "grandma"
+                  ],
+                  "recipients": [
+                    "sister",
+                    "brother",
+                    "mum",
+                    "grandma"
+                  ],
+                  "parcelAnswers": [
+                    "sister"
+                  ],
+                  "recipientAnswers": [
+                    "sister"
+                  ]
+                },
+                "parcels": [
+                  "grandma",
+                  "brother",
+                  "mum",
+                  "sister"
+                ],
+                "stations": [
+                  "brother",
+                  "sister",
+                  "mum",
+                  "grandma"
+                ]
+              }
+            ],
+            "questionIndex": 2,
+            "score": 20,
+            "firstTryCount": 2,
+            "totalWrongCount": 0,
+            "currentWrong": false,
+            "attempts": [
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "wrongs": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "carrying": null,
+            "result": null
+          },
+          "rngState": 291746620,
+          "previousIds": [
+            "EN-C-009",
+            "EN-C-017",
+            "EN-C-004",
+            "EN-C-016",
+            "EN-C-006"
+          ],
+          "grades": [
+            1
+          ],
+          "contentVersion": "english-static-v1"
+        },
+        "restoredSnap": {
+          "version": 1,
+          "gameId": "english-courier",
+          "roundId": "f4efe8a9-46b5-4676-a8f5-9bb102c384c8",
+          "state": {
+            "phase": "asking",
+            "questions": [
+              {
+                "exerciseId": "EN-C-010",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "vocab",
+                  "prompt": "Deliver the parcel to the hungry one.",
+                  "parcels": [
+                    "hungry",
+                    "thirsty",
+                    "tired",
+                    "happy"
+                  ],
+                  "recipients": [
+                    "hungry",
+                    "thirsty",
+                    "tired",
+                    "happy"
+                  ],
+                  "parcelAnswers": [
+                    "hungry"
+                  ],
+                  "recipientAnswers": [
+                    "hungry"
+                  ]
+                },
+                "parcels": [
+                  "thirsty",
+                  "hungry",
+                  "tired",
+                  "happy"
+                ],
+                "stations": [
+                  "happy",
+                  "hungry",
+                  "tired",
+                  "thirsty"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-018",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "The sleepy child is going to bed.",
+                  "parcels": [
+                    "sleepy",
+                    "tired",
+                    "sad",
+                    "happy"
+                  ],
+                  "recipients": [
+                    "sleepy",
+                    "tired",
+                    "sad",
+                    "happy"
+                  ],
+                  "parcelAnswers": [
+                    "sleepy"
+                  ],
+                  "recipientAnswers": [
+                    "sleepy"
+                  ]
+                },
+                "parcels": [
+                  "happy",
+                  "sleepy",
+                  "sad",
+                  "tired"
+                ],
+                "stations": [
+                  "sleepy",
+                  "happy",
+                  "sad",
+                  "tired"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-013",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "This one is for Grandpa.",
+                  "parcels": [
+                    "grandpa",
+                    "grandma",
+                    "dad",
+                    "brother"
+                  ],
+                  "recipients": [
+                    "grandpa",
+                    "grandma",
+                    "dad",
+                    "brother"
+                  ],
+                  "parcelAnswers": [
+                    "grandpa"
+                  ],
+                  "recipientAnswers": [
+                    "grandpa"
+                  ]
+                },
+                "parcels": [
+                  "brother",
+                  "dad",
+                  "grandma",
+                  "grandpa"
+                ],
+                "stations": [
+                  "dad",
+                  "grandma",
+                  "brother",
+                  "grandpa"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-011",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "Dad wants his parcel.",
+                  "parcels": [
+                    "dad",
+                    "mum",
+                    "brother",
+                    "grandpa"
+                  ],
+                  "recipients": [
+                    "dad",
+                    "mum",
+                    "brother",
+                    "grandpa"
+                  ],
+                  "parcelAnswers": [
+                    "dad"
+                  ],
+                  "recipientAnswers": [
+                    "dad"
+                  ]
+                },
+                "parcels": [
+                  "dad",
+                  "grandpa",
+                  "mum",
+                  "brother"
+                ],
+                "stations": [
+                  "dad",
+                  "brother",
+                  "grandpa",
+                  "mum"
+                ]
+              },
+              {
+                "exerciseId": "EN-C-014",
+                "task": {
+                  "kind": "english-delivery",
+                  "mode": "sentence",
+                  "prompt": "Sister asks for her parcel.",
+                  "parcels": [
+                    "sister",
+                    "brother",
+                    "mum",
+                    "grandma"
+                  ],
+                  "recipients": [
+                    "sister",
+                    "brother",
+                    "mum",
+                    "grandma"
+                  ],
+                  "parcelAnswers": [
+                    "sister"
+                  ],
+                  "recipientAnswers": [
+                    "sister"
+                  ]
+                },
+                "parcels": [
+                  "grandma",
+                  "brother",
+                  "mum",
+                  "sister"
+                ],
+                "stations": [
+                  "brother",
+                  "sister",
+                  "mum",
+                  "grandma"
+                ]
+              }
+            ],
+            "questionIndex": 2,
+            "score": 20,
+            "firstTryCount": 2,
+            "totalWrongCount": 0,
+            "currentWrong": false,
+            "attempts": [
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "wrongs": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "carrying": null,
+            "result": null
+          },
+          "rngState": 291746620,
+          "previousIds": [
+            "EN-C-009",
+            "EN-C-017",
+            "EN-C-004",
+            "EN-C-016",
+            "EN-C-006"
+          ],
+          "grades": [
+            1
+          ],
+          "contentVersion": "english-static-v1"
+        },
+        "stateOk": true,
+        "expect": {
+          "score": 50
+        },
+        "result": {
+          "score": "总分 50",
+          "answer": "完成 5 个任务 · 首次一次完成 5 · 错送 0 次 · 送达尝试 5 次",
+          "modes": "词汇识别 1/1 题首答 · 句意理解 4/4 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "f4efe8a9-46b5-4676-a8f5-9bb102c384c8",
+          "gameId": "english-courier",
+          "finishedAt": "2026-10-27T18:25:10.375Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "english-static-v1",
+          "score": 50,
+          "answer": {
+            "tasks": [
+              {
+                "exerciseId": "EN-C-010",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-018",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-013",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-011",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-014",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              }
+            ]
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E7 视口五档与触摸目标",
+      "pass": true,
+      "result": "五档（320x568、390x844、412x915、568x320-landscape、1280x800-desktop）局内均无横向溢出；390×844 档包裹触摸目标最小 62px、站位卡最小 120px（≥44）、站位角色图 4 张全部加载（naturalWidth>0）；截图见 e7-*.png；JS 错误 0 个",
+      "checks": {
+        "viewports": [
+          {
+            "name": "320x568",
+            "overflowX": false,
+            "parcels": 4,
+            "stations": 4
+          },
+          {
+            "name": "390x844",
+            "overflowX": false,
+            "parcels": 4,
+            "stations": 4
+          },
+          {
+            "name": "412x915",
+            "overflowX": false,
+            "parcels": 4,
+            "stations": 4
+          },
+          {
+            "name": "568x320-landscape",
+            "overflowX": false,
+            "parcels": 4,
+            "stations": 4
+          },
+          {
+            "name": "1280x800-desktop",
+            "overflowX": false,
+            "parcels": 4,
+            "stations": 4
+          }
+        ],
+        "touchOk": {
+          "parcelMin": 62,
+          "stationMin": 120,
+          "imagesLoaded": true,
+          "imageCount": 4
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "E8 四游戏回归",
+      "pass": true,
+      "result": "英语「返回数字消除」回首页；菜单经真实点击进 hanzi.html、dungeon.html、pinyin.html 均正常加载（年级卡 6/6/6 张、boot-fail 隐藏）并经返回锚点回首页；四游戏进出 JS 错误 0",
+      "checks": {
+        "results": {
+          "hanzi": {
+            "gradeCards": 6,
+            "errors": []
+          },
+          "dungeon": {
+            "gradeCards": 6,
+            "errors": []
+          },
+          "pinyin": {
+            "gradeCards": 6,
+            "errors": []
+          }
+        },
+        "overflow": false,
+        "errors": {
+          "home": [],
+          "hanzi": {
+            "gradeCards": 6,
+            "errors": []
+          },
+          "dungeon": {
+            "gradeCards": 6,
+            "errors": []
+          },
+          "pinyin": {
+            "gradeCards": 6,
+            "errors": []
+          }
+        }
+      }
+    },
+    {
+      "name": "E9 SW 五入口断网完整局",
+      "pass": true,
+      "result": "SW 版本 pixel-academy:number-puzzle:assets-v1-7b3cf359a863 预缓存含 /、/hanzi.html、/dungeon.html、/pinyin.html、/english.html（含 /english.css 与英语 dist 模块）+ 12 张 /img/english-courier/*.svg（清单文本含 english 入口=true）；杀掉 serve 进程（源站请求确认失败）后刷新：英语快递员由缓存打开，开局断网下未取件点选提示正常、5 任务自算作答全对（EN-C-004、EN-C-007、EN-C-009、EN-C-001、EN-C-016）→ 结算「总分 50」「完成 5 个任务 · 首次一次完成 5 · 错送 0 次 · 送达尝试 5 次」；断网记录 score=50、5 任务全 firstTry=true；JS 错误 0 个",
+      "checks": {
+        "swInfo": {
+          "name": "pixel-academy:number-puzzle:assets-v1-7b3cf359a863",
+          "svgs": 12,
+          "fiveEntries": true,
+          "swHasEnglishEntry": true
+        },
+        "sourceDead": true,
+        "tasks": [
+          {
+            "id": "EN-C-004",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Grandpa.",
+            "pickedParcel": "grandpa",
+            "stationIndex": 1
+          },
+          {
+            "id": "EN-C-007",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to the happy one.",
+            "pickedParcel": "happy",
+            "stationIndex": 2
+          },
+          {
+            "id": "EN-C-009",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to the tired one.",
+            "pickedParcel": "tired",
+            "stationIndex": 1
+          },
+          {
+            "id": "EN-C-001",
+            "mode": "vocab",
+            "prompt": "Deliver the parcel to Mum.",
+            "pickedParcel": "mum",
+            "stationIndex": 3
+          },
+          {
+            "id": "EN-C-016",
+            "mode": "sentence",
+            "prompt": "The tired one needs a rest.",
+            "pickedParcel": "tired",
+            "stationIndex": 1
+          }
+        ],
+        "result": {
+          "score": "总分 50",
+          "answer": "完成 5 个任务 · 首次一次完成 5 · 错送 0 次 · 送达尝试 5 次",
+          "modes": "词汇识别 4/4 题首答 · 句意理解 1/1 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "9baffb1d-df6c-4252-95f7-06a9731b3529",
+          "gameId": "english-courier",
+          "finishedAt": "2026-10-27T18:25:29.150Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "english-static-v1",
+          "score": 50,
+          "answer": {
+            "tasks": [
+              {
+                "exerciseId": "EN-C-004",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-007",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-009",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-001",
+                "mode": "vocab",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              },
+              {
+                "exerciseId": "EN-C-016",
+                "mode": "sentence",
+                "attempts": 1,
+                "wrongs": 0,
+                "firstTry": true
+              }
+            ]
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    }
+  ],
+  "allPassed": true
+}

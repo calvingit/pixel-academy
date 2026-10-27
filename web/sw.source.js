@@ -95,15 +95,16 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       // 入口页离线回退：'/'（数字消除，含 ?preview=candidate）、'/hanzi.html'、'/hanzi'
-      // （汉字勇者，含 ?nosw）、'/dungeon.html'、'/dungeon'（算术地下城）与
-      // '/pinyin.html'、'/pinyin'（拼音冒险）均为清单内入口；
-      // 查询参数不影响匹配（ignoreSearch）。
-      // '/hanzi'、'/dungeon'、'/pinyin' 兜底：生产 Pages 曾把 /hanzi.html 规范化 308 到 /hanzi，
-      // 旧访客可能持有该 URL；无扩展名路径同样回退到缓存的对应入口页。
+      // （汉字勇者，含 ?nosw）、'/dungeon.html'、'/dungeon'（算术地下城）、
+      // '/pinyin.html'、'/pinyin'（拼音冒险）与 '/english.html'、'/english'（英语快递员）
+      // 均为清单内入口；查询参数不影响匹配（ignoreSearch）。
+      // '/hanzi'、'/dungeon'、'/pinyin'、'/english' 兜底：生产 Pages 曾把 /hanzi.html 规范化 308
+      // 到 /hanzi，旧访客可能持有该 URL；无扩展名路径同样回退到缓存的对应入口页。
       const entryPath = url.pathname === '/' ? '/'
         : (url.pathname === '/hanzi.html' || url.pathname === '/hanzi') ? '/hanzi.html'
         : (url.pathname === '/dungeon.html' || url.pathname === '/dungeon') ? '/dungeon.html'
         : (url.pathname === '/pinyin.html' || url.pathname === '/pinyin') ? '/pinyin.html'
+        : (url.pathname === '/english.html' || url.pathname === '/english') ? '/english.html'
         : null;
       if (entryPath) {
         const hit = await cache.match(entryPath, { ignoreSearch: true });
