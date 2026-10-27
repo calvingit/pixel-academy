@@ -38,7 +38,14 @@
 
 ## 生产环境验证轮（2026-10-28）
 
-- 推送 Cloudflare Pages 后生产验证结果记入本文件「生产环境验证轮」小节（M9 教训：生产证据与本 README 同步更新，不留「未复验」口径漂移）。
+- 部署：提交 d6dfe17 推送 main → Cloudflare Pages 部署 25092cd4 成功（2026-10-27T18:36Z，https://pixel-academy.pages.dev）。HTTP 层核对：`/english.html` 308 → `/english`（Pages 规范化，M8 已知行为）、`/english` 200、`/img/english-courier/mum.svg` 200（content-type image/svg+xml）。
+- 无头 Chrome 直连生产源冒烟（HeadlessChrome/156.0.0.0 经 CDP；驱动脚本与逐场景数据见 [production/english-prod-smoke.mjs](production/english-prod-smoke.mjs)、[production/english-prod-results.json](production/english-prod-results.json)），**P1–P4 全部通过**：
+  - **P1 生产在线首页**：SW `assets-v1-7b3cf359a863` 受控；预缓存含 /english.html、/english.css、英语 dist 模块与 12 张角色 SVG；菜单弹层内英语快递员与既有三游戏锚点并存；JS 错误 0。
+  - **P2 生产在线 /english.html（SW 导航）**：经菜单真实导航（Pages 对 /english.html 308 → /english 由 SW 回退分支与 redirected 重包处理，M8 缺陷修复口径）→ 真实任务 EN-C-016「The tired one needs a rest.」取「tired」送达 → ✓ +10；站位角色图 4/4 加载；JS 错误 0。
+  - **P3 生产离线仿真**：CDP 浏览器级离线仿真下 reload → 首页与 /english.html 由缓存打开；断网真实任务 EN-C-010 取「hungry」送达 → ✓ +10；离线 200 只能来自 SW 预缓存；JS 错误 0。
+  - **P4 离线无扩展名 /english 导航回退**：离线下 Page.navigate 到 /english（旧访客可能持有的 308 规范化 URL）→ 页面由 SW 回退分支打开；sw.js 文本含 '/english.html' || '/english' 分支。
+- 截图：production/p1-01-home-menu.png、p2-01-english-online-task.png、p3-01-offline-home.png、p3-02-offline-task.png、p4-01-offline-no-ext.png。
+- 验证工具侧说明（非游戏缺陷）：冒烟脚本经菜单进入后「弃局确认」步骤存在未定位的工具侧竞态（同一动作在独立探针与桌面 E5/模拟器轮均正常），已改为尽力而为清理、不计入场景判定；游戏侧弃局行为由桌面 E5、Android/iOS 模拟器轮及生产探针覆盖。
 
 ## SW 版本
 

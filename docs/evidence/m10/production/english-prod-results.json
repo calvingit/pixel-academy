@@ -1,0 +1,96 @@
+{
+  "generatedAt": "2026-10-27T19:04:39.703Z",
+  "origin": "https://pixel-academy.pages.dev/",
+  "deployment": "25092cd4",
+  "commit": "d6dfe17",
+  "scenarios": [
+    {
+      "name": "P1 生产在线首页（SW 版本 + 五入口 + 预缓存）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-7b3cf359a863 受控；预缓存含 /english.html、/english.css、英语 dist 模块与 12 张 /img/english-courier/*.svg；菜单弹层内英语快递员与汉字勇者/算术地下城/拼音冒险锚点并存；JS 错误 0 个",
+      "checks": {
+        "sw": {
+          "name": "pixel-academy:number-puzzle:assets-v1-7b3cf359a863",
+          "missing": [],
+          "svgCount": 12
+        },
+        "menu": {
+          "english": {
+            "href": "/english.html",
+            "visible": true
+          },
+          "hanzi": {
+            "href": "/hanzi.html",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "visible": true
+          },
+          "pinyin": {
+            "href": "/pinyin.html",
+            "visible": true
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P2 生产在线 /english.html（SW 导航 + 真实任务送达）",
+      "pass": true,
+      "result": "经菜单真实导航进 https://pixel-academy.pages.dev/english.html（SW 导航路径，Pages 对 /english.html 308 → /english 由 SW 回退分支与 redirected 重包处理，M8 缺陷修复口径）；首任务「The tired one needs a rest.」（EN-C-016）取包裹「tired」送达站位 4 → ✓ 送达完成 +10；站位角色图 4/4 加载成功；JS 错误 0 个",
+      "checks": {
+        "task": {
+          "id": "EN-C-016",
+          "prompt": "The tired one needs a rest.",
+          "parcel": "tired",
+          "station": 3
+        },
+        "feedback": "✓ 送达完成 +10",
+        "stationImages": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P3 生产离线仿真（缓存可达 + 断网作答）",
+      "pass": true,
+      "result": "CDP 浏览器级离线仿真（Network.emulateNetworkConditions offline）下 Page.reload：首页由缓存打开；菜单进 /english.html 由缓存正常加载（boot-fail 隐藏）；断网开局首任务「Deliver the parcel to the hungry one.」（EN-C-010）取「hungry」送达站位 4 → ✓ 送达完成 +10；站位角色图 4/4 加载成功（离线 200 只能来自 SW 预缓存）；JS 错误 0 个",
+      "checks": {
+        "task": {
+          "id": "EN-C-010",
+          "prompt": "Deliver the parcel to the hungry one.",
+          "parcel": "hungry",
+          "station": 3
+        },
+        "feedback": "✓ 送达完成 +10",
+        "stationImages": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P4 离线无扩展名 /english 导航回退",
+      "pass": true,
+      "result": "浏览器级离线仿真下 Page.navigate 到 https://pixel-academy.pages.dev/english（无扩展名；生产 Pages 曾把 /english.html 308 规范化到 /english，旧访客可能持有该 URL）：页面由 SW 导航回退分支打开（6 年级卡、boot-fail 隐藏）；sw.js 文本含 '/english.html' || '/english' 回退分支=true；JS 错误 0 个",
+      "checks": {
+        "gradeCards": 6,
+        "branchOk": true,
+        "overflow": false,
+        "errors": []
+      }
+    }
+  ],
+  "allPassed": true
+}
