@@ -1,0 +1,72 @@
+{
+  "generatedAt": "2026-10-27T06:06:30.506Z",
+  "origin": "https://pixel-academy.pages.dev",
+  "expectedVersion": "assets-v1-c443b797b0e8",
+  "scenarios": [
+    {
+      "name": "P1 生产首页 + SW 版本",
+      "pass": true,
+      "result": "生产首页加载（数字消除.）；缓存 pixel-academy:number-puzzle:assets-v1-c443b797b0e8（45 项）与预期 assets-v1-c443b797b0e8 一致，SW 受控；无横向溢出，JS 错误 0 个",
+      "checks": {
+        "home": {
+          "url": "https://pixel-academy.pages.dev/",
+          "h1": "数字消除.",
+          "selectVisible": true,
+          "menuDialogOpen": false,
+          "hanziAnchor": true,
+          "offlineNotice": "离线缓存已就绪（版本 assets-v1-c443b797b0e8），断网也能游玩。",
+          "controlled": true,
+          "overflow": false,
+          "errors": []
+        },
+        "sw": {
+          "name": "pixel-academy:number-puzzle:assets-v1-c443b797b0e8",
+          "count": 45,
+          "controlled": true
+        }
+      }
+    },
+    {
+      "name": "P2 菜单入口进 hanzi + 返回",
+      "pass": true,
+      "result": "真实触摸菜单入口进入 https://pixel-academy.pages.dev/hanzi.html（年级卡 6 张、boot-fail 隐藏），返回链接回首页正常；无横向溢出，JS 错误 0 个",
+      "checks": {
+        "hanzi": {
+          "url": "https://pixel-academy.pages.dev/hanzi.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": true,
+          "overflow": false,
+          "errors": []
+        }
+      }
+    },
+    {
+      "name": "P3 飞行模式离线可达",
+      "pass": true,
+      "result": "飞行模式后刷新：首页由缓存打开（提示「当前处于离线状态，正在使用已缓存资源（版本 assets-v1-c443…」），菜单入口离线进入 hanzi（年级卡 6 张）；无横向溢出，JS 错误 0 个",
+      "checks": {
+        "offlineHome": {
+          "url": "https://pixel-academy.pages.dev/",
+          "h1": "数字消除.",
+          "selectVisible": true,
+          "menuDialogOpen": false,
+          "hanziAnchor": true,
+          "offlineNotice": "当前处于离线状态，正在使用已缓存资源（版本 assets-v1-c443b797b0e8）。",
+          "controlled": true,
+          "overflow": false,
+          "errors": []
+        },
+        "offlineHanzi": {
+          "url": "https://pixel-academy.pages.dev/hanzi.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": true,
+          "overflow": false,
+          "errors": []
+        }
+      }
+    }
+  ],
+  "allPassed": true
+}

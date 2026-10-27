@@ -86,10 +86,39 @@ iOS 截图 14 张：I1 `ios-s1-01-home-entry`…`ios-s1-06-result`（含 q1 答�
 
 iOS 环境观察（非阻塞）：`xcrun simctl terminate com.apple.mobilesafari` 会清空该模拟器 Safari 的 origin 存储（localStorage/IndexedDB）——第 1 轮运行结束时 hanzi 记录为 2 条，第 2 轮 S1 起步又为 0。全部断言均为相对值（前→后），两轮各自自洽，不影响本轮结论；但该模拟器上强制结束 Safari 后存储不可保留，复跑证据时不能假设跨轮持久化。
 
+## 生产环境验证（Cloudflare Pages，全部通过）
+
+导航接入随 dea2637 推送部署（构建 `npm run build:site` → dist-site/，git 集成自动部署）。生产首验暴露一个本地未复现的真实缺陷并随即修复闭环：部署链 dea2637（导航）→ 生产首验失败 → 968bee5（_redirects 方案，实测无法绕过 Pages 资产解析层的规范化且使 /hanzi 落 308 自循环，撤销）→ 91d309c（终版修复，SW 版本 `assets-v1-c443b797b0e8`）。
+
+**缺陷记录（Pages 308 规范化 × SW respondWith）**：Pages 把 `/hanzi.html` 308 规范化到 `/hanzi`（`/` 无此行为，M7 未暴露）。`cache.addAll` 预缓存跟随 308 后把 `redirected=true` 的 same-origin 200 响应写入缓存键 `/hanzi.html`；此后任何经 SW 的该导航 `cache.match` 命中并以 redirected 响应 respondWith，按 Fetch 规范导航直接网络错误（Chrome 系统错误页 ERR_FAILED）。本地 serve 无规范化，故三端验证（桌面/Android/iOS）均通过而生产首验才发现。修复：SW 导航回退分支命中缓存时对 `redirected` 条目用 `new Response(hit.body, …)` 重包去掉标记（`web/sw.source.js`），并兼容 `/hanzi` 路径（历史规范化 URL 与离线手输）；SW 未接管的首访由浏览器自身跟随 308 正常打开（`/hanzi` 200）。该行为已由 `tests/offline.test.mjs` 回退分支断言固化。
+
+**桌面无头 Chrome 156 验证**（profile 全新首访，脚本 `production/production-browser.mjs`，结果 `production/production-browser-results.json`）：
+
+| # | 场景 | 结果 |
+| --- | --- | --- |
+| P1 | 生产首页与 SW 版本 | 首页正常加载，SW 受控，缓存 `pixel-academy:number-puzzle:assets-v1-c443b797b0e8` 45 项与预期版本一致，页面提示「离线缓存已就绪」；缓存条目 redirected 形态如实记录（/hanzi.html=true，由 SW re-wrap 兜底），生产 sw.js 含 re-wrap 逻辑 |
+| P2 | 导航入口进 hanzi 并返回 | 菜单入口真实点击进入 /hanzi.html（年级卡 6 张、boot-fail 隐藏），「返回数字消除」回首页正常，JS 错误 0 |
+| P3 | 缓存清单双入口 | 缓存正文核对：/ 含汉字勇者入口标记、/hanzi.html 含返回标记 |
+| P4 | 断网刷新离线可达 | 浏览器级断网仿真刷新：首页与 hanzi 均由缓存打开、离线可往返，JS 错误 0 |
+
+截图 7 张（`production/prod-01`–`prod-07`，含首跑失败现场 `prod-fail-p2/p4`）。
+
+**Android Chrome 113 模拟器验证**（emulator-5556，真实触摸 `Input.dispatchTouchEvent`，脚本 `production/android-prod-smoke.mjs`，结果 `production/android-prod-results.json`）：
+
+| # | 场景 | 结果 |
+| --- | --- | --- |
+| Q1 | 生产首页 + SW 版本 | 缓存 `assets-v1-c443b797b0e8` 45 项与预期一致、SW 受控，无横向溢出、JS 错误 0 |
+| Q2 | 菜单入口进 hanzi + 返回 | 真实触摸进入 /hanzi.html（年级卡 6 张），返回链接回首页，JS 错误 0 |
+| Q3 | 飞行模式离线可达（M7 R4 口径） | 飞行模式后刷新：首页与 hanzi 均由缓存打开，JS 错误 0 |
+
+截图 6 张（`production/android-prod-01`–`android-prod-06`）。
+
+驱动坑补充（复跑参考）：模拟器 Chrome 113 的 per-page WebSocket 握手成功但命令可能无响应，需走 browser 级 endpoint + `Target.attachToTarget(flatten)`；Chrome `/json` 按"最近使用在前"排序，多 tab 时应匹配本项目 URL 的第一个 target。
+
 ## 已知限制与未验证项
 
 1. **物理真机未验证**：已补充 Android 模拟器与 iOS 模拟器验证（见「设备模拟器验证」），但模拟器证据不代表物理真机——触控手感、性能与真实设备系统差异未覆盖。
-2. **生产部署未验证**：本次改动未提交未推送；Cloudflare Pages 部署后的首页导航与 SW 行为未验证，推送部署后需在生产环境复验（SW 更新、双入口离线与 MIME 按 M7 方法）。
+2. **生产环境已验证（2026-10-27）**：桌面无头 Chrome 156 与 Android Chrome 113 模拟器对 https://pixel-academy.pages.dev 完成导航入口、SW 版本更新与双入口离线验证（见「生产环境验证」）；iOS Safari 生产环境未单独跑（iOS 模拟器验证为本地源，生产 SW 行为与 Android 同机制同代码）；窗口期（dea2637 部署后、91d309c 修复前）安装过新 SW 的浏览器持有被 redirected 响应污染的缓存，91d309c 的版本更新会在 activate 时清理旧缓存自愈。
 3. **iOS 离线冷导航为已知 WebKit 行为**：WebKit 离线冷导航可能落系统错误页；本轮按断源刷新口径验证通过（I3），未做离线冷导航。
 4. **教学有效性未验证**：28 题为代理内容审核（题意/正确性/适配性），学生可读性、图文认知效果、组字教学价值需教师/学生实测；审核记录已声明撤回条件（图示混淆即撤出）。
 5. **抽题覆盖为随机抽样**：V1–V3 每局 5 题（约 3 局 ×5 = 15 题次），未穷举全部 28 题；全部任务已由 `tests/hanzi-hero.test.mjs`「自身答案判对」与窄路径测试覆盖判题面。
