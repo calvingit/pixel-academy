@@ -101,7 +101,10 @@ self.addEventListener('fetch', (event) => {
       const entryPath = url.pathname === '/' ? '/' : (url.pathname === '/hanzi.html' || url.pathname === '/hanzi') ? '/hanzi.html' : null;
       if (entryPath) {
         const hit = await cache.match(entryPath, { ignoreSearch: true });
-        if (hit) return hit;
+        // Pages 等托管平台对 /hanzi.html 的 308 规范化会让缓存条目带 redirected 标记
+        // （install 的 addAll 跟随重定向写入）；导航 respondWith 禁止 redirected 响应，
+        // 命中时必须重包一层去掉标记，否则在线与离线导航都落网络错误页。
+        if (hit) return hit.redirected ? new Response(hit.body, { status: hit.status, statusText: hit.statusText, headers: hit.headers }) : hit;
         try {
           const response = await fetch(request);
           if (response.ok) await cache.put(entryPath, response.clone());

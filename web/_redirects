@@ -1,7 +1,0 @@
-# Cloudflare Pages 重定向规则（优先于默认的 .html 规范化）。
-# Pages 默认把 /hanzi.html 308 到 /hanzi；SW 预缓存与导航回退都以 /hanzi.html
-# 为入口键，跟随重定向的响应会被 SW respondWith 拒绝（导航 ERR_FAILED）。
-# 200 rewrite 让 /hanzi.html 原地服务资产，绕过 308；/hanzi 同样 rewrite 到资产，
-# 在线可用且离线可被 SW 的 /hanzi 分支回退到缓存入口。
-/hanzi.html /hanzi.html 200
-/hanzi /hanzi.html 200

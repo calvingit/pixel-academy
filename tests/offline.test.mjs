@@ -310,6 +310,9 @@ test('生成的 web/sw.js: 双入口导航回退分支（/ 与 /hanzi.html、/ha
   // 两者可区分：分支缺失时页面将无法在离线状态下经缓存打开对应入口。
   assert.ok(swSource.includes("url.pathname === '/' ? '/' :"), 'sw.js 导航回退分支应匹配 / 入口');
   assert.ok(swSource.includes("url.pathname === '/hanzi.html' || url.pathname === '/hanzi'"), 'sw.js 导航回退分支应匹配 /hanzi.html 与 /hanzi 入口');
+  // 托管平台 308 规范化会让缓存条目带 redirected 标记；导航 respondWith 禁止 redirected，
+  // 命中必须重包一层（缺失时生产 /hanzi.html 导航稳定落网络错误页）。
+  assert.ok(swSource.includes('hit.redirected ? new Response(hit.body'), 'sw.js 导航回退应对 redirected 缓存条目重新包装');
 });
 
 test('renderSwSource: 占位符替换完整，模板缺占位符时抛错', () => {
