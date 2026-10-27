@@ -291,13 +291,25 @@ test('生成的 web/sw.js: 版本格式、缓存名前缀与清单一致性', as
   assert.ok(swPrefixMatch, 'sw.js 应声明缓存名前缀');
   assert.equal(`${swPrefixMatch[1]}${version}`, buildCacheName(version));
 
-  // 清单与构建脚本重算结果一致，且模板占位符已全部替换。
-  const urls = buildPrecacheUrls(await collectDistClosure(SW_ENTRY_MODULES[0]));
+  // 清单与构建脚本重算结果一致（构建取双入口闭包并集，见 build-sw.mjs main()），
+  // 且模板占位符已全部替换。
+  const distModules = [...new Set((await Promise.all(SW_ENTRY_MODULES.map(entry => collectDistClosure(entry)))).flat())].sort();
+  const urls = buildPrecacheUrls(distModules);
+  // 双入口清单级断言：静态入口页不可从 STATIC_PRECACHE_URLS 悄悄移除。
+  assert.ok(urls.includes('/') && urls.includes('/hanzi.html'), '预缓存清单必须包含数字消除与汉字勇者两个入口页');
   for (const url of urls) {
     assert.ok(swSource.includes(JSON.stringify(url)), `sw.js 清单缺少 ${url}`);
   }
   assert.ok(!swSource.includes('__APP_VERSION__'));
   assert.ok(!swSource.includes('__PRECACHE_URLS__'));
+});
+
+test('生成的 web/sw.js: 双入口导航回退分支（/ 与 /hanzi.html）', async () => {
+  const swSource = await readFile(join(root, 'web/sw.js'), 'utf8');
+  // 单引号字面量只出现在导航回退分支；预缓存清单用 JSON.stringify 的双引号，
+  // 两者可区分：分支缺失时页面将无法在离线状态下经缓存打开对应入口。
+  assert.ok(swSource.includes("url.pathname === '/' ? '/' :"), 'sw.js 导航回退分支应匹配 / 入口');
+  assert.ok(swSource.includes("url.pathname === '/hanzi.html'"), 'sw.js 导航回退分支应匹配 /hanzi.html 入口');
 });
 
 test('renderSwSource: 占位符替换完整，模板缺占位符时抛错', () => {

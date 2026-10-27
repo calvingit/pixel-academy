@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-10-27T04:53:05.216Z",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "sessionUdid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "scenarios": [
+    {
+      "name": "S1 在线 hanzi 完整局（入口→5 题→结算）",
+      "pass": true,
+      "result": "首页菜单「汉字勇者」入口（href=/hanzi.html）点击进入 hanzi.html；选一年级（一年级 28 个，共 28 个任务）开局；第 1 题先错后对（重试 5 分档）、第 2–5 题首答正确（10 分档），结算「总分 45」「首次答对 4/5 · 答错 1 次」（= 5 + 10×4，验证首答 10 分、重试 5 分）；记录 0→1 条；JS 错误 0、结算屏溢出 false",
+      "checks": {
+        "resultScore": "总分 45",
+        "resultDetail": "首次答对 4/5 · 答错 1 次",
+        "records": [
+          0,
+          1
+        ],
+        "entry": {
+          "text": "字汉字勇者切换到语文挑战",
+          "href": "/hanzi.html",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "availability": "一年级 28 个，共 28 个任务",
+        "errors": [],
+        "overflowResult": false
+      }
+    },
+    {
+      "name": "S2 返回路径与数字消除开局",
+      "pass": true,
+      "result": "hanzi 顶栏「返回数字消除」返回 http://localhost:4373/ 首页（无溢出）；勾选一年级 → 可用性「动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次」→ 开局，作答 2 题（binary、choice）后弃局返回选择屏；成绩 0→0 条（弃局不产生成绩）；金币 20→20",
+      "checks": {
+        "backLink": {
+          "visible": true,
+          "href": "/",
+          "text": "返回数字消除"
+        },
+        "answered": 2,
+        "availability": "动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次",
+        "records": [
+          0,
+          0
+        ],
+        "coins": [
+          20,
+          20
+        ]
+      }
+    },
+    {
+      "name": "S3 离线断源刷新（首页+hanzi 缓存打开+完整局）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-deb0ba6e041b 受控（预缓存含 /+入口与 /hanzi.html+）；杀源后刷新同一标签页，首页由缓存打开（离线提示「离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。」，navigator.onLine=true）；经菜单入口离线进入 hanzi.html（离线提示「」），选一年级（一年级 28 个，共 28 个任务）完整玩 5 题全对，结算「总分 50」「首次答对 5/5 · 答错 0 次」；记录 1→2 条；JS 错误 0；溢出 首页false/hanzifalse/结算false",
+      "checks": {
+        "controlled": true,
+        "cacheInfo": {
+          "hanziCached": true,
+          "homeHasEntry": true,
+          "name": "pixel-academy:number-puzzle:assets-v1-deb0ba6e041b",
+          "homeCached": true,
+          "hanziHasBack": true
+        },
+        "onLineBefore": true,
+        "onLineAfter": true,
+        "offlineNoticeHome": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。",
+        "offlineNoticeHanzi": "",
+        "resultScore": "总分 50",
+        "resultDetail": "首次答对 5/5 · 答错 0 次",
+        "records": [
+          1,
+          2
+        ],
+        "availability": "一年级 28 个，共 28 个任务",
+        "errors": []
+      }
+    },
+    {
+      "name": "S4 全程无 JS 错误、无横向溢出",
+      "pass": true,
+      "result": "台账覆盖 8 个页面检查点，溢出 0 处；JS 错误台账 0 条（[]）",
+      "checks": {
+        "errorLedger": [],
+        "overflowLedger": [
+          {
+            "where": "S1-首页选择屏",
+            "overflow": false
+          },
+          {
+            "where": "S1-hanzi选择屏",
+            "overflow": false
+          },
+          {
+            "where": "S1-hanzi结算屏",
+            "overflow": false
+          },
+          {
+            "where": "S2-返回后首页(菜单开)",
+            "overflow": false
+          },
+          {
+            "where": "S2-数字消除选择屏",
+            "overflow": false
+          },
+          {
+            "where": "S3-离线首页",
+            "overflow": false
+          },
+          {
+            "where": "S3-离线hanzi选择屏",
+            "overflow": false
+          },
+          {
+            "where": "S3-离线hanzi结算屏",
+            "overflow": false
+          }
+        ]
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-首页选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-hanzi选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-hanzi结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S2-返回后首页(菜单开)",
+      "overflow": false
+    },
+    {
+      "where": "S2-数字消除选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线hanzi选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线hanzi结算屏",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

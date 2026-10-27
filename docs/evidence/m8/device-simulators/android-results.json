@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-10-27T04:47:22.233Z",
+  "environment": {
+    "device": "emulator-5556 (Android 14 / Chrome 113, userAgent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36)",
+    "origin": "http://localhost:4273/ (adb reverse tcp:4273 tcp:4273)",
+    "driver": "docs/evidence/m8/device-simulators/android-round.mjs (Input.dispatchTouchEvent 真实触摸)",
+    "viewport": {
+      "w": 412,
+      "h": 790,
+      "dpr": 2.625
+    },
+    "note": "离线口径：kill 本地 node scripts/serve.mjs 4273 进程后刷新；模拟器系统网络仍在线（onLine=true），页面资源全部由 SW 缓存供给"
+  },
+  "scenarios": {
+    "1-online-hanzi-full-round": {
+      "pass": true,
+      "entry": {
+        "navText": "字汉字勇者切换到语文挑战",
+        "backLink": "返回数字消除"
+      },
+      "availability": "一年级 28 个，共 28 个任务",
+      "steps": [
+        {
+          "question": 1,
+          "kind": "hanzi-parts",
+          "mode": null,
+          "picks": [
+            "手",
+            "目"
+          ],
+          "expected": [
+            "手",
+            "目"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 2,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "木"
+          ],
+          "expected": [
+            "金"
+          ],
+          "outcome": "wrong-first",
+          "feedback": "✗ 再想一想"
+        },
+        {
+          "question": 2,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "金"
+          ],
+          "expected": [
+            "金"
+          ],
+          "outcome": "correct",
+          "gained": 5
+        },
+        {
+          "question": 3,
+          "kind": "hanzi-parts",
+          "mode": null,
+          "picks": [
+            "人",
+            "木"
+          ],
+          "expected": [
+            "人",
+            "木"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 4,
+          "kind": "hanzi-choose",
+          "mode": "meaning",
+          "picks": [
+            "火"
+          ],
+          "expected": [
+            "火"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 5,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "日"
+          ],
+          "expected": [
+            "日"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        }
+      ],
+      "resultText": "通关！ | 总分 45 | 首次答对 4/5 · 答错 1 次",
+      "records": [
+        0,
+        1
+      ],
+      "scoringEvidence": "第2题故意答错 feedback=✗ 再想一想，重试答对 +5；其余首答 +10；总分 45 = 4×10 + 5"
+    },
+    "2-return-to-number-puzzle": {
+      "pass": true,
+      "backLink": "返回数字消除",
+      "mathAvailability": "动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次",
+      "mathSteps": [
+        {
+          "kind": "binary",
+          "expected": 12,
+          "tile": 0
+        },
+        {
+          "kind": "binary",
+          "expected": 5,
+          "tile": 0
+        }
+      ],
+      "records": [
+        0,
+        0
+      ],
+      "note": "作答 2 题后返回并确认放弃，无新增成绩"
+    },
+    "3-offline-both-pages": {
+      "pass": true,
+      "offlineNoticeHome": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。",
+      "hanziAvailability": "一年级 28 个，共 28 个任务",
+      "steps": [
+        {
+          "question": 1,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "目"
+          ],
+          "expected": [
+            "目"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 2,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "天"
+          ],
+          "expected": [
+            "天"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 3,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "水"
+          ],
+          "expected": [
+            "水"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 4,
+          "kind": "hanzi-parts",
+          "mode": null,
+          "picks": [
+            "日",
+            "月"
+          ],
+          "expected": [
+            "日",
+            "月"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        },
+        {
+          "question": 5,
+          "kind": "hanzi-choose",
+          "mode": "shape",
+          "picks": [
+            "耳"
+          ],
+          "expected": [
+            "耳"
+          ],
+          "outcome": "correct",
+          "gained": 10
+        }
+      ],
+      "resultText": "通关！ | 总分 50 | 首次答对 5/5 · 答错 0 次",
+      "records": [
+        1,
+        2
+      ]
+    },
+    "4-no-js-errors-no-overflow": {
+      "pass": true,
+      "errors": [],
+      "overflow": [
+        false,
+        false
+      ],
+      "checkedAt": "每个截图检查点（requireClean）"
+    }
+  },
+  "screenshots": [
+    "android-offline-01-home.png",
+    "android-offline-02-menu.png",
+    "android-offline-03-hanzi-select.png",
+    "android-offline-04-hanzi-q1.png",
+    "android-offline-05-hanzi-result.png",
+    "android-offline-q1.png",
+    "android-online-01-home.png",
+    "android-online-02-menu.png",
+    "android-online-03-hanzi-select.png",
+    "android-online-04-hanzi-availability.png",
+    "android-online-05-hanzi-q1.png",
+    "android-online-06-hanzi-result.png",
+    "android-online-07-hanzi-back-select.png",
+    "android-online-08-home-returned.png",
+    "android-online-09-math-availability.png",
+    "android-online-10-math-q1.png",
+    "android-online-11-math-q1.png",
+    "android-online-12-math-q2.png",
+    "android-online-13-math-returned.png",
+    "android-online-q1.png",
+    "android-online-q2-wrong.png"
+  ]
+}

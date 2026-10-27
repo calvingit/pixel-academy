@@ -1,0 +1,105 @@
+{
+  "phase": "offline",
+  "offlineNoticeHome": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。",
+  "round": {
+    "steps": [
+      {
+        "question": 1,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "目"
+        ],
+        "expected": [
+          "目"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 2,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "天"
+        ],
+        "expected": [
+          "天"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 3,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "水"
+        ],
+        "expected": [
+          "水"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 4,
+        "kind": "hanzi-parts",
+        "mode": null,
+        "picks": [
+          "日",
+          "月"
+        ],
+        "expected": [
+          "日",
+          "月"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 5,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "耳"
+        ],
+        "expected": [
+          "耳"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      }
+    ],
+    "resultText": "通关！ | 总分 50 | 首次答对 5/5 · 答错 0 次",
+    "records": [
+      1,
+      2
+    ],
+    "lastRecord": {
+      "id": "b5c46362-355e-4817-8297-a9ae55fb4fc8",
+      "at": "2026-10-27T04:46:51.917Z",
+      "grades": [
+        1
+      ],
+      "score": 50,
+      "firstTry": 5,
+      "wrong": 0,
+      "total": 5
+    },
+    "availability": "一年级 28 个，共 28 个任务"
+  },
+  "page": {
+    "path": "/hanzi.html",
+    "overflow": false,
+    "viewport": {
+      "w": 412,
+      "h": 790,
+      "dpr": 2.625
+    },
+    "errors": [],
+    "swControlled": true,
+    "onLine": true,
+    "offlineNotice": ""
+  }
+}

@@ -50,12 +50,15 @@ button {
 button:active { transform: translateY(2px); }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fffef8; box-shadow: 0 3px 0 var(--accent-deep); }
 button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, canvas:focus-visible { outline: 3px solid #a16d19; outline-offset: 4px; }
-@media (hover: hover) { button:not(:disabled):hover { background: var(--soft); } button.primary:not(:disabled):hover { background: var(--accent-deep); } }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, canvas:focus-visible { outline: 3px solid #a16d19; outline-offset: 4px; }
+@media (hover: hover) { button:not(:disabled):hover { background: var(--soft); } button.primary:not(:disabled):hover { background: var(--accent-deep); } #main-nav a:hover { background: var(--soft); } }
 #main-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 16px 0 24px; gap: 12px; }
-#main-nav button { text-align: center; padding: 10px 6px; background: transparent; border-color: var(--line); }
-#main-nav button > span { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 8px; background: #e7eddf; border-radius: 7px; font-size: 20px; vertical-align: middle; }
+#main-nav :is(button, a) { text-align: center; padding: 10px 6px; background: transparent; border-color: var(--line); }
+#main-nav :is(button, a) > span { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 8px; background: #e7eddf; border-radius: 7px; font-size: 20px; vertical-align: middle; }
 #main-nav small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 9px; }
+/* 跨页锚点没有全局 button 基样式，需补齐；占满一整行避免 2 列网格出现半行。 */
+#main-nav a { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 650; color: var(--panel); text-decoration: none; min-height: 48px; border: 1px solid var(--line); border-radius: 12px; touch-action: manipulation; transition: background .15s, transform .15s; }
+#main-nav a:active { transform: translateY(2px); }
 .screen { flex: 1; min-height: 0; }
 .screen h2 { font-size: 23px; line-height: 1.4; margin: 0 0 14px; }
 .screen:not(#screen-select):not(#screen-game) { padding: 20px; overflow: auto; background: var(--card); border: 1px solid var(--line); border-radius: 22px; }

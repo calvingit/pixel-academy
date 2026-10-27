@@ -1,0 +1,386 @@
+{
+  "generatedAt": "2026-10-27T04:35:29.426Z",
+  "origin": "http://127.0.0.1:4173/",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "viewport": {
+    "w": 1280,
+    "h": 813,
+    "dpr": 1
+  },
+  "scenarios": [
+    {
+      "name": "S1 首页游戏选择入口",
+      "pass": true,
+      "result": "数字消除为当前游戏（h1=数字消除.，title=数字消除 · Pixel Academy）；汉字勇者入口 href=/hanzi.html 可见可点；Tab 焦点路径 [\"btn-menu-close\",\"btn-open-courses\",\"btn-open-review\",\"btn-open-shop\",\"btn-open-profile\"] 后到达入口；AX 角色 link、名称「汉字勇者」；装饰字 span aria-hidden=true",
+      "checks": {
+        "pool": {
+          "preview": false,
+          "count": 1085,
+          "statuses": [
+            "approved"
+          ]
+        },
+        "anchor": {
+          "href": "/hanzi.html",
+          "text": "字汉字勇者切换到语文挑战",
+          "decorAriaHidden": "true",
+          "visible": true,
+          "rect": {
+            "x": 439,
+            "y": 424,
+            "w": 402,
+            "h": 50
+          }
+        },
+        "navLabel": "学习与收藏",
+        "navItems": [
+          {
+            "tag": "BUTTON",
+            "text": "▤学习课程先学一学，再试一试"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "↺错题复习慢慢想，把它弄明白"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "◇金币商店为下一次挑战做准备"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "☺我的收藏装扮我的数字花园"
+          },
+          {
+            "tag": "A",
+            "text": "字汉字勇者切换到语文挑战"
+          }
+        ],
+        "keyboardFocusPath": [
+          "btn-menu-close",
+          "btn-open-courses",
+          "btn-open-review",
+          "btn-open-shop",
+          "btn-open-profile"
+        ],
+        "keyboardReached": true,
+        "axName": "汉字勇者",
+        "axRole": "link",
+        "axFocusable": true,
+        "axQueried": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "S2 进入汉字勇者",
+      "pass": true,
+      "result": "真实点击入口后 URL=http://127.0.0.1:4173/hanzi.html，标题「汉字勇者 · Pixel Academy」正常加载（年级卡 6 张、boot-fail 隐藏、选择屏可见），JS 错误 0 个",
+      "checks": {
+        "hanzi": {
+          "url": "http://127.0.0.1:4173/hanzi.html",
+          "title": "汉字勇者 · Pixel Academy",
+          "h1": "汉字勇者·",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": {
+            "href": "/",
+            "text": "返回数字消除",
+            "visible": true
+          },
+          "selectVisible": true,
+          "offlineNotice": null,
+          "storageNoticeHidden": true,
+          "errors": []
+        },
+        "backLink": {
+          "href": "/",
+          "text": "返回数字消除",
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "S3 hanzi 页返回首页",
+      "pass": true,
+      "result": "点击「返回数字消除」回到 http://127.0.0.1:4173/，数字消除首页正常，菜单内汉字勇者入口仍在且可见",
+      "checks": {
+        "backLink": {
+          "href": "/",
+          "text": "返回数字消除",
+          "visible": true
+        },
+        "anchor": {
+          "href": "/hanzi.html",
+          "text": "字汉字勇者切换到语文挑战",
+          "decorAriaHidden": "true",
+          "visible": true,
+          "rect": {
+            "x": 439,
+            "y": 424,
+            "w": 402,
+            "h": 50
+          }
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "S4 数字消除整局回归",
+      "pass": true,
+      "result": "选一年级→查看挑战（动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次）→开局，10 题全部按页面题面自动作答（第 1 题故意答错→购买复活卡 15 金币→重试得 5 分档），结算「总分 95 · 已完成 10/10」「首次答对 9/10 · 辅助完成 1」「答错 1 次 · 超时 0 次 · 复活 1 次」「本局 +23 金币：答题 18，通关 5，全首次答对 0。」；返回首页后入口仍在，钱包「小小探险家 · 28 金币」= 局前 20 − 15 + 23",
+      "checks": {
+        "baseCoins": 20,
+        "availability": {
+          "status": "动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次"
+        },
+        "revive": {
+          "message": "这次选错了。剩余复活次数 2，已有复活卡 0。",
+          "btnText": "购买并使用 · 15 金币（余额 20，购买后 5）",
+          "disabled": false
+        },
+        "answers": [
+          {
+            "no": 1,
+            "text": "找出所有比 5 大的数",
+            "kind": "choice-multiple",
+            "matchId": "choices-v3:1:{\"kind\":\"filter\",\"relation\":\">\",\"target\":5}:number:0,number:5,number:6,number:7,number:8,number:9",
+            "status": "approved",
+            "chosen": [
+              "number:5"
+            ],
+            "scoreSeen": "0",
+            "wrong": true,
+            "retry": true,
+            "retryAnswer": {
+              "kind": "choice-multiple",
+              "matchId": "choices-v3:1:{\"kind\":\"filter\",\"relation\":\">\",\"target\":5}:number:0,number:5,number:6,number:7,number:8,number:9",
+              "status": "approved",
+              "chosen": [
+                "number:6",
+                "number:7",
+                "number:8",
+                "number:9"
+              ]
+            }
+          },
+          {
+            "no": 2,
+            "text": "找出所有比 8 小的数",
+            "kind": "choice-multiple",
+            "matchId": "choices-v3:1:{\"kind\":\"filter\",\"relation\":\"<\",\"target\":8}:number:4,number:5,number:6,number:7,number:8,number:9",
+            "status": "approved",
+            "chosen": [
+              "number:4",
+              "number:5",
+              "number:6",
+              "number:7"
+            ],
+            "scoreSeen": "5",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 3,
+            "text": "4 − 2 = ?",
+            "kind": "board",
+            "matchId": "generated-v4:MAP-008:4-2",
+            "status": "approved",
+            "value": 2,
+            "scoreSeen": "15",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 4,
+            "text": "0 + 4 ＝ 4，对不对？",
+            "kind": "choice-single",
+            "matchId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":0,\"right\":4},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+            "status": "approved",
+            "chosen": [
+              "boolean:true"
+            ],
+            "scoreSeen": "25",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 5,
+            "text": "8 ＝ 8，对不对？",
+            "kind": "choice-single",
+            "matchId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":8},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":8}}:boolean:false,boolean:true",
+            "status": "approved",
+            "chosen": [
+              "boolean:true"
+            ],
+            "scoreSeen": "35",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 6,
+            "text": "0 + 9 = ?",
+            "kind": "board",
+            "matchId": "generated-v4:MAP-010:0+9",
+            "status": "approved",
+            "value": 9,
+            "scoreSeen": "45",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 7,
+            "text": "1 ＋ 2 ○ 3 − 1",
+            "kind": "choice-single",
+            "matchId": "choices-v3:1:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":1,\"right\":2},\"right\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":3,\"right\":1}}:string:<,string:=,string:>",
+            "status": "approved",
+            "chosen": [
+              "string:>"
+            ],
+            "scoreSeen": "55",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 8,
+            "text": "3 + 4 = ?",
+            "kind": "board",
+            "matchId": "generated-v4:MAP-010:3+4",
+            "status": "approved",
+            "value": 7,
+            "scoreSeen": "65",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 9,
+            "text": "5 − 4 = ?",
+            "kind": "board",
+            "matchId": "generated-v4:MAP-008:5-4",
+            "status": "approved",
+            "value": 1,
+            "scoreSeen": "65",
+            "wrong": false,
+            "retry": false
+          },
+          {
+            "no": 10,
+            "text": "找出最小的数",
+            "kind": "choice-single",
+            "matchId": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:10,number:5,number:8,number:9",
+            "status": "approved",
+            "chosen": [
+              "number:5"
+            ],
+            "scoreSeen": "85",
+            "wrong": false,
+            "retry": false
+          }
+        ],
+        "result": {
+          "score": "总分 95 · 已完成 10/10",
+          "first": "首次答对 9/10 · 辅助完成 1",
+          "wrong": "答错 1 次 · 超时 0 次 · 复活 1 次",
+          "coins": "本局 +23 金币：答题 18，通关 5，全首次答对 0。"
+        },
+        "wallet": "小小探险家 · 28 金币",
+        "errors": []
+      }
+    },
+    {
+      "name": "S5 预览隔离",
+      "pass": true,
+      "result": "?preview=candidate 显示预览横幅、钱包「候选预览 · 不读写正式档案」、记录区隐藏；预览模式下导航区按设计隐藏（src/game/number-puzzle/main.ts:245）；预览局答 1 题后放弃，localStorage 与 IndexedDB 档案（金币 28、记录 1 条、revision 34）快照零变化；回正式首页钱包「小小探险家 · 28 金币」与档案一致、入口仍可见（href 不带 preview 参数）；正式池 1085 题全部 approved（预览用局池 12 题，状态 [\"approved\"]），草稿隔离由 selectExercises 的 approved 过滤保证",
+      "checks": {
+        "previewState": {
+          "bannerHidden": false,
+          "wallet": "候选预览 · 不读写正式档案",
+          "recordsSectionHidden": true,
+          "navHidden": true
+        },
+        "poolCheck": {
+          "formalCount": 1085,
+          "formalAllApproved": true,
+          "previewCount": 12,
+          "previewStatuses": [
+            "approved"
+          ]
+        },
+        "roundPool": {
+          "preview": true,
+          "count": 12,
+          "statuses": [
+            "approved"
+          ]
+        },
+        "localStorageUnchanged": true,
+        "idbBefore": {
+          "coins": 28,
+          "records": 1,
+          "revision": 34,
+          "challenge": null
+        },
+        "idbAfterPreview": {
+          "coins": 28,
+          "records": 1,
+          "revision": 34,
+          "challenge": null
+        },
+        "idbUnchanged": true,
+        "home": {
+          "wallet": "小小探险家 · 28 金币",
+          "anchor": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true,
+            "rect": {
+              "x": 439,
+              "y": 424,
+              "w": 402,
+              "h": 50
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "S6 刷新恢复",
+      "pass": true,
+      "result": "答对 2 题（20 分）后刷新出现「新版挑战进度已保存，恢复后手动继续。」→ 继续上局 → 冒险休息站 → 继续游戏回到同一题（第 3 题「找出所有比 7 大的数…」第 3/10 题 · 20 分），续打至结算「总分 100 · 已完成 10/10」（若重开或重计应分别为 80/120），本局 +30 金币：答题 20，通关 5，全首次答对 5。，钱包「小小探险家 · 58 金币」= 局前 28 + 通关 30",
+      "checks": {
+        "restoreText": "新版挑战进度已保存，恢复后手动继续。",
+        "q3Text": "找出所有比 7 大的数",
+        "q3Progress": "第 3/10 题 · 20 分",
+        "baseCoins": 28,
+        "finalCoins": 58,
+        "result": {
+          "score": "总分 100 · 已完成 10/10",
+          "first": "首次答对 10/10 · 辅助完成 0",
+          "wrong": "答错 0 次 · 超时 0 次 · 复活 0 次",
+          "coins": "本局 +30 金币：答题 20，通关 5，全首次答对 5。"
+        },
+        "wallet": "小小探险家 · 58 金币",
+        "errors": []
+      }
+    },
+    {
+      "name": "S7 SW 清单与断源回归",
+      "pass": true,
+      "result": "重建后 sw.js 版本 pixel-academy:number-puzzle:assets-v1-deb0ba6e041b（工作区哈希 assets-v1-deb0ba6e041b ≠ 按 HEAD 内容重算的 assets-v1-f1fbdc70d7c8），预缓存含 / 与 /hanzi.html 且缓存正文含入口/返回标记；杀掉源站后刷新，首页与 hanzi 页均由缓存打开，入口与返回链接离线可点击往返，无 JS 错误",
+      "checks": {
+        "cacheInfo": {
+          "name": "pixel-academy:number-puzzle:assets-v1-deb0ba6e041b",
+          "homeCached": true,
+          "hanziCached": true,
+          "homeHasEntry": true,
+          "hanziHasBack": true,
+          "controlled": true,
+          "notice": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。"
+        },
+        "offlineHomeNotice": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。",
+        "offlineHomeErrors": [],
+        "offlineHanziErrors": []
+      }
+    }
+  ],
+  "allPassed": true
+}

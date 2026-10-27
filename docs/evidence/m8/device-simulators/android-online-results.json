@@ -1,0 +1,143 @@
+{
+  "phase": "online",
+  "hanziEntry": {
+    "navText": "字汉字勇者切换到语文挑战",
+    "backLink": "返回数字消除"
+  },
+  "hanzi": {
+    "availability": "一年级 28 个，共 28 个任务",
+    "steps": [
+      {
+        "question": 1,
+        "kind": "hanzi-parts",
+        "mode": null,
+        "picks": [
+          "手",
+          "目"
+        ],
+        "expected": [
+          "手",
+          "目"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 2,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "木"
+        ],
+        "expected": [
+          "金"
+        ],
+        "outcome": "wrong-first",
+        "feedback": "✗ 再想一想"
+      },
+      {
+        "question": 2,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "金"
+        ],
+        "expected": [
+          "金"
+        ],
+        "outcome": "correct",
+        "gained": 5
+      },
+      {
+        "question": 3,
+        "kind": "hanzi-parts",
+        "mode": null,
+        "picks": [
+          "人",
+          "木"
+        ],
+        "expected": [
+          "人",
+          "木"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 4,
+        "kind": "hanzi-choose",
+        "mode": "meaning",
+        "picks": [
+          "火"
+        ],
+        "expected": [
+          "火"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      },
+      {
+        "question": 5,
+        "kind": "hanzi-choose",
+        "mode": "shape",
+        "picks": [
+          "日"
+        ],
+        "expected": [
+          "日"
+        ],
+        "outcome": "correct",
+        "gained": 10
+      }
+    ],
+    "resultText": "通关！ | 总分 45 | 首次答对 4/5 · 答错 1 次",
+    "records": [
+      0,
+      1
+    ],
+    "lastRecord": {
+      "id": "88c6307a-c1e4-4b05-be13-d66ca818d6af",
+      "at": "2026-10-27T04:45:33.120Z",
+      "grades": [
+        1
+      ],
+      "score": 45,
+      "firstTry": 4,
+      "wrong": 1,
+      "total": 5
+    }
+  },
+  "math": {
+    "availability": "动态出题 · 每局 10 题 · 每题 10 秒 · 最多复活 2 次",
+    "steps": [
+      {
+        "kind": "binary",
+        "expected": 12,
+        "tile": 0
+      },
+      {
+        "kind": "binary",
+        "expected": 5,
+        "tile": 0
+      }
+    ],
+    "records": [
+      0,
+      0
+    ]
+  },
+  "page": {
+    "path": "/",
+    "overflow": false,
+    "viewport": {
+      "w": 412,
+      "h": 790,
+      "dpr": 2.625
+    },
+    "errors": [],
+    "swControlled": true,
+    "onLine": true,
+    "offlineNotice": "离线缓存已就绪（版本 assets-v1-deb0ba6e041b），断网也能游玩。"
+  },
+  "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36"
+}
