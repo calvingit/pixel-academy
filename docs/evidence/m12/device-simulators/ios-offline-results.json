@@ -1,0 +1,179 @@
+{
+  "generatedAt": "2026-10-27T10:37:22.175Z",
+  "phase": "offline",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S3 离线断源刷新（缓存打开 + 断网完整探索含整数合成键入提交）",
+      "pass": true,
+      "result": "SW pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a 受控且预缓存含 /dungeon.html（含 /dungeon.css，sw.js 本体不进预缓存故清单断言=缓存外核验）；杀 serve 4373（源站 fetch 确认失败）后Safari 刷新同一标签页（非冷导航）：首页由缓存打开（提示「离线缓存已就绪（版本 assets-v1-ed99dbc5fe1a），断网也能游玩。」）；菜单进 /dungeon.html 由缓存正常加载（6 年级卡、boot-fail 隐藏）；断网下题库模块经 SW 预缓存 import 成功（1074 题）；选一年级（本层题库：一年级 1074 道，共 1074 道）第 5 次开局完成断网完整探索：石门「6 − 2 ＝ 5，对不对？…」选项点击作答→左门「1 − 1 = ?…」合成键入 0（input 事件实时启用「开门」，键入前 disabled=true）点击提交受理→资源机关「哪个数更小？…」选项点击作答→右门「原来有 2 颗种子，又拿来 …」选项点击作答，结算「总分 40」「作答 4 题 · 首答 4/4 · 重试 0 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」（断网整数题键入提交走通且首答档 +10 成立）；离线练习记录新增 1 条（gameId=arithmetic-dungeon、score=40）；结算返回后中断快照清除=true；离线金币 20 = 20（零收支）；全程无溢出、JS 错误 0",
+      "checks": {
+        "swInfo": {
+          "dungeonCached": true,
+          "swFromCache": false,
+          "name": "pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a",
+          "swHasDungeonEntry": false,
+          "dungeonCssCached": true
+        },
+        "sourceDead": true,
+        "serverWasAlive": true,
+        "poolInfo": {
+          "count": 1074,
+          "statuses": [
+            "approved"
+          ],
+          "kinds": {
+            "binary": 57,
+            "choice": 1017
+          }
+        },
+        "avail": "本层题库：一年级 1074 道，共 1074 道",
+        "offAttempts": 5,
+        "typed": {
+          "id": "generated-v4:MAP-008:1-1",
+          "kind": "binary",
+          "prompt": "1 − 1 = ?",
+          "value": 0,
+          "probe": {
+            "after": {
+              "inputDisabled": false,
+              "inputValue": "0",
+              "submitDisabled": false
+            },
+            "before": {
+              "inputDisabled": false,
+              "submitDisabled": true
+            }
+          }
+        },
+        "steps": [
+          {
+            "label": "石门",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":6,\"right\":2},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+            "prompt": "6 − 2 ＝ 5，对不对？",
+            "value": null,
+            "typed": false
+          },
+          {
+            "label": "左门",
+            "kind": "binary",
+            "id": "generated-v4:MAP-008:1-1",
+            "prompt": "1 − 1 = ?",
+            "value": 0,
+            "typed": true
+          },
+          {
+            "label": "资源机关",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:3,number:8",
+            "prompt": "哪个数更小？",
+            "value": null,
+            "typed": false
+          },
+          {
+            "label": "右门",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"story\",\"start\":2,\"change\":3,\"operator\":\"+\"}:number:3,number:4,number:5,number:6",
+            "prompt": "原来有 2 颗种子，又拿来 3 颗，现在有几颗？",
+            "value": null,
+            "typed": false
+          }
+        ],
+        "result": {
+          "score": "总分 40",
+          "answer": "作答 4 题 · 首答 4/4 · 重试 0 次",
+          "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+        },
+        "offScoreOk": true,
+        "offExploreOk": true,
+        "roundId3": "433b98e9-ff3c-47a2-895e-18618b966442",
+        "recRawOff": {
+          "gameId": "arithmetic-dungeon",
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ],
+          "score": 40,
+          "answer": {
+            "questions": [
+              {
+                "slot": "gate-stone",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":6,\"right\":2},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-left",
+                "exerciseId": "generated-v4:MAP-008:1-1",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "resource",
+                "exerciseId": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:3,number:8",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-right",
+                "exerciseId": "choices-v3:1:{\"kind\":\"story\",\"start\":2,\"change\":3,\"operator\":\"+\"}:number:3,number:4,number:5,number:6",
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          },
+          "recordId": "433b98e9-ff3c-47a2-895e-18618b966442",
+          "explore": {
+            "retries": 0,
+            "route": [
+              "start",
+              "junction",
+              "resource",
+              "junction",
+              "end"
+            ],
+            "keysHeld": 1,
+            "keyUses": 0
+          },
+          "contentVersion": "generated-v4:choices-v3",
+          "finishedAt": "2026-10-27T10:37:21.003Z"
+        },
+        "recOffOk": true,
+        "snapshotDiscarded": true,
+        "coins": [
+          20,
+          20
+        ],
+        "offlineNoticeHome": "离线缓存已就绪（版本 assets-v1-ed99dbc5fe1a），断网也能游玩。"
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S3-SW就绪首页(在线)",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线地下城选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线结算与记录",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线返回首页",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

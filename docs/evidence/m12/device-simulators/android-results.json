@@ -1,0 +1,412 @@
+{
+  "generatedAt": "2026-10-27T10:26:31.716Z",
+  "origin": "http://localhost:4273",
+  "userAgentNote": "见各 phase JSON",
+  "online": {
+    "generatedAt": "2026-10-27T10:10:06.238Z",
+    "phase": "online",
+    "origin": "http://localhost:4273",
+    "scenarios": [
+      {
+        "name": "S1 在线完整通关局（整数键入 + choice 触摸 + 答错换题重试档）",
+        "pass": true,
+        "result": "菜单「算术地下城」入口（href=/dungeon.html、装饰字 aria-hidden）进入地下城；勾一年级→「本层题库：一年级 1074 道，共 1074 道」与 dist 层一致（1074 题全 approved）；第 7 次开局（kinds=[\"choice\",\"binary\",\"choice\",\"choice\"]）：石门「4 + 4 ＝ 7，对不对？」→岔口（得分 10）→左门「2 + 8 = ?」→资源房（得分 20）→资源机关「1 ○ 2，选择正确符号」→钥匙 1/1（收下钥匙点击 2 次）→折回岔口→右门「8 + 2 ＝ 10，对不对？…」故意答错（✗、不解锁、得分仍 30）→「换一题」换为「哪个数更小？…」→答对（重试档 +5）→结算「总分 35」「作答 4 题 · 首答 3/4 · 重试 1 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」与计分规则逐项吻合（10+10+10+5=35）；作答含整数题真实键入提交=true（键入实时启用「开门」）、choice 触摸作答=true；练习记录新增 1 条（gameId=arithmetic-dungeon、recordId=roundId、score=35、keyUses=0、route 完整）且列表显示「35 分 · 首答 3/4 · 重试 1」；recent-ids 含本局全部题目 ID=true；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0、无横向溢出",
+        "checks": {
+          "entry": {
+            "dungeon": {
+              "href": "/dungeon.html",
+              "text": "钥算术地下城用算术开门探洞",
+              "decorAriaHidden": "true",
+              "visible": true
+            },
+            "hanzi": {
+              "href": "/hanzi.html",
+              "text": "字汉字勇者切换到语文挑战",
+              "decorAriaHidden": "true",
+              "visible": true
+            }
+          },
+          "availability": "本层题库：一年级 1074 道，共 1074 道",
+          "poolCount": 1074,
+          "picked": {
+            "attempts": 7,
+            "kinds": [
+              "choice",
+              "binary",
+              "choice",
+              "choice"
+            ],
+            "roundId": "5c0c7c1e-e86a-4ce5-90a5-ab4a19acf428"
+          },
+          "play": [
+            {
+              "label": "石门",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":4},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true",
+              "prompt": "4 + 4 ＝ 7，对不对？",
+              "value": null,
+              "wrong": false,
+              "typed": false
+            },
+            {
+              "label": "左门",
+              "kind": "binary",
+              "id": "generated-v4:MAP-010:2+8",
+              "prompt": "2 + 8 = ?",
+              "value": 10,
+              "wrong": false,
+              "typed": true
+            },
+            {
+              "label": "资源机关",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"symbol\",\"left\":1,\"right\":2}:string:<,string:=,string:>",
+              "prompt": "1 ○ 2，选择正确符号",
+              "value": null,
+              "wrong": false,
+              "typed": false
+            },
+            {
+              "label": "右门-答错",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":8,\"right\":2},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+              "prompt": "8 + 2 ＝ 10，对不对？",
+              "value": null,
+              "wrong": true,
+              "typed": false
+            },
+            {
+              "label": "右门-换题后",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:1,number:10",
+              "prompt": "哪个数更小？",
+              "value": null,
+              "wrong": false,
+              "typed": false
+            }
+          ],
+          "result": {
+            "score": "总分 35",
+            "answer": "作答 4 题 · 首答 3/4 · 重试 1 次",
+            "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+          },
+          "recOk": true,
+          "recentOk": true,
+          "coinsBefore": {
+            "coins": 20,
+            "records": 0,
+            "revision": 9
+          },
+          "coinsAfter": {
+            "coins": 20,
+            "records": 0,
+            "revision": 9
+          },
+          "coinsOk": true,
+          "allApproved": true,
+          "leaveClickAttempts": 2,
+          "errors": [],
+          "overflow": false
+        }
+      },
+      {
+        "name": "S2 返回路径与三入口并存",
+        "pass": true,
+        "result": "地下城顶栏「返回数字消除」返回数字消除首页；勾选一年级→下一步按钮启用（可选年级），取消复原；菜单弹层内「汉字勇者」（href=/hanzi.html）与「算术地下城」（href=/dungeon.html）两锚点并存可见（数字消除为当前页）；JS 错误 0、无横向溢出",
+        "checks": {
+          "npOk": true,
+          "threeOk": true,
+          "menu": {
+            "hanzi": {
+              "href": "/hanzi.html",
+              "text": "字汉字勇者切换到语文挑战",
+              "decorAriaHidden": "true",
+              "visible": true
+            },
+            "dungeon": {
+              "href": "/dungeon.html",
+              "text": "钥算术地下城用算术开门探洞",
+              "decorAriaHidden": "true",
+              "visible": true
+            }
+          },
+          "errors": [],
+          "overflow": false
+        }
+      }
+    ],
+    "errorLedger": [],
+    "overflowLedger": [
+      {
+        "where": "S1-在线首页",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S1-地下城选择屏",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S1-结算屏",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S1-记录列表",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S2-返回后首页",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S2-菜单三入口",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      }
+    ],
+    "allPassed": true
+  },
+  "offline": {
+    "generatedAt": "2026-10-27T10:26:31.716Z",
+    "phase": "offline",
+    "origin": "http://localhost:4273",
+    "scenarios": [
+      {
+        "name": "S3 离线断源（缓存打开 + 断网完整探索含整数键入提交）",
+        "pass": true,
+        "result": "SW pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a 受控且预缓存含 /dungeon.html（含 /dungeon.css、预缓存 sw.js 清单含 dungeon 入口=false）；源站已在先前场景断开（本轮自导航起全程离线，导航由 SW 回退服务）刷新同一标签页：首页由缓存打开；菜单进 /dungeon.html 由缓存正常加载（6 年级卡、boot-fail 隐藏）；断网下题库模块经 SW 预缓存 import 成功（1074 题）；选一年级（本层题库：一年级 1074 道，共 1074 道）第 14 次开局完成断网完整探索：石门「8 − 3 ＝ 5，对不对？…」选项触摸作答→左门「1 − 0 = ?…」逐字符键入 1（每字符「开门」实时启用，键入前 disabled=true）点击提交受理→资源机关「1 + 0 ＝ 1，对不对？…」选项触摸作答→右门「0 可以分成 0 和几？…」选项触摸作答，结算「总分 40」「作答 4 题 · 首答 4/4 · 重试 0 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」（断网整数题键入提交走通且首答档 +10 成立）；离线练习记录新增 1 条（gameId=arithmetic-dungeon、score=40）；结算返回后中断快照清除=true；离线金币 20 = 20（零收支）；返回首页正常；全程 JS 错误 0、无横向溢出",
+        "checks": {
+          "swInfo": {
+            "name": "pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a",
+            "dungeonCached": true,
+            "dungeonCssCached": true,
+            "swHasDungeonEntry": false,
+            "swFromCache": false
+          },
+          "pcReady": {
+            "path": "/",
+            "overflow": false,
+            "viewport": {
+              "w": 412,
+              "h": 790,
+              "dpr": 2.625
+            },
+            "errors": [],
+            "swControlled": true,
+            "onLine": true
+          },
+          "sourceDead": true,
+          "poolInfo": {
+            "count": 1074,
+            "statuses": [
+              "approved"
+            ],
+            "kinds": {
+              "binary": 57,
+              "choice": 1017
+            }
+          },
+          "avail": "本层题库：一年级 1074 道，共 1074 道",
+          "offAttempts": 14,
+          "typed": {
+            "id": "generated-v4:MAP-008:1-0",
+            "kind": "binary",
+            "prompt": "1 − 0 = ?",
+            "value": 1,
+            "probe": {
+              "disabledBefore": {
+                "inputDisabled": false,
+                "submitDisabled": true
+              },
+              "disabledSeq": [
+                {
+                  "inputDisabled": false,
+                  "submitDisabled": false
+                }
+              ],
+              "value": "1"
+            }
+          },
+          "steps": [
+            {
+              "label": "石门",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+              "prompt": "8 − 3 ＝ 5，对不对？",
+              "value": null,
+              "typed": false
+            },
+            {
+              "label": "左门",
+              "kind": "binary",
+              "id": "generated-v4:MAP-008:1-0",
+              "prompt": "1 − 0 = ?",
+              "value": 1,
+              "typed": true
+            },
+            {
+              "label": "资源机关",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":1,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":1}}:boolean:false,boolean:true",
+              "prompt": "1 + 0 ＝ 1，对不对？",
+              "value": null,
+              "typed": false
+            },
+            {
+              "label": "右门",
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"composition\",\"total\":0,\"part\":0}:number:0,number:1,number:2,number:3",
+              "prompt": "0 可以分成 0 和几？",
+              "value": null,
+              "typed": false
+            }
+          ],
+          "result": {
+            "score": "总分 40",
+            "answer": "作答 4 题 · 首答 4/4 · 重试 0 次",
+            "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+          },
+          "offScoreOk": true,
+          "offExploreOk": true,
+          "roundId3": "4b1419f6-1f91-47a5-9d52-78efc4d339c5",
+          "recRawOff": {
+            "schemaVersion": 1,
+            "recordId": "4b1419f6-1f91-47a5-9d52-78efc4d339c5",
+            "gameId": "arithmetic-dungeon",
+            "finishedAt": "2026-10-27T10:26:27.503Z",
+            "grades": [
+              1
+            ],
+            "contentVersion": "generated-v4:choices-v3",
+            "score": 40,
+            "answer": {
+              "questions": [
+                {
+                  "slot": "gate-stone",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-left",
+                  "exerciseId": "generated-v4:MAP-008:1-0",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "resource",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":1,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":1}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-right",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"composition\",\"total\":0,\"part\":0}:number:0,number:1,number:2,number:3",
+                  "firstTry": true,
+                  "wrongs": 0
+                }
+              ]
+            },
+            "explore": {
+              "route": [
+                "start",
+                "junction",
+                "resource",
+                "junction",
+                "end"
+              ],
+              "keysHeld": 1,
+              "keyUses": 0,
+              "retries": 0
+            }
+          },
+          "recOffOk": true,
+          "snapshotDiscarded": true,
+          "coins": [
+            20,
+            20
+          ],
+          "errors": []
+        }
+      }
+    ],
+    "errorLedger": [],
+    "overflowLedger": [
+      {
+        "where": "S3-SW就绪首页(在线)",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S3-离线首页",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S3-离线地下城选择屏",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S3-离线返回首页",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      },
+      {
+        "where": "S3-离线结算与记录",
+        "overflow": false,
+        "viewport": {
+          "w": 412,
+          "h": 790,
+          "dpr": 2.625
+        }
+      }
+    ],
+    "allPassed": true
+  },
+  "allPassed": true
+}

@@ -1,0 +1,161 @@
+{
+  "generatedAt": "2026-10-27T10:31:33.772Z",
+  "phase": "online",
+  "origin": "http://localhost:4373/",
+  "udid": "28F2F0F0-4732-4493-816A-A382DCBF329A",
+  "wdEndpoint": "http://127.0.0.1:4801",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S1 在线完整通关局（整数合成键入 + choice 点击 + 答错换题重试档）",
+      "pass": true,
+      "result": "菜单「算术地下城」入口（href=/dungeon.html、装饰字 aria-hidden）进入地下城；勾一年级→「本层题库：一年级 1074 道，共 1074 道」与 dist 层一致（1074 题全 approved）；第 6 次开局（kinds=[\"choice\",\"choice\",\"choice\",\"binary\"]）：石门「哪个数更小？」→岔口（得分 10）→左门「5 + 1 ＝ 7，对不对？」→资源房（得分 20）→资源机关「4 + 5 = ?」→钥匙 1/1（收下钥匙点击 2 次）→折回岔口→右门「6 + 3 ＝ 10，对不对？…」故意答错（✗、不解锁、得分仍 30）→「换一题」换为「6 ＞ 7，对不对？…」→答对（重试档 +5）→结算「总分 35」「作答 4 题 · 首答 3/4 · 重试 1 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」与计分规则逐项吻合（10+10+10+5=35）；作答含整数题合成键入提交=true（input 事件实时启用「开门」）、choice 点击作答=true；练习记录新增 1 条（gameId=arithmetic-dungeon、recordId=roundId、score=35、keyUses=0、route 完整）且列表显示「35 分 · 首答 3/4 · 重试 1」；recent-ids 含本局全部题目 ID=true；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0、无横向溢出",
+      "checks": {
+        "entry": {
+          "dungeon": {
+            "text": "钥算术地下城用算术开门探洞",
+            "href": "/dungeon.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "hanzi": {
+            "visible": true,
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战"
+          }
+        },
+        "availability": "本层题库：一年级 1074 道，共 1074 道",
+        "poolCount": 1074,
+        "picked": {
+          "attempts": 6,
+          "kinds": [
+            "choice",
+            "choice",
+            "choice",
+            "binary"
+          ],
+          "roundId": "77bfbda1-7f63-44c0-8133-6f513b0828ad"
+        },
+        "play": [
+          {
+            "label": "石门",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:4,number:8",
+            "prompt": "哪个数更小？",
+            "value": null,
+            "wrong": false,
+            "typed": false
+          },
+          {
+            "label": "左门",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":5,\"right\":1},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true",
+            "prompt": "5 + 1 ＝ 7，对不对？",
+            "value": null,
+            "wrong": false,
+            "typed": false
+          },
+          {
+            "label": "资源机关",
+            "kind": "binary",
+            "id": "generated-v4:MAP-010:4+5",
+            "prompt": "4 + 5 = ?",
+            "value": 9,
+            "wrong": false,
+            "typed": true
+          },
+          {
+            "label": "右门-答错",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":6,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+            "prompt": "6 + 3 ＝ 10，对不对？",
+            "value": null,
+            "wrong": true,
+            "typed": false
+          },
+          {
+            "label": "右门-换题后",
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":6},\"relation\":\">\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true",
+            "prompt": "6 ＞ 7，对不对？",
+            "value": null,
+            "wrong": false,
+            "typed": false
+          }
+        ],
+        "result": {
+          "score": "总分 35",
+          "answer": "作答 4 题 · 首答 3/4 · 重试 1 次",
+          "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+        },
+        "recOk": true,
+        "recentOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsOk": true,
+        "allApproved": true,
+        "leaveClickAttempts": 2,
+        "errors": [],
+        "overflow": false
+      }
+    },
+    {
+      "name": "S2 返回路径与三入口并存",
+      "pass": true,
+      "result": "地下城顶栏「返回数字消除」返回数字消除首页；勾选一年级→下一步按钮启用（可选年级），取消复原；菜单弹层内「汉字勇者」（href=/hanzi.html）与「算术地下城」（href=/dungeon.html）两锚点并存可见（数字消除为当前页）；无溢出、JS 错误 0",
+      "checks": {
+        "npOk": true,
+        "threeOk": true,
+        "menu": {
+          "hanzi": {
+            "visible": true,
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战"
+          },
+          "dungeon": {
+            "text": "钥算术地下城用算术开门探洞",
+            "href": "/dungeon.html",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        }
+      }
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-在线首页",
+      "overflow": false
+    },
+    {
+      "where": "S1-地下城选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-记录列表",
+      "overflow": false
+    },
+    {
+      "where": "S2-返回后首页",
+      "overflow": false
+    },
+    {
+      "where": "S2-菜单三入口",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}
