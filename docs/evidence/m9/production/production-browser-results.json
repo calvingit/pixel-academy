@@ -1,0 +1,172 @@
+{
+  "generatedAt": "2026-10-27T13:31:50.853Z",
+  "origin": "https://pixel-academy.pages.dev/",
+  "expectedVersion": "assets-v1-9f9ffaac4a45",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "viewport": {
+    "w": 756,
+    "h": 469
+  },
+  "scenarios": [
+    {
+      "name": "P1 生产首页与 SW 版本",
+      "pass": true,
+      "result": "生产 https://pixel-academy.pages.dev/ 正常加载（h1=数字消除.）；SW 受控，缓存 pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45 与预期版本 assets-v1-9f9ffaac4a45 一致（108 项），页面提示「离线缓存已就绪（版本 assets-v1-9f9ffaac4a45），断网也能游玩。」；菜单含汉字勇者与算术地下城两个入口标记",
+      "checks": {
+        "home": {
+          "url": "https://pixel-academy.pages.dev/",
+          "title": "数字消除 · Pixel Academy",
+          "h1": "数字消除.",
+          "selectVisible": true,
+          "errorVisible": false,
+          "menuDialogOpen": false,
+          "hanziAnchor": true,
+          "dungeonAnchor": true,
+          "pinyinAnchor": true,
+          "offlineNotice": "正在准备离线缓存……完成前断网可能无法游玩。",
+          "errors": []
+        },
+        "homeAfterReady": {
+          "url": "https://pixel-academy.pages.dev/",
+          "title": "数字消除 · Pixel Academy",
+          "h1": "数字消除.",
+          "selectVisible": true,
+          "errorVisible": false,
+          "menuDialogOpen": false,
+          "hanziAnchor": true,
+          "dungeonAnchor": true,
+          "pinyinAnchor": true,
+          "offlineNotice": "离线缓存已就绪（版本 assets-v1-9f9ffaac4a45），断网也能游玩。",
+          "errors": []
+        },
+        "sw": {
+          "scriptURL": "https://pixel-academy.pages.dev/sw.js",
+          "cacheName": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+          "cacheOk": {
+            "homeCached": true,
+            "hanziCached": true,
+            "dungeonCached": true,
+            "pinyinCached": true,
+            "homeHasHanzi": true,
+            "homeHasDungeon": true,
+            "homeHasPinyin": true,
+            "hanziHasBack": true,
+            "dungeonHasBack": true,
+            "pinyinHasBack": true,
+            "audioCachedB": true,
+            "audioCachedOng": true,
+            "audioCount": 47,
+            "count": 108
+          },
+          "controlledViaController": true
+        }
+      }
+    },
+    {
+      "name": "P2 汉字勇者入口往返",
+      "pass": true,
+      "result": "菜单入口点击进入 https://pixel-academy.pages.dev/hanzi.html（年级卡 6 张），「/」返回生产首页正常；JS 错误 0 个",
+      "checks": {
+        "hanzi": {
+          "url": "https://pixel-academy.pages.dev/hanzi.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": "/",
+          "errors": []
+        }
+      }
+    },
+    {
+      "name": "P2b 地下城入口往返",
+      "pass": true,
+      "result": "菜单入口点击进入 https://pixel-academy.pages.dev/dungeon.html（年级卡 6 张、boot-fail 隐藏），「/」返回生产首页正常；JS 错误 0 个",
+      "checks": {
+        "dungeon": {
+          "url": "https://pixel-academy.pages.dev/dungeon.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": "/",
+          "errors": []
+        }
+      }
+    },
+    {
+      "name": "P2c 拼音入口往返",
+      "pass": true,
+      "result": "菜单入口点击进入 https://pixel-academy.pages.dev/pinyin.html（年级卡 6 张、boot-fail 隐藏），「/」返回生产首页正常；JS 错误 0 个",
+      "checks": {
+        "pinyin": {
+          "url": "https://pixel-academy.pages.dev/pinyin.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": "/",
+          "errors": []
+        }
+      }
+    },
+    {
+      "name": "P3 缓存清单四入口与音频",
+      "pass": true,
+      "result": "生产缓存 pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45 共 108 项：缓存正文核对 / 含三游戏入口标记=true，hanzi/dungeon/pinyin 三页含返回标记=true，音频缓存 47 条（抽验 b.wav=true、ong.wav=true）",
+      "checks": {
+        "sw": {
+          "scriptURL": "https://pixel-academy.pages.dev/sw.js",
+          "cacheName": "pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45",
+          "cacheOk": {
+            "homeCached": true,
+            "hanziCached": true,
+            "dungeonCached": true,
+            "pinyinCached": true,
+            "homeHasHanzi": true,
+            "homeHasDungeon": true,
+            "homeHasPinyin": true,
+            "hanziHasBack": true,
+            "dungeonHasBack": true,
+            "pinyinHasBack": true,
+            "audioCachedB": true,
+            "audioCachedOng": true,
+            "audioCount": 47,
+            "count": 108
+          },
+          "controlledViaController": true
+        }
+      }
+    },
+    {
+      "name": "P4 断网刷新四页缓存可达且音频可播",
+      "pass": true,
+      "result": "SW 受控（缓存 pixel-academy:number-puzzle:assets-v1-9f9ffaac4a45）后浏览器级断网仿真刷新：首页由缓存打开（提示「当前处于离线状态，正在使用已缓存资源（版本 assets-v1-9f9f…」），菜单入口离线进入地下城（年级卡 6 张）与拼音页（年级卡 6 张），断网下缓存音频 /audio/pinyin/b.wav canplay=true，全程 JS 错误 0 个",
+      "checks": {
+        "offlineHome": {
+          "url": "https://pixel-academy.pages.dev/",
+          "title": "数字消除 · Pixel Academy",
+          "h1": "数字消除.",
+          "selectVisible": true,
+          "errorVisible": false,
+          "menuDialogOpen": false,
+          "hanziAnchor": true,
+          "dungeonAnchor": true,
+          "pinyinAnchor": true,
+          "offlineNotice": "当前处于离线状态，正在使用已缓存资源（版本 assets-v1-9f9ffaac4a45）。",
+          "errors": []
+        },
+        "offlineDungeon": {
+          "url": "https://pixel-academy.pages.dev/dungeon.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": "/",
+          "errors": []
+        },
+        "offlinePinyin": {
+          "url": "https://pixel-academy.pages.dev/pinyin.html",
+          "bootFailHidden": true,
+          "gradeCards": 6,
+          "backLink": "/",
+          "errors": []
+        },
+        "audioOk": true
+      }
+    }
+  ],
+  "allPassed": true
+}
