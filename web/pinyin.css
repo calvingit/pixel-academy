@@ -1,0 +1,127 @@
+/* 拼音冒险首版样式：沿用数字花园视觉方向（暖纸色、奶油卡、清晰对比），
+   以湖蓝青色表达字母与声音主题；独立命名空间，不复用其他游戏的选择器行为。
+   候选字母用大号清晰字体，区分易混字形（b/d/p/q、n/u 等），不做装饰性变形。 */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #f4f1e6;
+  color: #2d3a3a;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  min-height: 100dvh;
+}
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px calc(env(safe-area-inset-bottom, 0px) + 24px);
+}
+.app-title { font-size: 30px; margin: 4px 0 14px; letter-spacing: 1px; }
+.app-title-dot { color: #2d7a8c; }
+.screen { display: block; }
+.screen[hidden] { display: none; }
+.card {
+  background: #fbf8ee;
+  border: 1px solid #d6d9c8;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h2 { margin: 2px 0 10px; font-size: 20px; }
+.hint { color: #68766f; font-size: 14px; margin: 4px 0 10px; }
+.profile-bar {
+  background: #fbf8ee; border: 1px solid #d6d9c8; border-radius: 999px;
+  padding: 10px 16px; margin-bottom: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+/* 锚点没有按钮默认样式，去下划线即可复用 .btn-ghost 外观；跨页返回数字消除首页。 */
+a.btn-ghost { text-decoration: none; }
+.storage-notice { font-size: 13px; color: #a05a2c; margin: 8px 0; }
+.grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 14px; }
+.grade-card {
+  border: 2px solid #d6d9c8; border-radius: 12px; background: #fff;
+  padding: 12px 6px; text-align: center; font-size: 15px; cursor: pointer;
+}
+.grade-card[aria-pressed="true"] { border-color: #2d7a8c; background: #e3f1f2; font-weight: 700; }
+.grade-card:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary {
+  display: block; width: 100%; border: 0; border-radius: 12px;
+  background: #2d7a8c; color: #fff; font-size: 17px; font-weight: 700;
+  padding: 14px; cursor: pointer;
+}
+.btn-primary:disabled { background: #a3c4ca; cursor: not-allowed; }
+.btn-ghost {
+  border: 2px solid #2d7a8c; background: transparent; color: #23606d;
+  border-radius: 12px; font-size: 15px; font-weight: 600; padding: 10px 14px; cursor: pointer;
+}
+.availability { font-size: 14px; color: #23606d; min-height: 18px; margin: 10px 0 0; }
+.restore { border-color: #2d7a8c; }
+.restore-actions { display: flex; gap: 10px; }
+.restore-actions .btn-primary, .restore-actions .btn-ghost { flex: 1; }
+.records { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.records li { padding: 8px 2px; border-bottom: 1px dashed #d6d9c8; }
+.records li:last-child { border-bottom: 0; }
+/* 局内 */
+.game-hud { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.hud-progress { font-weight: 700; }
+.hud-score { flex: 1; text-align: right; font-weight: 700; color: #23606d; }
+.q-title { font-size: 18px; margin: 0 0 4px; color: #23606d; }
+.q-title:focus { outline: 2px solid #2d7a8c; outline-offset: 2px; border-radius: 4px; }
+.countdown { text-align: right; font-size: 14px; font-weight: 600; color: #68766f; margin: 0 0 4px; }
+.countdown[data-urgent="true"] { color: #b03a2e; }
+.q-prompt { font-size: 34px; font-weight: 700; margin: 8px 0 12px; text-align: center; letter-spacing: 2px; }
+/* 听辨播放区：可重复播放；音频不可用提示明确，不假装完成听力训练。 */
+.play-group { text-align: center; margin: 4px 0 12px; }
+.play-group[hidden] { display: none; }
+.btn-play {
+  border: 2px solid #2d7a8c; background: #e3f1f2; color: #23606d;
+  border-radius: 999px; font-size: 18px; font-weight: 700;
+  padding: 14px 30px; cursor: pointer; min-height: 52px; font-family: inherit;
+}
+.btn-play:disabled { opacity: .55; cursor: not-allowed; }
+.audio-notice {
+  font-size: 14px; color: #7a5a22; background: #fdf6e4;
+  border: 1px solid #c9a53c; border-radius: 10px; padding: 8px 10px; margin: 10px 0 0;
+}
+.audio-notice[hidden] { display: none; }
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.option-card {
+  border: 2px solid #d6d9c8; border-radius: 14px; background: #fff;
+  font-size: 34px; font-weight: 700; padding: 16px 6px; cursor: pointer;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  min-height: 72px; color: #2d3a3a; letter-spacing: 1px;
+}
+.option-card:disabled { opacity: .55; cursor: not-allowed; }
+.feedback { text-align: center; font-size: 17px; font-weight: 700; padding: 8px; border-radius: 10px; margin-top: 12px; }
+.feedback[data-kind="correct"] { color: #2d7a37; background: #e8f4e4; }
+.feedback[data-kind="wrong"] { color: #b03a2e; background: #f9e8e4; }
+.feedback[data-kind="info"] { color: #7a5a22; background: #fdf6e4; }
+.question-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.question-actions .btn-primary, .question-actions .btn-ghost { flex: 1 1 40%; }
+.question-actions .btn-primary[hidden], .question-actions .btn-ghost[hidden] { display: none; }
+/* 结算 */
+.result-score { font-size: 34px; font-weight: 800; color: #23606d; margin: 6px 0 10px; }
+.result-line { font-size: 14px; line-height: 1.6; margin: 4px 0; color: #2d3a3a; }
+.result .restore-actions { margin-top: 14px; }
+/* 暂停与确认 */
+.pause-overlay {
+  position: fixed; inset: 0; background: rgba(45, 58, 58, .45);
+  display: flex; align-items: center; justify-content: center;
+}
+.pause-overlay[hidden] { display: none; }
+.pause-card, .confirm-dialog {
+  background: #fbf8ee; border-radius: 16px; padding: 22px 26px; text-align: center;
+  border: 1px solid #d6d9c8;
+}
+.pause-card p { font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.confirm-dialog::backdrop { background: rgba(45, 58, 58, .45); }
+.confirm-dialog p { margin: 0 0 14px; }
+.boot-fail {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: #f4f1e6; color: #b03a2e; font-size: 16px;
+}
+.boot-fail[hidden] { display: none; }
+@media (min-width: 720px) {
+  .options { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .options { grid-template-columns: repeat(4, 1fr); }
+}

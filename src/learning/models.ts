@@ -91,7 +91,31 @@ export interface HanziPartsTask {
   readonly options: readonly string[];
 }
 export type ChineseTask = HanziChooseTask | HanziPartsTask;
-export type Task = MathTask | ChineseTask;
+/** 拼音字母辨认任务：呈现目标字形，从候选中选认（单选）。 */
+export interface PinyinChooseTask {
+  readonly kind: 'pinyin-choose';
+  /** 目标拼音字母（声母或韵母；zh/ch/sh 为双字母，ü 为单字母）。 */
+  readonly letter: string;
+  /** 题面文案（辨认题可含目标字形，与字形认读玩法一致）。 */
+  readonly prompt: string;
+  readonly options: readonly string[];
+  /** 正确答案字母；判题按字母身份，与候选排列无关。 */
+  readonly answer: string;
+}
+/** 拼音听辨任务：播放音频选认字母。 */
+export interface PinyinListenTask {
+  readonly kind: 'pinyin-listen';
+  /** 目标拼音字母（仅用于判题与记录；题面与渲染层不得展示）。 */
+  readonly letter: string;
+  /** 音频资源路径（web 根内相对路径，随构建预缓存，如 audio/pinyin/b.wav）。 */
+  readonly audio: string;
+  /** 题面文案；结构级防泄露：不得包含任何拼音字母字形。 */
+  readonly prompt: string;
+  readonly options: readonly string[];
+  readonly answer: string;
+}
+export type PinyinTask = PinyinChooseTask | PinyinListenTask;
+export type Task = MathTask | ChineseTask | PinyinTask;
 export type SubmittedAnswer = number | string | readonly string[];
 export interface Exercise<T extends Task = Task> {
   id: string;

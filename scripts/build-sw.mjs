@@ -10,21 +10,36 @@
 //    避免生成必然安装失败的缓存清单）。
 // 版本与清理决策的可测逻辑在 offline.ts，本脚本与生成的 sw.js 与其保持一致。
 import { createHash } from 'node:crypto';
+import { readdirSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const rootPath = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** 预缓存入口：三个页面的主模块（tsc 产物）。 */
+/** 预缓存入口：四个页面的主模块（tsc 产物）。 */
 export const SW_ENTRY_MODULES = [
   'dist/game/number-puzzle/main.js',
   'dist/game/hanzi-hero/main.js',
   'dist/game/arithmetic-dungeon/main.js',
+  'dist/game/pinyin-adventure/main.js',
 ];
-/** 静态页面资源（相对仓库根；'/' 即 web/index.html，'/hanzi.html' 即 web/hanzi.html）。 */
+
+/**
+ * 拼音冒险听辨音频（web/audio/pinyin/*.wav，由 scripts/gen-pinyin-audio.sh 生成入库）。
+ * 逐文件扫描并排序：缺文件即构建失败（快速失败），新增音频自动进入清单。
+ */
+const PINYIN_AUDIO_DIR = 'web/audio/pinyin';
+const pinyinAudioFiles = readdirSync(join(rootPath, PINYIN_AUDIO_DIR))
+  .filter(name => name.endsWith('.wav')).sort();
+if (!pinyinAudioFiles.length) throw new Error(`${PINYIN_AUDIO_DIR} 下没有 WAV：请先运行 scripts/gen-pinyin-audio.sh`);
+export const PINYIN_AUDIO_URLS = pinyinAudioFiles.map(name => `/audio/pinyin/${name}`);
+
+/** 静态页面资源（相对仓库根；'/' 即 web/index.html，'/pinyin.html' 即 web/pinyin.html）。 */
 export const STATIC_PRECACHE_URLS = [
   '/', '/style.css', '/hanzi.html', '/hanzi.css', '/dungeon.html', '/dungeon.css',
+  '/pinyin.html', '/pinyin.css',
+  ...PINYIN_AUDIO_URLS,
   ...['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => `/img/hanzi-hero/${name}.svg`),
 ];
@@ -36,6 +51,9 @@ const STATIC_FILE_FOR_URL = Object.freeze({
   '/hanzi.css': 'web/hanzi.css',
   '/dungeon.html': 'web/dungeon.html',
   '/dungeon.css': 'web/dungeon.css',
+  '/pinyin.html': 'web/pinyin.html',
+  '/pinyin.css': 'web/pinyin.css',
+  ...Object.fromEntries(PINYIN_AUDIO_URLS.map(url => [url, `web${url}`])),
   ...Object.fromEntries(['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => [`/img/hanzi-hero/${name}.svg`, `web/img/hanzi-hero/${name}.svg`])),
 });

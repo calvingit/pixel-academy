@@ -1,0 +1,1621 @@
+{
+  "generatedAt": "2026-10-27T12:55:56.057Z",
+  "origin": "http://127.0.0.1:4173/",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "viewport": {
+    "w": 1280,
+    "h": 713,
+    "dpr": 1
+  },
+  "scenarios": [
+    {
+      "name": "P1 首页菜单四入口",
+      "pass": true,
+      "result": "数字消除为当前游戏（h1=数字消除.）；菜单弹层（aria-label=学习与收藏）内「拼音冒险」入口 href=/pinyin.html 可见（文本含描述「听声音认拼音字母」），装饰字 span aria-hidden=true；与「汉字勇者」「算术地下城」两入口并存（连同四功能按钮共 7 项）；Tab 焦点路径 [\"btn-menu-close\",\"btn-open-courses\",\"btn-open-review\",\"btn-open-shop\",\"btn-open-profile\",\"HANZI\",\"DUNGEON\"] 后到达拼音入口；AX 角色 link、名称「拼音冒险」；IndexedDB 档案金币 20（全新档案）、JS 错误 0",
+      "checks": {
+        "pinyinAnchor": {
+          "href": "/pinyin.html",
+          "text": "音拼音冒险听声音认拼音字母",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "hanziAnchor": {
+          "href": "/hanzi.html",
+          "text": "字汉字勇者切换到语文挑战",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "dungeonAnchor": {
+          "href": "/dungeon.html",
+          "text": "钥算术地下城用算术开门探洞",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "navItems": [
+          {
+            "tag": "BUTTON",
+            "text": "▤学习课程先学一学，再试一试"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "↺错题复习慢慢想，把它弄明白"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "◇金币商店为下一次挑战做准备"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "☺我的收藏装扮我的数字花园"
+          },
+          {
+            "tag": "A",
+            "text": "字汉字勇者切换到语文挑战"
+          },
+          {
+            "tag": "A",
+            "text": "钥算术地下城用算术开门探洞"
+          },
+          {
+            "tag": "A",
+            "text": "音拼音冒险听声音认拼音字母"
+          }
+        ],
+        "keyboardFocusPath": [
+          "btn-menu-close",
+          "btn-open-courses",
+          "btn-open-review",
+          "btn-open-shop",
+          "btn-open-profile",
+          "HANZI",
+          "DUNGEON"
+        ],
+        "keyboardReached": true,
+        "axName": "拼音冒险",
+        "axRole": "link",
+        "axFocusable": true,
+        "axQueried": true,
+        "idbProfile": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P2 进入 pinyin.html",
+      "pass": true,
+      "result": "真实点击菜单入口后 URL=http://127.0.0.1:4173/pinyin.html，标题「拼音冒险 · Pixel Academy」正常加载：h1=拼音冒险·、6 张年级卡、boot-fail 隐藏、存储可用提示隐藏=true、「返回数字消除」锚点（href=/）可见，JS 错误 0 个",
+      "checks": {
+        "backLink": {
+          "href": "/",
+          "text": "返回数字消除",
+          "visible": true
+        },
+        "gradeCards": [
+          {
+            "text": "一年级",
+            "pressed": "false",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "二年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "三年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "四年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "五年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "六年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          }
+        ],
+        "restoreOfferHidden": true,
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P3 年级筛选",
+      "pass": true,
+      "result": "dist 层 selectPinyinExercises([1])=94 道（辨认 47 + 听辨 47，全部 approved），二~六年级各 0/0/0/0/0 道；UI 初始未选年级开始禁用 → 勾一年级→「本局题库：一年级 94 道，共 94 道」（与 dist 一致）、开始可用；二年级卡禁用置灰（disabled、title=暂未开放、点击无效，提示不变）——未开放年级不可混入；dist 层 describeAvailability([2])=「二年级暂无已审核的拼音练习。当前开放：一年级（语文）。」（startable=false）；JS 错误 0 个",
+      "checks": {
+        "poolInfo": {
+          "count": 94,
+          "kinds": {
+            "pinyin-choose": 47,
+            "pinyin-listen": 47
+          },
+          "statuses": [
+            "approved"
+          ]
+        },
+        "perGrade": {
+          "1": {
+            "total": 94,
+            "listen": 47
+          },
+          "2": {
+            "total": 0,
+            "listen": 0
+          },
+          "3": {
+            "total": 0,
+            "listen": 0
+          },
+          "4": {
+            "total": 0,
+            "listen": 0
+          },
+          "5": {
+            "total": 0,
+            "listen": 0
+          },
+          "6": {
+            "total": 0,
+            "listen": 0
+          }
+        },
+        "descG2": {
+          "startable": false,
+          "statusText": "二年级暂无已审核的拼音练习。当前开放：一年级（语文）。",
+          "rangeText": "，共 0 道"
+        },
+        "gradeCards": [
+          {
+            "text": "一年级",
+            "pressed": "true",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "二年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "三年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "四年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "五年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "六年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          }
+        ],
+        "g1Status": "本局题库：一年级 94 道，共 94 道",
+        "g2Card": {
+          "text": "二年级",
+          "pressed": "false",
+          "disabled": true,
+          "title": "暂未开放"
+        },
+        "settings": {
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ]
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P4 完整局 5 题（听辨 ≥2 + 重试档 + 记录/金币）",
+      "pass": true,
+      "result": "roundId=e8122a32-588f-4acd-b1a3-490c3ac2ae41，5 题构成 2 辨认 + 3 听辨（PY-L-021:listen、PY-C-013:choose、PY-C-034:choose、PY-L-017:listen、PY-L-009:listen）；听辨题面（除候选按钮）无任何拉丁字母/ü 且不含答案字形（leakScan 逐题通过=3）、题头为「听辨练习 · 听声音选字母」类文案；播放钮可点，Audio 事件 canplay+playing 触发、currentTime=0、音频 URL 与题库一致、CacheStorage 命中 status=200/200/200；可重复播放（第二次 playing 触发=true）；第 4 题故意答错（✗、得分仍 30）→「再试一次」重开计时（倒计时回到 10 秒档）→ 重试 +5；结算「总分 45」「作答 5 题 · 首答 4 · 重试 1 次」「辨认 2/2 题首答 · 听辨 2/3 题首答」与逐题档位（4×10 + 5）吻合；记录 gameId=pinyin-adventure、score=45、模式序列=[\"listen\",\"choose\",\"choose\",\"listen\",\"listen\"]、首答 4/5、第 4 题 wrongs=1；recent-ids 含本局全部题目 ID=true；IndexedDB 金币局前 20 = 局后 20（零收支）；JS 错误 0 个",
+      "checks": {
+        "roundId": "e8122a32-588f-4acd-b1a3-490c3ac2ae41",
+        "questions": [
+          {
+            "id": "PY-L-021",
+            "kind": "pinyin-listen",
+            "mode": "listen",
+            "wrong": false,
+            "picked": "s"
+          },
+          {
+            "id": "PY-C-013",
+            "kind": "pinyin-choose",
+            "mode": "choose",
+            "wrong": false,
+            "picked": "q"
+          },
+          {
+            "id": "PY-C-034",
+            "kind": "pinyin-choose",
+            "mode": "choose",
+            "wrong": false,
+            "picked": "ou"
+          },
+          {
+            "id": "PY-L-017",
+            "kind": "pinyin-listen",
+            "mode": "listen",
+            "wrong": true,
+            "picked": "zh",
+            "retryGained": 5
+          },
+          {
+            "id": "PY-L-009",
+            "kind": "pinyin-listen",
+            "mode": "listen",
+            "wrong": false,
+            "picked": "g"
+          }
+        ],
+        "listenChecks": [
+          {
+            "id": "PY-L-021",
+            "leakOk": true,
+            "btnOk": true,
+            "first": {
+              "url": "audio/pinyin/s.wav",
+              "events": [
+                {
+                  "ev": "canplay",
+                  "t": 1793105728616
+                },
+                {
+                  "ev": "playing",
+                  "t": 1793105728616
+                }
+              ],
+              "currentTimeAtPlaying": 0
+            },
+            "repeat": {
+              "url": "audio/pinyin/s.wav",
+              "events": [
+                {
+                  "ev": "canplay",
+                  "t": 1793105728979
+                },
+                {
+                  "ev": "playing",
+                  "t": 1793105728979
+                }
+              ]
+            },
+            "urlOk": true,
+            "playedOk": true,
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-82a7025b1ba5",
+              "status": 200
+            },
+            "audioUrl": "http://127.0.0.1:4173/audio/pinyin/s.wav"
+          },
+          {
+            "id": "PY-L-017",
+            "leakOk": true,
+            "btnOk": true,
+            "first": {
+              "url": "audio/pinyin/sh.wav",
+              "events": [
+                {
+                  "ev": "canplay",
+                  "t": 1793105732211
+                },
+                {
+                  "ev": "playing",
+                  "t": 1793105732211
+                }
+              ],
+              "currentTimeAtPlaying": 0
+            },
+            "repeat": null,
+            "urlOk": true,
+            "playedOk": true,
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-82a7025b1ba5",
+              "status": 200
+            },
+            "audioUrl": "http://127.0.0.1:4173/audio/pinyin/sh.wav"
+          },
+          {
+            "id": "PY-L-009",
+            "leakOk": true,
+            "btnOk": true,
+            "first": {
+              "url": "audio/pinyin/g.wav",
+              "events": [
+                {
+                  "ev": "canplay",
+                  "t": 1793105733694
+                },
+                {
+                  "ev": "playing",
+                  "t": 1793105733694
+                }
+              ],
+              "currentTimeAtPlaying": 0
+            },
+            "repeat": null,
+            "urlOk": true,
+            "playedOk": true,
+            "cache": {
+              "cache": "pixel-academy:number-puzzle:assets-v1-82a7025b1ba5",
+              "status": 200
+            },
+            "audioUrl": "http://127.0.0.1:4173/audio/pinyin/g.wav"
+          }
+        ],
+        "expect": {
+          "score": 45,
+          "firstTry": 4,
+          "retries": 1,
+          "modes": "辨认 2/2 题首答 · 听辨 2/3 题首答"
+        },
+        "result": {
+          "score": "总分 45",
+          "answer": "作答 5 题 · 首答 4 · 重试 1 次",
+          "modes": "辨认 2/2 题首答 · 听辨 2/3 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "e8122a32-588f-4acd-b1a3-490c3ac2ae41",
+          "gameId": "pinyin-adventure",
+          "finishedAt": "2026-10-27T12:55:35.042Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "score": 45,
+          "answer": {
+            "questions": [
+              {
+                "exerciseId": "PY-L-021",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-013",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-034",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-017",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": false,
+                "wrongs": 1
+              },
+              {
+                "exerciseId": "PY-L-009",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          }
+        },
+        "recentOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "repeatOk": true,
+        "cacheOk": true,
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P5 音频不可用降级（拦截 wav → 提示 + 跳过不计分）",
+      "pass": true,
+      "result": "注销 SW 并以 ?nosw=1 重载（controller=null），Fetch 拦截 http://127.0.0.1:4173/audio/pinyin/*.wav；第 1 题（听辨）点播放 → Audio error 事件触发（无 playing）→ 出现「当前无法播放声音…」提示与「跳过这道听辨题」入口（截图 p5-01）→ 跳过后其余 4 题（辨认 2 + 听辨 2）全部首答答对；结算「总分 40」「作答 4 题 · 首答 4 · 重试 0 次 · 跳过 1 题」——跳过题不计分不计作答；记录 score=40、5 题中 1 题 answered=false（mode=listen、firstTry=false）=true、列表含「跳过 1」；金币 20 = 20；JS 错误 0 个",
+      "checks": {
+        "swOff": true,
+        "skippedIndex": 0,
+        "questions": [
+          {
+            "id": "PY-L-012",
+            "kind": "pinyin-listen",
+            "skipped": true
+          },
+          {
+            "id": "PY-L-036",
+            "kind": "pinyin-listen",
+            "skipped": false,
+            "wrong": false
+          },
+          {
+            "id": "PY-L-044",
+            "kind": "pinyin-listen",
+            "skipped": false,
+            "wrong": false
+          },
+          {
+            "id": "PY-C-017",
+            "kind": "pinyin-choose",
+            "skipped": false,
+            "wrong": false
+          },
+          {
+            "id": "PY-C-022",
+            "kind": "pinyin-choose",
+            "skipped": false,
+            "wrong": false
+          }
+        ],
+        "expect": {
+          "score": 40,
+          "answered": 4
+        },
+        "result": {
+          "score": "总分 40",
+          "answer": "作答 4 题 · 首答 4 · 重试 0 次 · 跳过 1 题",
+          "modes": "辨认 2/2 题首答 · 听辨 2/3 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "295a87ef-2df5-425a-a728-2ab66830fec3",
+          "gameId": "pinyin-adventure",
+          "finishedAt": "2026-10-27T12:55:40.447Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "score": 40,
+          "answer": {
+            "questions": [
+              {
+                "exerciseId": "PY-L-012",
+                "mode": "listen",
+                "answered": false,
+                "firstTry": false,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-036",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-044",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-017",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-022",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          }
+        },
+        "skippedEntry": {
+          "exerciseId": "PY-L-012",
+          "mode": "listen",
+          "answered": false,
+          "firstTry": false,
+          "wrongs": 0
+        },
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P6 暂停/恢复（倒计时冻结）",
+      "pass": true,
+      "result": "第 1 题「找出字母「iu」」首答 +10 后暂停：覆盖层「在字母森林歇一会」出现、HUD 不变（得分 10），继续后正常；第 2 题计时中（剩 9.3 秒）暂停→倒计时显示「剩余 9.3 秒」、快照 remainingMs 冻结于 9270ms（paused=true，2.5s 后仍 9270ms 不变）→继续后倒计时 9.3 秒 ≈ 冻结值（暂停期间未流逝），题面不变「听一听，是哪个字母？」；续答第 2 题首答 → 第 3/5 题、得分 20、快照 roundId=9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b、questionIndex=2（P7 前置就绪）；JS 错误 0 个",
+      "checks": {
+        "roundId": "9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b",
+        "q1": {
+          "id": "PY-C-035",
+          "kind": "pinyin-choose",
+          "isListen": false,
+          "prompt": "找出字母「iu」",
+          "answer": "iu",
+          "picked": "iu",
+          "optionsOk": true,
+          "wrong": false
+        },
+        "pausedIdleCountdown": "已停止计时",
+        "c1b": 9.3,
+        "pausedCountdown": "剩余 9.3 秒",
+        "frozenRemaining": 9270,
+        "frozenRemaining2": 9270,
+        "c2": 9.3,
+        "timerOk": true,
+        "p7Snapshot": {
+          "version": 1,
+          "gameId": "pinyin-adventure",
+          "roundId": "9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b",
+          "state": {
+            "phase": "asking",
+            "questions": [
+              {
+                "exerciseId": "PY-C-035",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "iu",
+                  "prompt": "找出字母「iu」",
+                  "options": [
+                    "iu",
+                    "ui",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "iu"
+                }
+              },
+              {
+                "exerciseId": "PY-L-015",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "zh",
+                  "audio": "audio/pinyin/zh.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "zh",
+                    "ch",
+                    "sh",
+                    "r"
+                  ],
+                  "answer": "zh"
+                }
+              },
+              {
+                "exerciseId": "PY-C-011",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "h",
+                  "prompt": "找出字母「h」",
+                  "options": [
+                    "h",
+                    "n",
+                    "b",
+                    "p"
+                  ],
+                  "answer": "h"
+                }
+              },
+              {
+                "exerciseId": "PY-C-013",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "q",
+                  "prompt": "找出字母「q」",
+                  "options": [
+                    "q",
+                    "b",
+                    "d",
+                    "p"
+                  ],
+                  "answer": "q"
+                }
+              },
+              {
+                "exerciseId": "PY-L-033",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "ao",
+                  "audio": "audio/pinyin/ao.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "ao",
+                    "ou",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "ao"
+                }
+              }
+            ],
+            "questionIndex": 2,
+            "score": 20,
+            "firstTryCount": 2,
+            "totalWrongCount": 0,
+            "currentWrong": false,
+            "wrongs": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "skipped": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "result": null
+          },
+          "rngState": 4235443451,
+          "previousIds": [
+            "PY-L-012",
+            "PY-L-036",
+            "PY-L-044",
+            "PY-C-017",
+            "PY-C-022"
+          ],
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "timer": {
+            "paused": false,
+            "remainingMs": 10000,
+            "deadline": 1793105755627,
+            "timerKind": "question"
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P7 刷新恢复（不重复计分）",
+      "pass": true,
+      "result": "第 1、2 题首答（得分 20）后 Page.reload：出现恢复提供「有未完成的练习，可以继续（题目、得分与计时进度都会恢复）。…」→继续练习→第 3/5 题、得分 20、roundId/题目 ID 序列/firstTryCount 与刷新前一致（快照恢复）、计时继续（倒计时 剩余 9.7 秒）→续答 3 题全对→结算「总分 50」「作答 5 题 · 首答 5 · 重试 0 次」（= 刷新前 20 + 新增 30；若前两题重计应为 70）「辨认 3/3 题首答 · 听辨 2/2 题首答」；记录 recordId=roundId 幂等恰 1 条、5 题全 firstTry=true；JS 错误 0 个",
+      "checks": {
+        "beforeSnap": {
+          "version": 1,
+          "gameId": "pinyin-adventure",
+          "roundId": "9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b",
+          "state": {
+            "phase": "asking",
+            "questions": [
+              {
+                "exerciseId": "PY-C-035",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "iu",
+                  "prompt": "找出字母「iu」",
+                  "options": [
+                    "iu",
+                    "ui",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "iu"
+                }
+              },
+              {
+                "exerciseId": "PY-L-015",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "zh",
+                  "audio": "audio/pinyin/zh.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "zh",
+                    "ch",
+                    "sh",
+                    "r"
+                  ],
+                  "answer": "zh"
+                }
+              },
+              {
+                "exerciseId": "PY-C-011",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "h",
+                  "prompt": "找出字母「h」",
+                  "options": [
+                    "h",
+                    "n",
+                    "b",
+                    "p"
+                  ],
+                  "answer": "h"
+                }
+              },
+              {
+                "exerciseId": "PY-C-013",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "q",
+                  "prompt": "找出字母「q」",
+                  "options": [
+                    "q",
+                    "b",
+                    "d",
+                    "p"
+                  ],
+                  "answer": "q"
+                }
+              },
+              {
+                "exerciseId": "PY-L-033",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "ao",
+                  "audio": "audio/pinyin/ao.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "ao",
+                    "ou",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "ao"
+                }
+              }
+            ],
+            "questionIndex": 2,
+            "score": 20,
+            "firstTryCount": 2,
+            "totalWrongCount": 0,
+            "currentWrong": false,
+            "wrongs": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "skipped": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "result": null
+          },
+          "rngState": 4235443451,
+          "previousIds": [
+            "PY-L-012",
+            "PY-L-036",
+            "PY-L-044",
+            "PY-C-017",
+            "PY-C-022"
+          ],
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "timer": {
+            "paused": false,
+            "remainingMs": 10000,
+            "deadline": 1793105755627,
+            "timerKind": "question"
+          }
+        },
+        "offerText": "有未完成的练习，可以继续（题目、得分与计时进度都会恢复）。",
+        "restoredSnap": {
+          "version": 1,
+          "gameId": "pinyin-adventure",
+          "roundId": "9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b",
+          "state": {
+            "phase": "asking",
+            "questions": [
+              {
+                "exerciseId": "PY-C-035",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "iu",
+                  "prompt": "找出字母「iu」",
+                  "options": [
+                    "iu",
+                    "ui",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "iu"
+                }
+              },
+              {
+                "exerciseId": "PY-L-015",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "zh",
+                  "audio": "audio/pinyin/zh.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "zh",
+                    "ch",
+                    "sh",
+                    "r"
+                  ],
+                  "answer": "zh"
+                }
+              },
+              {
+                "exerciseId": "PY-C-011",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "h",
+                  "prompt": "找出字母「h」",
+                  "options": [
+                    "h",
+                    "n",
+                    "b",
+                    "p"
+                  ],
+                  "answer": "h"
+                }
+              },
+              {
+                "exerciseId": "PY-C-013",
+                "task": {
+                  "kind": "pinyin-choose",
+                  "letter": "q",
+                  "prompt": "找出字母「q」",
+                  "options": [
+                    "q",
+                    "b",
+                    "d",
+                    "p"
+                  ],
+                  "answer": "q"
+                }
+              },
+              {
+                "exerciseId": "PY-L-033",
+                "task": {
+                  "kind": "pinyin-listen",
+                  "letter": "ao",
+                  "audio": "audio/pinyin/ao.wav",
+                  "prompt": "听一听，是哪个字母？",
+                  "options": [
+                    "ao",
+                    "ou",
+                    "a",
+                    "o"
+                  ],
+                  "answer": "ao"
+                }
+              }
+            ],
+            "questionIndex": 2,
+            "score": 20,
+            "firstTryCount": 2,
+            "totalWrongCount": 0,
+            "currentWrong": false,
+            "wrongs": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "skipped": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "result": null
+          },
+          "rngState": 4235443451,
+          "previousIds": [
+            "PY-L-012",
+            "PY-L-036",
+            "PY-L-044",
+            "PY-C-017",
+            "PY-C-022"
+          ],
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "timer": {
+            "paused": true,
+            "remainingMs": 9976,
+            "deadline": null,
+            "timerKind": "question"
+          }
+        },
+        "stateOk": true,
+        "expect": {
+          "score": 50
+        },
+        "result": {
+          "score": "总分 50",
+          "answer": "作答 5 题 · 首答 5 · 重试 0 次",
+          "modes": "辨认 3/3 题首答 · 听辨 2/2 题首答"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "9f0cb7b5-7a33-4ad0-a846-e5efeb691e3b",
+          "gameId": "pinyin-adventure",
+          "finishedAt": "2026-10-27T12:55:49.077Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "pinyin-static-v1",
+          "score": 50,
+          "answer": {
+            "questions": [
+              {
+                "exerciseId": "PY-C-035",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-015",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-011",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-C-013",
+                "mode": "choose",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "exerciseId": "PY-L-033",
+                "mode": "listen",
+                "answered": true,
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "P8 三游戏回归",
+      "pass": true,
+      "result": "拼音「返回数字消除」回首页（钱包「小小探险家 · 20 金币」）；数字消除选择屏勾一年级→下一步可用（再取消复原）；菜单弹层内汉字勇者/算术地下城/拼音冒险三锚点并存可见；真实点击进 hanzi.html 正常加载（6 年级卡、boot-fail 隐藏）→返回锚点回首页；再进 dungeon.html 正常（6 年级卡）→返回锚点回首页；JS 错误 0",
+      "checks": {
+        "wallet": "小小探险家 · 20 金币",
+        "menu": {
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "pinyin": {
+            "href": "/pinyin.html",
+            "text": "音拼音冒险听声音认拼音字母",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "npOk": true,
+        "hanzi": {
+          "gradeCards": 6,
+          "h1": "汉字勇者·"
+        },
+        "dungeon": {
+          "gradeCards": 6,
+          "h1": "算术地下城·"
+        },
+        "overflow": false,
+        "errors": {
+          "home": [],
+          "hanzi": [],
+          "dungeon": []
+        }
+      }
+    },
+    {
+      "name": "P9 SW 四入口与断网听辨",
+      "pass": true,
+      "result": "SW 版本 pixel-academy:number-puzzle:assets-v1-82a7025b1ba5 预缓存含 /、/hanzi.html、/dungeon.html、/pinyin.html（含 /pinyin.css 与拼音 dist 模块）+ 47 条 /audio/pinyin/*.wav（清单文本含 pinyin 入口=true）；杀掉 serve 进程（源站请求确认失败）后刷新：首页由缓存打开，菜单进拼音冒险由缓存正常加载（6 年级卡）；断网开局答对前序题后遇听辨题「audio/pinyin/ou.wav」→ 播放成功（playing 事件触发、CacheStorage 命中 status=200）并答对完成该听辨题（✓ 反馈，截图 p9-03）；放弃本局回选择屏（快照清除=true）→ 返回首页 → hanzi.html、dungeon.html 均由缓存正常加载——四入口缓存互导；全程 JS 错误 0",
+      "checks": {
+        "swInfo": {
+          "name": "pixel-academy:number-puzzle:assets-v1-82a7025b1ba5",
+          "wavs": 47,
+          "fourEntries": true,
+          "swHasPinyinEntry": true
+        },
+        "sourceDead": true,
+        "listenPlayed": {
+          "id": "PY-L-034",
+          "events": [
+            {
+              "ev": "canplay",
+              "t": 1793105754110
+            },
+            {
+              "ev": "playing",
+              "t": 1793105754110
+            }
+          ],
+          "cache": {
+            "cache": "pixel-academy:number-puzzle:assets-v1-82a7025b1ba5",
+            "status": 200
+          },
+          "audio": "audio/pinyin/ou.wav"
+        },
+        "questions9": [
+          {
+            "id": "PY-C-032",
+            "kind": "pinyin-choose",
+            "answered": true
+          },
+          {
+            "id": "PY-L-034",
+            "kind": "pinyin-listen",
+            "answered": true
+          }
+        ],
+        "snapshotDiscarded": true,
+        "overflow": false,
+        "errors": {
+          "home": [],
+          "pinyin": [],
+          "hanzi": [],
+          "dungeon": []
+        }
+      }
+    },
+    {
+      "name": "P10 贯穿（横向溢出与 JS 错误）",
+      "pass": true,
+      "result": "全程 8 个功能场景均无横向溢出（溢出场景：无）、均无 JS 错误（报错场景：无）；UA=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "checks": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "viewport": {
+          "w": 1280,
+          "h": 713,
+          "dpr": 1
+        },
+        "horizontalOverflowScenarios": [],
+        "jsErrorScenarios": []
+      }
+    }
+  ],
+  "allPassed": true,
+  "fixVerification": {
+    "executedAt": "2026-10-27T13:25:25.970Z",
+    "purpose": "缺陷修复合并复验轮：M9 ①组卷洗牌 ②降级提示去重 + M8 hanzi-hero 同款洗牌",
+    "script": "pinyin-fix-verify.mjs",
+    "buildVersion": "assets-v1-9f9ffaac4a45",
+    "fixes": {
+      "m9Shuffle": "src/game/pinyin-adventure/rules.ts createRound 以局内 rng 洗每题 options（随 RoundState/快照恢复）",
+      "m9SingleNotice": "src/game/pinyin-adventure/main.ts onPlay 降级只置 audioUnavailable（audio-notice 呈现），不再写 feedback",
+      "m8Shuffle": "src/game/hanzi-hero/rules.ts createRound 同款洗牌（choose+parts 同路径，判题按字/部件集合身份，内容数据零改动）"
+    },
+    "npmCheck": {
+      "rerun": true,
+      "result": "167 项通过（含新增 hanzi-hero 洗牌与 offline 测试更新）"
+    },
+    "scenarios": [
+      {
+        "name": "FX1 M9-P4 重跑（3 局洗牌 + 判题/记录/金币）",
+        "pass": true,
+        "result": "3 局各 5 题全部完成：答案位置分布 [0,2,1,0,1,3,0,1,2,1,0,0,2,2,3]（不同位置 4 个、首位 5 题）、与内容原始序不同的题 15/15——洗牌生效（修复前恒为首位）；每题渲染候选均为内容候选的排列（判题按字母身份点击正确字母）；听辨防泄露逐题通过（题面无拉丁字母/ü、不含答案字形）；每局第一道听辨播放成功（playing + 缓存命中 200）；第 4 题答错→再试一次→重试档，结算「总分 45」「作答 5 题 · 首答 4 · 重试 1 次」逐局吻合，记录 gameId/score/模式序列/wrongs 校验 3/3；IndexedDB 金币 20 = 20；JS 错误 0 个",
+        "checks": {
+          "rounds": [
+            {
+              "roundId": "be245b54-9b17-474e-826c-651ff0ef3037",
+              "questions": [
+                {
+                  "id": "PY-L-006",
+                  "mode": "listen",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-011",
+                  "mode": "choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-028",
+                  "mode": "choose",
+                  "targetIndex": 1,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-044",
+                  "mode": "listen",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-047",
+                  "mode": "listen",
+                  "targetIndex": 1,
+                  "shuffled": true
+                }
+              ],
+              "resultModes": "辨认 2/2 题首答 · 听辨 2/3 题首答",
+              "recordOk": true
+            },
+            {
+              "roundId": "32afe286-6c9f-4665-82a1-3682c1798be0",
+              "questions": [
+                {
+                  "id": "PY-L-033",
+                  "mode": "listen",
+                  "targetIndex": 3,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-024",
+                  "mode": "listen",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-042",
+                  "mode": "choose",
+                  "targetIndex": 1,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-005",
+                  "mode": "choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-035",
+                  "mode": "listen",
+                  "targetIndex": 1,
+                  "shuffled": true
+                }
+              ],
+              "resultModes": "辨认 1/2 题首答 · 听辨 3/3 题首答",
+              "recordOk": true
+            },
+            {
+              "roundId": "c1cfba61-8262-457c-8047-921888d4b723",
+              "questions": [
+                {
+                  "id": "PY-L-009",
+                  "mode": "listen",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-016",
+                  "mode": "listen",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-L-029",
+                  "mode": "listen",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-016",
+                  "mode": "choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "PY-C-037",
+                  "mode": "choose",
+                  "targetIndex": 3,
+                  "shuffled": true
+                }
+              ],
+              "resultModes": "辨认 1/2 题首答 · 听辨 3/3 题首答",
+              "recordOk": true
+            }
+          ],
+          "allTargets": [
+            0,
+            2,
+            1,
+            0,
+            1,
+            3,
+            0,
+            1,
+            2,
+            1,
+            0,
+            0,
+            2,
+            2,
+            3
+          ],
+          "distinctPositions": [
+            0,
+            2,
+            1,
+            3
+          ],
+          "zeroCount": 5,
+          "shuffledCount": 15,
+          "shuffleOk": true,
+          "coinsBefore": {
+            "coins": 20
+          },
+          "coinsAfter": {
+            "coins": 20
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "FX2 M9-P5 重跑（降级单提示 + 跳过不计分）",
+        "pass": true,
+        "result": "注销 SW 并 ?nosw=1 重载（controller=null），Fetch 拦截 *.wav；第 3 题（听辨）播放 → Audio error（无 playing）→ audio-notice 降级提示出现，**feedback 保持隐藏**——同屏仅一条提示（修复前 feedback 重复同文案）→ 跳过后其余 4 题全部首答答对；结算「总分 40」「作答 4 题 · 首答 4 · 重试 0 次 · 跳过 1 题」；记录 score=40、跳过题 answered=false（mode=listen、firstTry=false）=true；金币 20 = 20；JS 错误 0 个",
+        "checks": {
+          "swOff": true,
+          "skippedIndex": 2,
+          "degradeFeedback": {
+            "hidden": true,
+            "text": "✓ 答对了 +10"
+          },
+          "singleNotice": true,
+          "questions": [
+            {
+              "id": "PY-C-039",
+              "kind": "pinyin-choose",
+              "skipped": false
+            },
+            {
+              "id": "PY-C-030",
+              "kind": "pinyin-choose",
+              "skipped": false
+            },
+            {
+              "id": "PY-L-031",
+              "kind": "pinyin-listen",
+              "skipped": true
+            },
+            {
+              "id": "PY-L-021",
+              "kind": "pinyin-listen",
+              "skipped": false
+            },
+            {
+              "id": "PY-L-035",
+              "kind": "pinyin-listen",
+              "skipped": false
+            }
+          ],
+          "expect": {
+            "score": 40
+          },
+          "result": {
+            "score": "总分 40",
+            "answer": "作答 4 题 · 首答 4 · 重试 0 次 · 跳过 1 题"
+          },
+          "recordRaw": {
+            "schemaVersion": 1,
+            "recordId": "063f9467-36d6-4e2f-b671-44909e61660a",
+            "gameId": "pinyin-adventure",
+            "finishedAt": "2026-10-27T13:25:12.964Z",
+            "grades": [
+              1
+            ],
+            "contentVersion": "pinyin-static-v1",
+            "score": 40,
+            "answer": {
+              "questions": [
+                {
+                  "exerciseId": "PY-C-039",
+                  "mode": "choose",
+                  "answered": true,
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "exerciseId": "PY-C-030",
+                  "mode": "choose",
+                  "answered": true,
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "exerciseId": "PY-L-031",
+                  "mode": "listen",
+                  "answered": false,
+                  "firstTry": false,
+                  "wrongs": 0
+                },
+                {
+                  "exerciseId": "PY-L-021",
+                  "mode": "listen",
+                  "answered": true,
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "exerciseId": "PY-L-035",
+                  "mode": "listen",
+                  "answered": true,
+                  "firstTry": true,
+                  "wrongs": 0
+                }
+              ]
+            }
+          },
+          "coinsBefore": {
+            "coins": 20
+          },
+          "coinsAfter": {
+            "coins": 20
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "FX3 M8 抽验（hanzi 洗牌 + 身份判题 + 组字多选 + 刷新恢复）",
+        "pass": true,
+        "result": "共 2 局（首局含刷新恢复；一年级池 28 题含 3 道组字题，单局随机抽可能不含，续局直至覆盖组字题）：组字多选共 1 题（勾选+「提交答案」）；渲染候选与内容原始序不同的题 10/10、正确选项位置分布 [2,0,2,0,3,2,0,2,3,3]（不同位置 3 个、首位 3 题）——洗牌生效（修复前目标字/部件恒在首位）；每题经 /dist/learning/hanzi.js correctHanziIds 对洗牌后 task 自算正确选项（choose 按字身份、parts 按部件集合身份），全部首答 ✓+10；首局答对 2 题（20 分）后 Page.reload → 恢复提供 → 继续上局：roundId/得分/题目洗牌排列逐题与刷新前一致（洗牌结果随快照恢复）、DOM 候选与快照一致 → 续打 3 题；各局结算「总分 50」「首次答对 5/5 · 答错 0 次」全部吻合；记录 id=roundId 恰 1 条、score=50、firstTry=5、wrong=0 逐局成立；金币 20 = 20；JS 错误 0 个",
+        "checks": {
+          "rounds": [
+            {
+              "roundId": "3484012f-bf34-4c56-b50a-a0758508b97a",
+              "partsCount": 0,
+              "questions": [
+                {
+                  "id": "HZ-004",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-024",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-019",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-013",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-005",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 3,
+                  "shuffled": true
+                }
+              ],
+              "resultScore": "总分 50",
+              "resultOk": true,
+              "recordOk": true
+            },
+            {
+              "roundId": "5ffb2a9e-c1b3-41a6-9d08-74a7d48367b7",
+              "partsCount": 1,
+              "questions": [
+                {
+                  "id": "HZ-011",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-026",
+                  "kind": "hanzi-parts",
+                  "targetIndex": 0,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-008",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 2,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-017",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 3,
+                  "shuffled": true
+                },
+                {
+                  "id": "HZ-016",
+                  "kind": "hanzi-choose",
+                  "targetIndex": 3,
+                  "shuffled": true
+                }
+              ],
+              "resultScore": "总分 50",
+              "resultOk": true,
+              "recordOk": true
+            }
+          ],
+          "allTargets": [
+            2,
+            0,
+            2,
+            0,
+            3,
+            2,
+            0,
+            2,
+            3,
+            3
+          ],
+          "distinctPositions": [
+            2,
+            0,
+            3
+          ],
+          "shuffledCount": 10,
+          "shuffleOk": true,
+          "totalParts": 1,
+          "preReload": {
+            "roundId": "3484012f-bf34-4c56-b50a-a0758508b97a",
+            "score": 20,
+            "questionIndex": 2,
+            "optionsPerQuestion": [
+              [
+                "水",
+                "木",
+                "金",
+                "火"
+              ],
+              [
+                "口",
+                "目",
+                "日",
+                "月"
+              ],
+              [
+                "口",
+                "耳",
+                "山",
+                "手"
+              ],
+              [
+                "足",
+                "口",
+                "手",
+                "耳"
+              ],
+              [
+                "水",
+                "土",
+                "火",
+                "木"
+              ]
+            ]
+          },
+          "coinsBefore": {
+            "coins": 20
+          },
+          "coinsAfter": {
+            "coins": 20
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "FX4 快速回归（数字消除 + 地下城）",
+        "pass": true,
+        "result": "数字消除选择屏勾一年级→下一步可用（数学题无选项卡，不受洗牌修复影响，再取消复原）；菜单进 dungeon.html 正常加载（6 年级卡、boot-fail 隐藏）→返回锚点回首页；JS 错误 0",
+        "checks": {
+          "npOk": true,
+          "dungeon": {
+            "gradeCards": 6,
+            "title": "算术地下城 · Pixel Academy"
+          },
+          "overflow": false,
+          "errors": {
+            "home": [],
+            "dungeon": []
+          }
+        }
+      },
+      {
+        "name": "FX5 贯穿（横向溢出与 JS 错误）",
+        "pass": true,
+        "result": "复验全程 3 个场景均无横向溢出（溢出场景：无）、均无 JS 错误（报错场景：无）；UA=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "checks": {
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+          "viewport": {
+            "w": 1280,
+            "h": 713,
+            "dpr": 1
+          },
+          "horizontalOverflowScenarios": [],
+          "jsErrorScenarios": []
+        }
+      }
+    ],
+    "allPassed": true
+  }
+}

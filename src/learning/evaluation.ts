@@ -1,5 +1,6 @@
 import { correctOptionIds, isMultiple } from './choice.js';
 import { correctHanziIds, isHanziTask, isHanziMultiple } from './hanzi.js';
+import { correctPinyinAnswer, isPinyinTask } from './pinyin.js';
 import type { Task } from './models.js';
 
 import { answerFor } from './arithmetic.js';
@@ -12,6 +13,9 @@ export function evaluateAnswer(task: Task, answer: unknown): boolean {
     return Array.isArray(answer) && answer.every(id => typeof id === 'string')
       && new Set(answer).size === answer.length && answer.length === expected.length
       && expected.every(id => answer.includes(id));
+  }
+  if (isPinyinTask(task)) {
+    return typeof answer === 'string' && answer === correctPinyinAnswer(task);
   }
   if (task.kind === 'choice') {
     const expected = correctOptionIds(task);
@@ -30,6 +34,7 @@ export function evaluateAnswer(task: Task, answer: unknown): boolean {
 
 export function validateTask(task: Task): void {
   if (isHanziTask(task)) { correctHanziIds(task); return; }
+  if (isPinyinTask(task)) { correctPinyinAnswer(task); return; }
   if (task.kind === 'choice') correctOptionIds(task);
   else answerFor(task);
 }
