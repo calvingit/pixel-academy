@@ -16,11 +16,15 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const rootPath = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** 预缓存入口：两个页面的主模块（tsc 产物）。 */
-export const SW_ENTRY_MODULES = ['dist/game/number-puzzle/main.js', 'dist/game/hanzi-hero/main.js'];
+/** 预缓存入口：三个页面的主模块（tsc 产物）。 */
+export const SW_ENTRY_MODULES = [
+  'dist/game/number-puzzle/main.js',
+  'dist/game/hanzi-hero/main.js',
+  'dist/game/arithmetic-dungeon/main.js',
+];
 /** 静态页面资源（相对仓库根；'/' 即 web/index.html，'/hanzi.html' 即 web/hanzi.html）。 */
 export const STATIC_PRECACHE_URLS = [
-  '/', '/style.css', '/hanzi.html', '/hanzi.css',
+  '/', '/style.css', '/hanzi.html', '/hanzi.css', '/dungeon.html', '/dungeon.css',
   ...['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => `/img/hanzi-hero/${name}.svg`),
 ];
@@ -30,6 +34,8 @@ const STATIC_FILE_FOR_URL = Object.freeze({
   '/style.css': 'web/style.css',
   '/hanzi.html': 'web/hanzi.html',
   '/hanzi.css': 'web/hanzi.css',
+  '/dungeon.html': 'web/dungeon.html',
+  '/dungeon.css': 'web/dungeon.css',
   ...Object.fromEntries(['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => [`/img/hanzi-hero/${name}.svg`, `web/img/hanzi-hero/${name}.svg`])),
 });

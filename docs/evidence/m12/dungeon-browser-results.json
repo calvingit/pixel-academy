@@ -1,0 +1,1395 @@
+{
+  "generatedAt": "2026-10-27T08:58:50.180Z",
+  "origin": "http://127.0.0.1:4173/",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "viewport": {
+    "w": 1280,
+    "h": 773,
+    "dpr": 1
+  },
+  "scenarios": [
+    {
+      "name": "D1 首页菜单入口",
+      "pass": true,
+      "result": "数字消除为当前游戏（h1=数字消除.）；菜单弹层（aria-label=学习与收藏）内「算术地下城」入口 href=/dungeon.html 可见，装饰字 span aria-hidden=true；与「汉字勇者」入口并存；Tab 焦点路径 [\"btn-menu-close\",\"btn-open-courses\",\"btn-open-review\",\"btn-open-shop\",\"btn-open-profile\",\"HANZI\"] 后到达入口；AX 角色 link、名称「算术地下城」；IndexedDB 档案金币 20（全新档案）、JS 错误 0",
+      "checks": {
+        "anchor": {
+          "href": "/dungeon.html",
+          "text": "钥算术地下城用算术开门探洞",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "hanziAnchor": {
+          "href": "/hanzi.html",
+          "text": "字汉字勇者切换到语文挑战",
+          "decorAriaHidden": "true",
+          "visible": true
+        },
+        "navItems": [
+          {
+            "tag": "BUTTON",
+            "text": "▤学习课程先学一学，再试一试"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "↺错题复习慢慢想，把它弄明白"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "◇金币商店为下一次挑战做准备"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "☺我的收藏装扮我的数字花园"
+          },
+          {
+            "tag": "A",
+            "text": "字汉字勇者切换到语文挑战"
+          },
+          {
+            "tag": "A",
+            "text": "钥算术地下城用算术开门探洞"
+          }
+        ],
+        "keyboardFocusPath": [
+          "btn-menu-close",
+          "btn-open-courses",
+          "btn-open-review",
+          "btn-open-shop",
+          "btn-open-profile",
+          "HANZI"
+        ],
+        "keyboardReached": true,
+        "axName": "算术地下城",
+        "axRole": "link",
+        "axFocusable": true,
+        "axQueried": true,
+        "idbProfile": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D2 进入 dungeon.html",
+      "pass": true,
+      "result": "真实点击菜单入口后 URL=http://127.0.0.1:4173/dungeon.html，标题「算术地下城 · Pixel Academy」正常加载：h1=算术地下城·、6 张年级卡、boot-fail 隐藏、存储可用提示隐藏=true、「返回数字消除」锚点（href=/）可见，JS 错误 0 个",
+      "checks": {
+        "backLink": {
+          "href": "/",
+          "text": "返回数字消除",
+          "visible": true
+        },
+        "gradeCards": [
+          {
+            "text": "一年级",
+            "pressed": "false",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "二年级",
+            "pressed": "false",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "三年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "四年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "五年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "六年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          }
+        ],
+        "restoreOfferHidden": true,
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D3 年级与可用性",
+      "pass": true,
+      "result": "勾一年级→「本层题库：一年级 1074 道，共 1074 道」（与 dist 层 selectDungeonExercises([1])=1074 道一致），开始按钮可用；三年级卡禁用置灰（disabled、title=暂未开放、点击无效，勾选后提示不变）——未开放年级不可混入；混选一+二→「本层题库：一年级 1074 道、二年级 52139 道，共 53213 道」（共 53213 道）仍可开始；取消二年级恢复一年级提示；dist 层 describeAvailability([3])=「三年级暂无已审核的数学练习。当前开放：一年级、二年级（数学）。」（三年级 0 道、不可开始）；JS 错误 0 个",
+      "checks": {
+        "counts": {
+          "g1": 1074,
+          "g2": 52139,
+          "g12": 53213,
+          "g3": 0,
+          "descG3": {
+            "startable": false,
+            "statusText": "三年级暂无已审核的数学练习。当前开放：一年级、二年级（数学）。",
+            "rangeText": "，共 0 道"
+          },
+          "descG12": {
+            "startable": true,
+            "statusText": null,
+            "rangeText": "一年级 1074 道、二年级 52139 道，共 53213 道"
+          }
+        },
+        "gradeCards": [
+          {
+            "text": "一年级",
+            "pressed": "true",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "二年级",
+            "pressed": "true",
+            "disabled": false,
+            "title": ""
+          },
+          {
+            "text": "三年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "四年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "五年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          },
+          {
+            "text": "六年级",
+            "pressed": "false",
+            "disabled": true,
+            "title": "暂未开放"
+          }
+        ],
+        "g1Status": "本层题库：一年级 1074 道，共 1074 道",
+        "g12Status": "本层题库：一年级 1074 道、二年级 52139 道，共 53213 道",
+        "g3Card": {
+          "text": "三年级",
+          "pressed": "false",
+          "disabled": true,
+          "title": "暂未开放"
+        },
+        "descG3": {
+          "startable": false,
+          "statusText": "三年级暂无已审核的数学练习。当前开放：一年级、二年级（数学）。",
+          "rangeText": "，共 0 道"
+        },
+        "settings": {
+          "schemaVersion": 1,
+          "grades": [
+            1
+          ]
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D4 完整通关局（对照示例 35 分）",
+      "pass": true,
+      "result": "起点→石门「1 − 0 ＝ 0，对不对？」（choice 首答 +10）→岔口（得分 10）→左门「哪个数更大？」（+10）→资源房→资源题「1 + 5 = ?」（+5、钥匙 1/1）→折回岔口→右门「找出最小的数…」故意答错（✗、不解锁、得分仍 25）→点「再试一次」重开计时（题面未变——实现将换题拆分到独立「换一题」按钮）→点「换一题」换为「4 + 5 ＝ 9，对不对？…」→答对（重试档 +5）→结算「总分 30」「作答 4 题 · 首答 2/4 · 重试 2 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」与计分规则逐项吻合；本局含算式题受缺陷 #1 影响（石/左/资源缺陷 1 道、右门答错路径正常、换题后正常），期望分按计分规则动态计算为 30 而非示例 35（35 分示例路径受阻于缺陷，计分逻辑本身逐项吻合）；练习记录新增 1 条（gameId=arithmetic-dungeon、recordId=roundId、score=30、keyUses=0、route=start→junction→resource→junction→end），列表显示「30 分 · 首答 2/4 · 重试 2」；recent-ids 含本局全部题目 ID=true；IndexedDB 金币局前 20 = 局后 20（零收支）；「收下钥匙」点击 2 次（答对后约 0.9s resolving 窗口内首次点击被静默忽略，脚本按真实用户二次点击，见 README）；JS 错误 0 个",
+      "checks": {
+        "answers": [
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":1,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":0}}:boolean:false,boolean:true",
+            "prompt": "1 − 0 ＝ 0，对不对？",
+            "wrong": false,
+            "defectPath": false
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:4,number:5",
+            "prompt": "哪个数更大？",
+            "wrong": false,
+            "defectPath": false
+          },
+          {
+            "kind": "binary",
+            "id": "generated-v4:MAP-010:1+5",
+            "prompt": "1 + 5 = ?",
+            "value": 6,
+            "wrong": false,
+            "defectPath": true,
+            "submitVia": "timeout+retry"
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:2,number:7,number:8,number:9",
+            "prompt": "找出最小的数",
+            "wrong": true,
+            "defectPath": false
+          },
+          {
+            "swapFrom": "找出最小的数",
+            "swappedTo": "4 + 5 ＝ 9，对不对？"
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":5},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":9}}:boolean:false,boolean:true",
+            "prompt": "4 + 5 ＝ 9，对不对？",
+            "wrong": false,
+            "defectPath": false
+          }
+        ],
+        "samePromptAfterRetry": true,
+        "leaveClickAttempts": 2,
+        "expect": {
+          "score": 30,
+          "firstTry": 2,
+          "retries": 2,
+          "sampleAligned": false
+        },
+        "roundId": "9fbb5c63-e261-4f25-b3e7-905e453de2fa",
+        "result": {
+          "score": "总分 30",
+          "answer": "作答 4 题 · 首答 2/4 · 重试 2 次",
+          "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "9fbb5c63-e261-4f25-b3e7-905e453de2fa",
+          "gameId": "arithmetic-dungeon",
+          "finishedAt": "2026-10-27T08:58:27.582Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "score": 30,
+          "answer": {
+            "questions": [
+              {
+                "slot": "gate-stone",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":1,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":0}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-left",
+                "exerciseId": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:4,number:5",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "resource",
+                "exerciseId": "generated-v4:MAP-010:1+5",
+                "firstTry": false,
+                "wrongs": 1
+              },
+              {
+                "slot": "gate-right",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":5},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":9}}:boolean:false,boolean:true",
+                "firstTry": false,
+                "wrongs": 1
+              }
+            ]
+          },
+          "explore": {
+            "route": [
+              "start",
+              "junction",
+              "resource",
+              "junction",
+              "end"
+            ],
+            "keysHeld": 1,
+            "keyUses": 0,
+            "retries": 2
+          }
+        },
+        "recentOk": true,
+        "coinsBefore": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "coinsAfter": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D5 备用钥匙路径",
+      "pass": true,
+      "result": "再来一局：石门+左门+资源题作答全对（首答全对得分 30、钥匙 1/1）→右门先故意答错（✗、不解锁不扣分、「用钥匙开门」按钮出现）→消耗备用钥匙直接解锁→通关结算「总分 30」「作答 3 题 · 首答 3/3 · 重试 1 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 1 把 / 剩 0 把」；记录 keyUses=1、keysHeld=0、retries=1，作答表现 slots=[\"gate-stone\",\"gate-left\",\"resource\"]（用钥匙开门的右门不计入作答表现、计入探索决策）；本局题目避开上一局（recent-ids 机制）=true；金币 20 不变；JS 错误 0 个",
+      "checks": {
+        "answers": [
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":1}}:boolean:false,boolean:true",
+            "prompt": "0 ＝ 1，对不对？",
+            "wrong": false,
+            "defectPath": false
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":7,\"right\":4},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+            "prompt": "7 − 4 ＝ 4，对不对？",
+            "wrong": false,
+            "defectPath": false
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":3,\"right\":3},\"right\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":1}}:string:<,string:=,string:>",
+            "prompt": "3 ＋ 3 ○ 8 − 1",
+            "wrong": false,
+            "defectPath": false
+          },
+          {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:0,number:5",
+            "prompt": "哪个数更小？",
+            "wrong": true,
+            "defectPath": false
+          }
+        ],
+        "useKeyVisible": true,
+        "expect": {
+          "score": 30,
+          "firstTry": 3,
+          "retries": 1
+        },
+        "result": {
+          "score": "总分 30",
+          "answer": "作答 3 题 · 首答 3/3 · 重试 1 次",
+          "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 1 把 / 剩 0 把"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "ee3ef742-22fd-4116-852b-839b6d266a0f",
+          "gameId": "arithmetic-dungeon",
+          "finishedAt": "2026-10-27T08:58:33.778Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "score": 30,
+          "answer": {
+            "questions": [
+              {
+                "slot": "gate-stone",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":1}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-left",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":7,\"right\":4},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "resource",
+                "exerciseId": "choices-v3:1:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":3,\"right\":3},\"right\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":1}}:string:<,string:=,string:>",
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          },
+          "explore": {
+            "route": [
+              "start",
+              "junction",
+              "resource",
+              "junction",
+              "end"
+            ],
+            "keysHeld": 0,
+            "keyUses": 1,
+            "retries": 1
+          }
+        },
+        "prevIds": [
+          "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":1,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":0}}:boolean:false,boolean:true",
+          "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:4,number:5",
+          "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:2,number:7,number:8,number:9",
+          "generated-v4:MAP-010:1+5",
+          "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":5},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":9}}:boolean:false,boolean:true"
+        ],
+        "exerciseIds": [
+          "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":1}}:boolean:false,boolean:true",
+          "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":7,\"right\":4},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+          "choices-v3:1:{\"kind\":\"expression-symbol\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":3,\"right\":3},\"right\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":1}}:string:<,string:=,string:>"
+        ],
+        "avoidPrevOk": true,
+        "roundId": "ee3ef742-22fd-4116-852b-839b6d266a0f",
+        "coins": {
+          "coins": 20,
+          "records": 0,
+          "revision": 0
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D6 暂停/恢复",
+      "pass": true,
+      "result": "石门「4 + 1 ＝ 5，对不对？」首答+10 后暂停：覆盖层「在地下城歇一会」出现、HUD 不变，继续后正常；左门计时中（剩 10 秒）暂停→倒计时显示「剩余 10.0 秒」、快照 remainingMs 冻结于 10000ms（2.5s 后仍 10000ms 不变）→继续后倒计时 9.7 秒 ≈ 冻结值（暂停期间未流逝），题面不变「2 + 7 ＝ 10，对不对？…」；续答左门到资源房（得分 20、石门+左门开），快照 room=resource、openDoors=[\"gate-stone\",\"gate-left\"]（D7 前置就绪）；JS 错误 0 个",
+      "checks": {
+        "pausedIdleCountdown": "",
+        "c1": 10,
+        "c1b": 10,
+        "pausedCountdown": "剩余 10.0 秒",
+        "frozenRemaining": 10000,
+        "frozenRemaining2": 10000,
+        "c2": 9.7,
+        "timerOk": true,
+        "d7Snapshot": {
+          "roundId": "e8da8442-f3c9-4088-ba83-7cab07fd1918",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "room": "resource",
+          "openDoors": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "score": 20,
+          "keys": 0,
+          "keyUses": 0,
+          "activeSlot": null,
+          "usedIds": [
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":1},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":2,\"right\":7},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":4,\"part\":4}:number:0,number:1,number:2,number:3",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":7,\"part\":6}:number:0,number:1,number:2,number:3"
+          ],
+          "answeredSlots": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "route": [
+            "start",
+            "junction",
+            "resource"
+          ],
+          "totalWrongCount": 0,
+          "firstTryCount": 2,
+          "timer": {
+            "paused": false,
+            "remainingMs": 0,
+            "deadline": null,
+            "timerKind": null
+          },
+          "slotsSolved": {
+            "gate-stone": true,
+            "gate-left": true,
+            "gate-right": false,
+            "resource": false
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D7 刷新恢复",
+      "pass": true,
+      "result": "石门+左门开（20 分）后 Page.reload：出现恢复提供「有未完成的探索，可以继续（房间、门、钥匙与作答进度都会恢复）…」→继续探索→资源房/得分 20/钥匙 0/1/roundId 一致、路线按钮「折回岔口」与「解读资源机关」在（房间、门状态、得分、钥匙与刷新前一致）→续打资源题（+10）+右门（+10）→结算「总分 40」「作答 4 题 · 首答 4/4 · 重试 0 次」（= 刷新前 20 + 新增 20，若石门/左门重计应为 60）「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」；记录 recordId=roundId 幂等；JS 错误 0 个",
+      "checks": {
+        "beforeSnap": {
+          "roundId": "e8da8442-f3c9-4088-ba83-7cab07fd1918",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "room": "resource",
+          "openDoors": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "score": 20,
+          "keys": 0,
+          "keyUses": 0,
+          "activeSlot": null,
+          "usedIds": [
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":1},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":2,\"right\":7},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":4,\"part\":4}:number:0,number:1,number:2,number:3",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":7,\"part\":6}:number:0,number:1,number:2,number:3"
+          ],
+          "answeredSlots": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "route": [
+            "start",
+            "junction",
+            "resource"
+          ],
+          "totalWrongCount": 0,
+          "firstTryCount": 2,
+          "timer": {
+            "paused": false,
+            "remainingMs": 0,
+            "deadline": null,
+            "timerKind": null
+          },
+          "slotsSolved": {
+            "gate-stone": true,
+            "gate-left": true,
+            "gate-right": false,
+            "resource": false
+          }
+        },
+        "offerText": "有未完成的探索，可以继续（房间、门、钥匙与作答进度都会恢复）。",
+        "restoredSnap": {
+          "roundId": "e8da8442-f3c9-4088-ba83-7cab07fd1918",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "room": "resource",
+          "openDoors": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "score": 20,
+          "keys": 0,
+          "keyUses": 0,
+          "activeSlot": null,
+          "usedIds": [
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":1},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":2,\"right\":7},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":4,\"part\":4}:number:0,number:1,number:2,number:3",
+            "choices-v3:1:{\"kind\":\"composition\",\"total\":7,\"part\":6}:number:0,number:1,number:2,number:3"
+          ],
+          "answeredSlots": [
+            "gate-stone",
+            "gate-left"
+          ],
+          "route": [
+            "start",
+            "junction",
+            "resource"
+          ],
+          "totalWrongCount": 0,
+          "firstTryCount": 2,
+          "timer": {
+            "paused": true,
+            "remainingMs": 0,
+            "deadline": null,
+            "timerKind": null
+          },
+          "slotsSolved": {
+            "gate-stone": true,
+            "gate-left": true,
+            "gate-right": false,
+            "resource": false
+          }
+        },
+        "stateOk": true,
+        "expect": {
+          "score": 40,
+          "firstTry": 4,
+          "retries": 0
+        },
+        "result": {
+          "score": "总分 40",
+          "answer": "作答 4 题 · 首答 4/4 · 重试 0 次",
+          "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+        },
+        "recordRaw": {
+          "schemaVersion": 1,
+          "recordId": "e8da8442-f3c9-4088-ba83-7cab07fd1918",
+          "gameId": "arithmetic-dungeon",
+          "finishedAt": "2026-10-27T08:58:43.911Z",
+          "grades": [
+            1
+          ],
+          "contentVersion": "generated-v4:choices-v3",
+          "score": 40,
+          "answer": {
+            "questions": [
+              {
+                "slot": "gate-stone",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":4,\"right\":1},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-left",
+                "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":2,\"right\":7},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "resource",
+                "exerciseId": "choices-v3:1:{\"kind\":\"composition\",\"total\":7,\"part\":6}:number:0,number:1,number:2,number:3",
+                "firstTry": true,
+                "wrongs": 0
+              },
+              {
+                "slot": "gate-right",
+                "exerciseId": "choices-v3:1:{\"kind\":\"composition\",\"total\":4,\"part\":4}:number:0,number:1,number:2,number:3",
+                "firstTry": true,
+                "wrongs": 0
+              }
+            ]
+          },
+          "explore": {
+            "route": [
+              "start",
+              "junction",
+              "resource",
+              "junction",
+              "end"
+            ],
+            "keysHeld": 1,
+            "keyUses": 0,
+            "retries": 0
+          }
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D8 双游戏回归",
+      "pass": true,
+      "result": "地下城「返回数字消除」回首页（钱包「小小探险家 · 20 金币」=20 金币，地下城零收支）；数字消除选择屏年级勾选一年级→下一步可用（再取消复原）；菜单弹层内汉字勇者与算术地下城两入口并存可见；真实点击进 hanzi.html 正常加载（6 年级卡、boot-fail 隐藏）→返回锚点回首页；再进 dungeon.html 正常（6 年级卡、练习记录 3 条=D4/D5/D7 三局）→返回锚点回首页；JS 错误 0",
+      "checks": {
+        "wallet": "小小探险家 · 20 金币",
+        "walletCoins": 20,
+        "npChecked": {
+          "grades": [
+            "1"
+          ],
+          "btnOk": true
+        },
+        "menu": {
+          "hanzi": {
+            "href": "/hanzi.html",
+            "text": "字汉字勇者切换到语文挑战",
+            "decorAriaHidden": "true",
+            "visible": true
+          },
+          "dungeon": {
+            "href": "/dungeon.html",
+            "text": "钥算术地下城用算术开门探洞",
+            "decorAriaHidden": "true",
+            "visible": true
+          }
+        },
+        "hanzi": {
+          "gradeCards": 6,
+          "h1": "汉字勇者·"
+        },
+        "dungeon": {
+          "records": 3,
+          "gradeCards": 6,
+          "h1": "算术地下城·"
+        },
+        "overflow": false,
+        "errors": []
+      }
+    },
+    {
+      "name": "D9 SW 三入口与断源",
+      "pass": true,
+      "result": "重新构建的 web/sw.js 版本 pixel-academy:number-puzzle:assets-v1-51ab2e546d4c 预缓存含 /、/hanzi.html、/dungeon.html（含 /dungeon.css，清单文本含 dungeon 入口）；杀掉 serve 进程（源站请求确认失败）后刷新：首页由缓存打开（提示「离线缓存已就绪（版本 assets-v1-51ab2e546d4c），断网也能游玩。」），菜单进地下城由缓存正常加载，断网下题库模块经 SW 预缓存 import 成功（1074 题），开局答对石门题「哪个数更小？」+10 并穿门到岔口（离线探索正常），返回锚点回首页，再进 hanzi.html 正常（6 年级卡）——三入口缓存互导；放弃后中断快照清除=true；全程 JS 错误 0",
+      "checks": {
+        "swInfo": {
+          "name": "pixel-academy:number-puzzle:assets-v1-51ab2e546d4c",
+          "homeCached": true,
+          "hanziCached": true,
+          "dungeonCached": true,
+          "dungeonCssCached": true,
+          "swHasDungeonEntry": true,
+          "notice": "离线缓存已就绪（版本 assets-v1-51ab2e546d4c），断网也能游玩。"
+        },
+        "sourceDead": true,
+        "offlinePoolCount": 1074,
+        "offlineHomeNotice": "离线缓存已就绪（版本 assets-v1-51ab2e546d4c），断网也能游玩。",
+        "offlineAnswer": {
+          "kind": "choice-single",
+          "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"min\"}:number:8,number:9",
+          "prompt": "哪个数更小？",
+          "wrong": false,
+          "defectPath": false
+        },
+        "offlineJunctionScore": "得分 10",
+        "snapshotDiscarded": true,
+        "overflow": false,
+        "errors": {
+          "home": [],
+          "dungeon": [],
+          "hanzi": []
+        }
+      }
+    }
+  ],
+  "allPassed": true,
+  "d10Throughline": {
+    "horizontalOverflowScenarios": [],
+    "jsErrorScenarios": [],
+    "allNoOverflow": true,
+    "allZeroErrors": true
+  },
+  "fixVerification": {
+    "driverScript": "dungeon-browser-fix.mjs",
+    "generatedAt": "2026-10-27T09:38:41.706Z",
+    "origin": "http://127.0.0.1:4173/",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "viewport": {
+      "w": 1280,
+      "h": 773,
+      "dpr": 1
+    },
+    "scenarios": [
+      {
+        "name": "F1 D4 复验：完整通关局 35 分",
+        "pass": true,
+        "result": "修复后 35 分路径直接达成：起点→4 ＜ 4，对不对？…(choice首答+10)→□ ＋ 0 ＝ 8…(choice首答+10)→8 可以分成 5 和几？…(choice首答+10)→8 − 3 ＝ 5，对不…(choice首答+10)→右门「9 − 3 ＝ 6，对不…」故意答错（choice 错项，不解锁不扣分）→「换一题」→「8 − 3 ＝ 5，对不…」重试档 +5→结算「总分 35」「作答 4 题 · 首答 3/4 · 重试 1 次」「路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把」与规格示例逐项吻合（10+10+10+5=35）；记录 gameId=arithmetic-dungeon、score=35、retries=1；金币局前 20 = 局后 20；整数题键入 0 道；JS 错误 0 个",
+        "checks": {
+          "answers": [
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":4},\"relation\":\"<\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+              "prompt": "4 ＜ 4，对不对？",
+              "wrong": false,
+              "chosen": [
+                "boolean:false"
+              ],
+              "typed": false
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"missing\",\"total\":8,\"addend\":0}:number:10,number:7,number:8,number:9",
+              "prompt": "□ ＋ 0 ＝ 8",
+              "wrong": false,
+              "chosen": [
+                "number:8"
+              ],
+              "typed": false
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"composition\",\"total\":8,\"part\":5}:number:1,number:2,number:3,number:4",
+              "prompt": "8 可以分成 5 和几？",
+              "wrong": false,
+              "chosen": [
+                "number:3"
+              ],
+              "typed": false
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+              "prompt": "8 − 3 ＝ 5，对不对？",
+              "wrong": false,
+              "chosen": [
+                "boolean:true"
+              ],
+              "typed": false
+            }
+          ],
+          "wrongAns": {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":9,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":6}}:boolean:false,boolean:true",
+            "prompt": "9 − 3 ＝ 6，对不对？",
+            "wrong": true,
+            "chosen": [
+              "boolean:false"
+            ],
+            "typed": false
+          },
+          "expect": {
+            "score": 35,
+            "firstTry": 3,
+            "retries": 1
+          },
+          "roundId": "44c10df1-527c-4a82-88db-b792d29b2ad5",
+          "result": {
+            "score": "总分 35",
+            "answer": "作答 4 题 · 首答 3/4 · 重试 1 次",
+            "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+          },
+          "recordRaw": {
+            "schemaVersion": 1,
+            "recordId": "44c10df1-527c-4a82-88db-b792d29b2ad5",
+            "gameId": "arithmetic-dungeon",
+            "finishedAt": "2026-10-27T09:38:22.751Z",
+            "grades": [
+              1
+            ],
+            "contentVersion": "generated-v4:choices-v3",
+            "score": 35,
+            "answer": {
+              "questions": [
+                {
+                  "slot": "gate-stone",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":4},\"relation\":\"<\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-left",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"missing\",\"total\":8,\"addend\":0}:number:10,number:7,number:8,number:9",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "resource",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"composition\",\"total\":8,\"part\":5}:number:1,number:2,number:3,number:4",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-right",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+                  "firstTry": false,
+                  "wrongs": 1
+                }
+              ]
+            },
+            "explore": {
+              "route": [
+                "start",
+                "junction",
+                "resource",
+                "junction",
+                "end"
+              ],
+              "keysHeld": 1,
+              "keyUses": 0,
+              "retries": 1
+            }
+          },
+          "coinsBefore": {
+            "coins": 20,
+            "records": 0,
+            "revision": 0
+          },
+          "coinsAfter": {
+            "coins": 20,
+            "records": 0,
+            "revision": 0
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "F2 缺陷回归探针（整数题键入联动 + resolving 窗口）",
+        "pass": true,
+        "result": "探针 A（缺陷 #1 回归）：循环 1 局命中石门整数题「5 − 0 = ?」，键入前「开门」disabled=true，逐键键入后每字符按钮实时启用（首字符即 true）[{\"value\":\"5\",\"submitDisabled\":false}]，点击提交受理、首答 +10（choice 级首答档恢复）→左门→资源机关→探针 B（缺陷 #2 回归）：答对后 resolving 窗口内路线按钮全部 disabled=[true]、「收下钥匙」disabled=true；窗口结束后恢复：路线按钮全部启用、「收下钥匙」disabled=false、一次点击生效→右门键入错值 Enter 提交答错（不解锁不扣分）→换一题→重试档 +5→通关结算「总分 35」「作答 4 题 · 首答 3/4 · 重试 1 次」（35 分路径再次达成）；JS 错误 0 个",
+        "checks": {
+          "probeA": {
+            "disabledBefore": true,
+            "firstCharEnables": true,
+            "seq": [
+              {
+                "value": "5",
+                "submitDisabled": false
+              }
+            ],
+            "round": 0
+          },
+          "probeB": {
+            "inWindow": {
+              "feedback": "✓ 答对了 +10",
+              "leaveDisabled": true,
+              "routeButtons": [
+                {
+                  "text": "折回岔口",
+                  "locked": false,
+                  "disabled": true
+                }
+              ]
+            },
+            "afterWindow": {
+              "leaveDisabled": false,
+              "leaveText": "收下钥匙，返回房间",
+              "routeButtons": [
+                {
+                  "text": "折回岔口",
+                  "locked": false,
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "probeAOk": true,
+          "probeBOk": true,
+          "answers": [
+            {
+              "kind": "binary",
+              "id": "generated-v4:MAP-008:5-0",
+              "prompt": "5 − 0 = ?",
+              "typed": true,
+              "viaEnter": "click"
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:2,number:4,number:5,number:6",
+              "prompt": "找出最大的数",
+              "wrong": false,
+              "chosen": [
+                "number:6"
+              ],
+              "typed": false
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"story\",\"start\":7,\"change\":5,\"operator\":\"-\"}:number:0,number:1,number:2,number:3",
+              "prompt": "原来有 7 颗种子，种下 5 颗，还剩几颗？",
+              "wrong": false,
+              "chosen": [
+                "number:2"
+              ],
+              "typed": false
+            },
+            {
+              "kind": "binary",
+              "id": "generated-v4:MAP-007:0+1",
+              "prompt": "0 + 1 = ?",
+              "value": 0,
+              "wrong": true,
+              "typed": true,
+              "viaEnter": "enter",
+              "typing": {
+                "disabledBefore": true,
+                "disabledSeq": [
+                  {
+                    "value": "0",
+                    "submitDisabled": false
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "choice-single",
+              "id": "choices-v3:1:{\"kind\":\"symbol\",\"left\":2,\"right\":2}:string:<,string:=,string:>",
+              "prompt": "2 ○ 2，选择正确符号",
+              "wrong": false,
+              "chosen": [
+                "string:="
+              ],
+              "typed": false
+            }
+          ],
+          "result": {
+            "score": "总分 35",
+            "answer": "作答 4 题 · 首答 3/4 · 重试 1 次"
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "F3 D5 抽查：备用钥匙路径",
+        "pass": true,
+        "result": "石门+左门+资源题首答全对（30 分、钥匙 1/1）→右门故意答错（choice 错项，不解锁不扣分）→消耗备用钥匙直接解锁→通关结算「总分 30」「作答 3 题 · 首答 3/3 · 重试 1 次」；作答表现 slots=[\"gate-stone\",\"gate-left\",\"resource\"]（钥匙解锁的右门不计入）、keyUses=1、本局避开上一局=true；JS 错误 0 个",
+        "checks": {
+          "wrongAns": {
+            "kind": "choice-single",
+            "id": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":5,\"right\":0},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":6}}:boolean:false,boolean:true",
+            "prompt": "5 − 0 ＝ 6，对不对？",
+            "wrong": true,
+            "chosen": [
+              "boolean:true"
+            ],
+            "typed": false
+          },
+          "result": {
+            "score": "总分 30",
+            "answer": "作答 3 题 · 首答 3/3 · 重试 1 次",
+            "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 1 把 / 剩 0 把"
+          },
+          "recordRaw": {
+            "schemaVersion": 1,
+            "recordId": "9c9f8079-1a40-4c7e-9f17-d31d8686ed9a",
+            "gameId": "arithmetic-dungeon",
+            "finishedAt": "2026-10-27T09:38:32.235Z",
+            "grades": [
+              1
+            ],
+            "contentVersion": "generated-v4:choices-v3",
+            "score": 30,
+            "answer": {
+              "questions": [
+                {
+                  "slot": "gate-stone",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":7,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":10}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-left",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "resource",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"story\",\"start\":6,\"change\":2,\"operator\":\"+\"}:number:6,number:7,number:8,number:9",
+                  "firstTry": true,
+                  "wrongs": 0
+                }
+              ]
+            },
+            "explore": {
+              "route": [
+                "start",
+                "junction",
+                "resource",
+                "junction",
+                "end"
+              ],
+              "keysHeld": 0,
+              "keyUses": 1,
+              "retries": 1
+            }
+          },
+          "avoidPrevOk": true,
+          "roundId": "9c9f8079-1a40-4c7e-9f17-d31d8686ed9a",
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "F4 D7 抽查：刷新恢复不重复计分",
+        "pass": true,
+        "result": "石门+左门开（20 分）后 Page.reload→恢复提供→继续探索：资源房/得分 20/钥匙 0/1/roundId/门状态与刷新前一致（stateOk=true）→续打资源题+右门→结算「总分 40」「作答 4 题 · 首答 4/4 · 重试 0 次」（=20+20；若石门/左门重计应为 60，未发生）；记录 recordId=roundId 幂等；JS 错误 0 个",
+        "checks": {
+          "beforeSnap": {
+            "roundId": "bac56851-844b-4097-9791-89bc5f1caf22",
+            "room": "resource",
+            "openDoors": [
+              "gate-stone",
+              "gate-left"
+            ],
+            "score": 20,
+            "keys": 0,
+            "activeSlot": null,
+            "usedIds": [
+              "choices-v3:1:{\"kind\":\"missing\",\"total\":5,\"addend\":1}:number:3,number:4,number:5,number:6",
+              "choices-v3:1:{\"kind\":\"sequence\",\"start\":5,\"step\":1,\"length\":5,\"index\":2}:number:5,number:6,number:7,number:8",
+              "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":0,\"right\":9},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":8}}:boolean:false,boolean:true",
+              "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":6},\"relation\":\">\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true"
+            ],
+            "answeredSlots": [
+              "gate-stone",
+              "gate-left"
+            ],
+            "route": [
+              "start",
+              "junction",
+              "resource"
+            ],
+            "totalWrongCount": 0,
+            "firstTryCount": 2,
+            "timer": {
+              "paused": false,
+              "remainingMs": 0,
+              "deadline": null,
+              "timerKind": null
+            }
+          },
+          "restoredSnap": {
+            "roundId": "bac56851-844b-4097-9791-89bc5f1caf22",
+            "room": "resource",
+            "openDoors": [
+              "gate-stone",
+              "gate-left"
+            ],
+            "score": 20,
+            "keys": 0,
+            "activeSlot": null,
+            "usedIds": [
+              "choices-v3:1:{\"kind\":\"missing\",\"total\":5,\"addend\":1}:number:3,number:4,number:5,number:6",
+              "choices-v3:1:{\"kind\":\"sequence\",\"start\":5,\"step\":1,\"length\":5,\"index\":2}:number:5,number:6,number:7,number:8",
+              "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":0,\"right\":9},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":8}}:boolean:false,boolean:true",
+              "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":6},\"relation\":\">\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true"
+            ],
+            "answeredSlots": [
+              "gate-stone",
+              "gate-left"
+            ],
+            "route": [
+              "start",
+              "junction",
+              "resource"
+            ],
+            "totalWrongCount": 0,
+            "firstTryCount": 2,
+            "timer": {
+              "paused": true,
+              "remainingMs": 0,
+              "deadline": null,
+              "timerKind": null
+            }
+          },
+          "stateOk": true,
+          "result": {
+            "score": "总分 40",
+            "answer": "作答 4 题 · 首答 4/4 · 重试 0 次",
+            "explore": "路线 起点 → 岔口 → 资源房 → 岔口 → 终点房 · 备用钥匙 用 0 把 / 剩 1 把"
+          },
+          "recordRaw": {
+            "schemaVersion": 1,
+            "recordId": "bac56851-844b-4097-9791-89bc5f1caf22",
+            "gameId": "arithmetic-dungeon",
+            "finishedAt": "2026-10-27T09:38:37.136Z",
+            "grades": [
+              1
+            ],
+            "contentVersion": "generated-v4:choices-v3",
+            "score": 40,
+            "answer": {
+              "questions": [
+                {
+                  "slot": "gate-stone",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"missing\",\"total\":5,\"addend\":1}:number:3,number:4,number:5,number:6",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-left",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"sequence\",\"start\":5,\"step\":1,\"length\":5,\"index\":2}:number:5,number:6,number:7,number:8",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "resource",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":6},\"relation\":\">\",\"right\":{\"kind\":\"number\",\"value\":7}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                },
+                {
+                  "slot": "gate-right",
+                  "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"+\",\"left\":0,\"right\":9},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":8}}:boolean:false,boolean:true",
+                  "firstTry": true,
+                  "wrongs": 0
+                }
+              ]
+            },
+            "explore": {
+              "route": [
+                "start",
+                "junction",
+                "resource",
+                "junction",
+                "end"
+              ],
+              "keysHeld": 1,
+              "keyUses": 0,
+              "retries": 0
+            }
+          },
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "F5 D9 抽查：断源三页缓存与断网整数题提交",
+        "pass": true,
+        "result": "重新构建的 sw.js 版本 pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a 预缓存含 /dungeon.html（含 /dungeon.css）；杀掉 serve 进程（源站确认失败）后刷新：首页由缓存打开（提示「离线缓存已就绪（版本 assets-v1-ed99dbc5fe1a），断网也能游玩。」）→菜单进地下城正常→断网下题库模块 import 成功（1074 题）→第 1 局石门命中选择题「8 ＞ 8，对不对？」+10（本局未抽到整数题，断网键入提交未覆盖）→放弃（快照清除=true）→返回锚点回首页→hanzi.html 正常（6 年级卡）——三入口缓存互导；JS 错误 0",
+        "checks": {
+          "swInfo": {
+            "name": "pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a",
+            "dungeonCached": true,
+            "notice": "离线缓存已就绪（版本 assets-v1-ed99dbc5fe1a），断网也能游玩。"
+          },
+          "sourceDead": true,
+          "offlinePoolCount": 1074,
+          "offlineAnswer": {
+            "prompt": "8 ＞ 8，对不对？",
+            "typed": false,
+            "gainedScore": "得分 10"
+          },
+          "offlineRounds": 1,
+          "snapshotDiscarded": true,
+          "overflow": false,
+          "errors": {
+            "home": [],
+            "dungeon": [],
+            "hanzi": []
+          }
+        }
+      },
+      {
+        "name": "F2b 含整数题通关局（F2 探针局）的练习记录核对",
+        "pass": true,
+        "result": "35 分记录 2 条（F1 全 choice 局 + F2 含整数题局）全部结构正确：gameId=arithmetic-dungeon、retries=1、keyUses=0、route=起点→岔口→资源房→岔口→终点房、右门外均 firstTry=true；含整数题的 F2 局记录石门 exerciseId=generated-v4:MAP-008:5-0（整数题计入作答表现、首答档恢复 firstTry=true）——整数题通关局的记录归属与首轮同构、gameId 可区分；JS 错误 0 个（首跑判定条件笔误漏判，原始记录数据未变，判定修正后通过）",
+        "checks": {
+          "records35": [
+            {
+              "schemaVersion": 1,
+              "recordId": "44c10df1-527c-4a82-88db-b792d29b2ad5",
+              "gameId": "arithmetic-dungeon",
+              "finishedAt": "2026-10-27T09:38:22.751Z",
+              "grades": [
+                1
+              ],
+              "contentVersion": "generated-v4:choices-v3",
+              "score": 35,
+              "answer": {
+                "questions": [
+                  {
+                    "slot": "gate-stone",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"number\",\"value\":4},\"relation\":\"<\",\"right\":{\"kind\":\"number\",\"value\":4}}:boolean:false,boolean:true",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "gate-left",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"missing\",\"total\":8,\"addend\":0}:number:10,number:7,number:8,number:9",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "resource",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"composition\",\"total\":8,\"part\":5}:number:1,number:2,number:3,number:4",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "gate-right",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"truth\",\"left\":{\"kind\":\"binary\",\"operator\":\"-\",\"left\":8,\"right\":3},\"relation\":\"=\",\"right\":{\"kind\":\"number\",\"value\":5}}:boolean:false,boolean:true",
+                    "firstTry": false,
+                    "wrongs": 1
+                  }
+                ]
+              },
+              "explore": {
+                "route": [
+                  "start",
+                  "junction",
+                  "resource",
+                  "junction",
+                  "end"
+                ],
+                "keysHeld": 1,
+                "keyUses": 0,
+                "retries": 1
+              }
+            },
+            {
+              "schemaVersion": 1,
+              "recordId": "ee805c04-59f8-429f-b66f-1e05f50fc37b",
+              "gameId": "arithmetic-dungeon",
+              "finishedAt": "2026-10-27T09:38:27.719Z",
+              "grades": [
+                1
+              ],
+              "contentVersion": "generated-v4:choices-v3",
+              "score": 35,
+              "answer": {
+                "questions": [
+                  {
+                    "slot": "gate-stone",
+                    "exerciseId": "generated-v4:MAP-008:5-0",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "gate-left",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"extreme\",\"direction\":\"max\"}:number:2,number:4,number:5,number:6",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "resource",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"story\",\"start\":7,\"change\":5,\"operator\":\"-\"}:number:0,number:1,number:2,number:3",
+                    "firstTry": true,
+                    "wrongs": 0
+                  },
+                  {
+                    "slot": "gate-right",
+                    "exerciseId": "choices-v3:1:{\"kind\":\"symbol\",\"left\":2,\"right\":2}:string:<,string:=,string:>",
+                    "firstTry": false,
+                    "wrongs": 1
+                  }
+                ]
+              },
+              "explore": {
+                "route": [
+                  "start",
+                  "junction",
+                  "resource",
+                  "junction",
+                  "end"
+                ],
+                "keysHeld": 1,
+                "keyUses": 0,
+                "retries": 1
+              }
+            }
+          ],
+          "recWithInteger": "ee805c04-59f8-429f-b66f-1e05f50fc37b",
+          "overflow": false,
+          "errors": []
+        }
+      },
+      {
+        "name": "F5b 断源重跑：断网整数题逐键键入 + Enter 提交",
+        "pass": true,
+        "result": "sw.js 版本 pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a；杀源站（确认失败）后刷新：首页由缓存打开（提示「离线缓存已就绪（版本 assets-v1-ed99dbc5fe1a），断网也能游玩。」）→菜单进地下城正常→断网题库 import 成功（1074 题）→第 4 局石门命中整数题「1 + 2 = ?」：逐键键入实时启用「开门」（首字符后 disabled=false）→**Enter 提交受理** +10 穿门到岔口（断网整数题键入提交走通）→放弃（快照清除）→返回锚点回首页→hanzi.html 正常（6 年级卡）——三入口缓存互导；JS 错误 0",
+        "checks": {
+          "swInfo": {
+            "name": "pixel-academy:number-puzzle:assets-v1-ed99dbc5fe1a"
+          },
+          "sourceDead": true,
+          "offlinePoolCount": 1074,
+          "offlineAnswer": {
+            "prompt": "1 + 2 = ?",
+            "kind": "binary",
+            "typed": true,
+            "viaEnter": "enter",
+            "value": 3,
+            "gainedScore": "得分 10"
+          },
+          "offlineRounds": 4,
+          "snapshotDiscarded": true,
+          "overflow": false,
+          "errors": {
+            "home": [],
+            "dungeon": [],
+            "hanzi": []
+          }
+        }
+      }
+    ],
+    "allPassed": true,
+    "d10Throughline": {
+      "horizontalOverflowScenarios": [],
+      "jsErrorScenarios": [],
+      "allNoOverflow": true,
+      "allZeroErrors": true
+    },
+    "supplementDriverScript": "docs/evidence/m12/dungeon-browser-fix.mjs（补充场景同文件系列，本轮为 F2b/F5b）",
+    "supplementedAt": "2026-10-27T09:45:16.105Z"
+  }
+}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>算术地下城 · Pixel Academy</title>
+  <link rel="stylesheet" href="/dungeon.css">
+  <script>
+    // 主模块加载失败兜底（与数字消除同口径）：保持不可玩并提示，不假装正常。
+    window.__dungeonBootFailed = setTimeout(function () {
+      var el = document.getElementById('boot-fail');
+      if (el) el.hidden = false;
+    }, 6000);
+  </script>
+</head>
+<body>
+  <main id="app" class="app">
+    <h1 class="app-title">算术地下城<span class="app-title-dot">·</span></h1>
+
+    <section id="screen-select" class="screen">
+      <div class="profile-bar">
+        <span class="profile-name">石门后的算术迷宫</span>
+        <a class="btn-ghost" href="/">返回数字消除</a>
+      </div>
+      <div class="card">
+        <h2>选择练习年级</h2>
+        <p class="hint">可多选 · 当前开放一、二年级数学</p>
+        <div id="grade-grid" class="grade-grid" role="group" aria-label="年级多选"></div>
+        <button id="btn-start" class="btn-primary" disabled>开始探索 →</button>
+        <p id="availability-status" class="availability" role="status"></p>
+        <p id="storage-notice" class="storage-notice" hidden>本地存储不可用，本次探索不会保存记录，游戏仍可正常游玩。</p>
+      </div>
+      <p id="restore-incompatible" class="storage-notice" hidden>发现旧版本的探索进度，与当前内容不兼容，已安全放弃，不影响其他游戏数据。</p>
+      <div id="restore-offer" class="card restore" hidden>
+        <p id="restore-offer-text">有未完成的探索，可以继续。</p>
+        <div class="restore-actions">
+          <button id="btn-restore" class="btn-primary">继续探索</button>
+          <button id="btn-discard-round" class="btn-ghost">放弃上局</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>练习记录</h2>
+        <ul id="records-list" class="records"></ul>
+        <p id="records-empty" class="hint">还没有探索记录。</p>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen" hidden>
+      <div class="game-hud">
+        <button id="btn-game-return" class="btn-ghost">返回</button>
+        <span id="hud-room" class="hud-room">起点</span>
+        <span id="hud-keys" class="hud-keys">备用钥匙 0/1</span>
+        <span id="hud-score" class="hud-score">得分 0</span>
+        <button id="btn-pause" class="btn-ghost" aria-pressed="false">暂停</button>
+      </div>
+      <div class="card room-card">
+        <h2 id="room-name" class="room-name"></h2>
+        <p id="room-desc" class="room-desc"></p>
+        <div id="route-list" class="route-list" role="group" aria-label="路线选择"></div>
+      </div>
+      <div id="question-card" class="card question" hidden>
+        <h3 id="slot-title" class="slot-title" tabindex="-1"></h3>
+        <p id="countdown" class="countdown" role="timer" aria-live="off" hidden></p>
+        <p id="question-prompt" class="question-prompt"></p>
+        <div id="options" class="options" role="group" aria-label="候选"></div>
+        <div id="answer-input-group" class="answer-input-group" hidden>
+          <label for="answer-input" class="hint">写出答案：</label>
+          <input id="answer-input" type="text" inputmode="numeric" autocomplete="off">
+          <button id="btn-input-submit" class="btn-primary input-submit" type="button">开门</button>
+        </div>
+        <button id="btn-choice-submit" class="btn-primary choice-submit" type="button" hidden disabled>提交答案</button>
+        <div id="feedback" class="feedback" role="status" hidden></div>
+        <div class="question-actions">
+          <button id="btn-retry-attempt" class="btn-primary" type="button" hidden>再试一次</button>
+          <button id="btn-swap" class="btn-ghost" type="button" hidden>换一题</button>
+          <button id="btn-use-key" class="btn-ghost" type="button" hidden>用钥匙开门</button>
+          <button id="btn-leave" class="btn-ghost" type="button">离开机关</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-result" class="screen" hidden>
+      <div class="card result">
+        <h2 id="result-title">通关！</h2>
+        <p id="result-score" class="result-score"></p>
+        <div class="result-columns">
+          <div class="result-col">
+            <h3>作答表现</h3>
+            <p id="result-answer"></p>
+          </div>
+          <div class="result-col">
+            <h3>探索决策</h3>
+            <p id="result-explore"></p>
+          </div>
+        </div>
+        <div class="restore-actions">
+          <button id="btn-again" class="btn-primary">再来一局</button>
+          <button id="btn-result-return" class="btn-ghost">返回选择</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="pause-overlay" class="pause-overlay" hidden>
+      <div class="pause-card">
+        <p>在地下城歇一会</p>
+        <button id="btn-resume" class="btn-primary">继续探索</button>
+      </div>
+    </div>
+
+    <dialog id="confirm-dialog" class="confirm-dialog">
+      <p id="confirm-text">确定吗？</p>
+      <div class="restore-actions">
+        <button id="btn-confirm-yes" class="btn-primary" value="yes">确定</button>
+        <button id="btn-confirm-no" class="btn-ghost" value="no">取消</button>
+      </div>
+    </dialog>
+
+    <div id="boot-fail" class="boot-fail" hidden>页面资源加载失败，请刷新重试。</div>
+  </main>
+  <script type="module" src="/dist/game/arithmetic-dungeon/main.js"></script>
+</body>
+</html>

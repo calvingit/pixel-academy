@@ -1,0 +1,139 @@
+/* 算术地下城首版样式：沿用数字花园视觉方向（暖纸色、森林绿、奶油卡），
+   以石灰岩棕色表达门与机关；独立命名空间，不复用其他游戏的选择器行为。 */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #f4efdf;
+  color: #2d3a2e;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  min-height: 100dvh;
+}
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px calc(env(safe-area-inset-bottom, 0px) + 24px);
+}
+.app-title { font-size: 30px; margin: 4px 0 14px; letter-spacing: 1px; }
+.app-title-dot { color: #a5713c; }
+.screen { display: block; }
+.screen[hidden] { display: none; }
+.card {
+  background: #fbf7ec;
+  border: 1px solid #ddd3ba;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h2 { margin: 2px 0 10px; font-size: 20px; }
+.hint { color: #6d7a68; font-size: 14px; margin: 4px 0 10px; }
+.profile-bar {
+  background: #fbf7ec; border: 1px solid #ddd3ba; border-radius: 999px;
+  padding: 10px 16px; margin-bottom: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+/* 锚点没有按钮默认样式，去下划线即可复用 .btn-ghost 外观；跨页返回数字消除首页。 */
+a.btn-ghost { text-decoration: none; }
+.storage-notice { font-size: 13px; color: #a05a2c; margin: 8px 0; }
+.grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 14px; }
+.grade-card {
+  border: 2px solid #ddd3ba; border-radius: 12px; background: #fff;
+  padding: 12px 6px; text-align: center; font-size: 15px; cursor: pointer;
+}
+.grade-card[aria-pressed="true"] { border-color: #4ca858; background: #e8f4e4; font-weight: 700; }
+.grade-card:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary {
+  display: block; width: 100%; border: 0; border-radius: 12px;
+  background: #4ca858; color: #fff; font-size: 17px; font-weight: 700;
+  padding: 14px; cursor: pointer;
+}
+.btn-primary:disabled { background: #a8c3a4; cursor: not-allowed; }
+.btn-ghost {
+  border: 2px solid #4ca858; background: transparent; color: #2d6a37;
+  border-radius: 12px; font-size: 15px; font-weight: 600; padding: 10px 14px; cursor: pointer;
+}
+.availability { font-size: 14px; color: #2d6a37; min-height: 18px; margin: 10px 0 0; }
+.restore { border-color: #4ca858; }
+.restore-actions { display: flex; gap: 10px; }
+.restore-actions .btn-primary, .restore-actions .btn-ghost { flex: 1; }
+.records { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.records li { padding: 8px 2px; border-bottom: 1px dashed #ddd3ba; }
+.records li:last-child { border-bottom: 0; }
+/* 局内 */
+.game-hud { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.hud-room { font-weight: 700; }
+.hud-keys { font-size: 13px; color: #8a6d3b; font-weight: 600; }
+.hud-score { flex: 1; text-align: right; font-weight: 700; color: #2d6a37; }
+.room-name { font-size: 20px; margin: 2px 0 6px; }
+.room-desc { color: #6d7a68; font-size: 15px; margin: 0 0 12px; }
+.route-list { display: grid; gap: 10px; }
+.route-btn {
+  border: 2px solid #ddd3ba; border-radius: 12px; background: #fff;
+  font-size: 15px; font-weight: 600; padding: 14px 10px; cursor: pointer;
+  min-height: 48px; color: #2d3a2e; font-family: inherit;
+}
+.route-btn.route-locked { border-color: #c9a53c; color: #7a5a22; background: #fdf6e4; }
+/* 门题/资源机关面板 */
+.slot-title { font-size: 17px; margin: 0 0 4px; color: #7a5a22; }
+.slot-title:focus { outline: 2px solid #4ca858; outline-offset: 2px; border-radius: 4px; }
+.countdown { text-align: right; font-size: 14px; font-weight: 600; color: #6d7a68; margin: 0 0 4px; }
+.countdown[data-urgent="true"] { color: #b03a2e; }
+.question-prompt { font-size: 24px; font-weight: 700; margin: 4px 0 12px; }
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.options[hidden] { display: none; }
+.option-card {
+  border: 2px solid #ddd3ba; border-radius: 14px; background: #fff;
+  font-size: 26px; padding: 16px 6px; cursor: pointer; font-family: inherit;
+  min-height: 64px;
+}
+.option-card:disabled { opacity: .55; cursor: not-allowed; }
+.option-card[aria-pressed="true"] { border-color: #4ca858; background: #e8f4e4; }
+.answer-input-group { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+.answer-input-group[hidden] { display: none; }
+.answer-input-group .hint { grid-column: 1 / -1; margin: 0; }
+.answer-input-group input {
+  border: 2px solid #ddd3ba; border-radius: 12px; padding: 12px 14px;
+  font-size: 22px; font-family: inherit; width: 100%;
+}
+.answer-input-group input:disabled { opacity: .55; }
+.answer-input-group input:focus { outline: 2px solid #4ca858; outline-offset: 1px; }
+.input-submit { width: auto; padding: 12px 22px; }
+.choice-submit { margin-top: 12px; }
+.choice-submit[hidden] { display: none; }
+.feedback { text-align: center; font-size: 17px; font-weight: 700; padding: 8px; border-radius: 10px; margin-top: 12px; }
+.feedback[data-kind="correct"] { color: #2d7a37; background: #e8f4e4; }
+.feedback[data-kind="wrong"] { color: #b03a2e; background: #f9e8e4; }
+.feedback[data-kind="info"] { color: #7a5a22; background: #fdf6e4; }
+.question-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.question-actions .btn-primary, .question-actions .btn-ghost { flex: 1 1 40%; }
+.question-actions .btn-primary[hidden], .question-actions .btn-ghost[hidden] { display: none; }
+/* 结算 */
+.result-score { font-size: 34px; font-weight: 800; color: #2d6a37; margin: 6px 0 10px; }
+.result-columns { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 14px; }
+.result-col { border: 1px dashed #ddd3ba; border-radius: 12px; padding: 10px 12px; }
+.result-col h3 { margin: 0 0 6px; font-size: 14px; color: #7a5a22; }
+.result-col p { margin: 0; font-size: 14px; line-height: 1.6; }
+/* 暂停与确认 */
+.pause-overlay {
+  position: fixed; inset: 0; background: rgba(45, 58, 46, .45);
+  display: flex; align-items: center; justify-content: center;
+}
+.pause-overlay[hidden] { display: none; }
+.pause-card, .confirm-dialog {
+  background: #fbf7ec; border-radius: 16px; padding: 22px 26px; text-align: center;
+  border: 1px solid #ddd3ba;
+}
+.pause-card p { font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.confirm-dialog::backdrop { background: rgba(45, 58, 46, .45); }
+.confirm-dialog p { margin: 0 0 14px; }
+.boot-fail {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: #f4efdf; color: #b03a2e; font-size: 16px;
+}
+.boot-fail[hidden] { display: none; }
+@media (min-width: 720px) {
+  .options { grid-template-columns: repeat(4, 1fr); }
+  .result-columns { grid-template-columns: 1fr 1fr; }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .options { grid-template-columns: repeat(4, 1fr); }
+}
