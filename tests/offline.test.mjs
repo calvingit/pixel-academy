@@ -304,12 +304,12 @@ test('生成的 web/sw.js: 版本格式、缓存名前缀与清单一致性', as
   assert.ok(!swSource.includes('__PRECACHE_URLS__'));
 });
 
-test('生成的 web/sw.js: 双入口导航回退分支（/ 与 /hanzi.html）', async () => {
+test('生成的 web/sw.js: 双入口导航回退分支（/ 与 /hanzi.html、/hanzi）', async () => {
   const swSource = await readFile(join(root, 'web/sw.js'), 'utf8');
   // 单引号字面量只出现在导航回退分支；预缓存清单用 JSON.stringify 的双引号，
   // 两者可区分：分支缺失时页面将无法在离线状态下经缓存打开对应入口。
   assert.ok(swSource.includes("url.pathname === '/' ? '/' :"), 'sw.js 导航回退分支应匹配 / 入口');
-  assert.ok(swSource.includes("url.pathname === '/hanzi.html'"), 'sw.js 导航回退分支应匹配 /hanzi.html 入口');
+  assert.ok(swSource.includes("url.pathname === '/hanzi.html' || url.pathname === '/hanzi'"), 'sw.js 导航回退分支应匹配 /hanzi.html 与 /hanzi 入口');
 });
 
 test('renderSwSource: 占位符替换完整，模板缺占位符时抛错', () => {

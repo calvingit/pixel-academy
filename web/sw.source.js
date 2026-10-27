@@ -94,9 +94,11 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      // 入口页离线回退：'/'（数字消除，含 ?preview=candidate）与 '/hanzi.html'（汉字勇者，含 ?nosw）
-      // 均为清单内入口；查询参数不影响匹配（ignoreSearch）。
-      const entryPath = url.pathname === '/' ? '/' : url.pathname === '/hanzi.html' ? '/hanzi.html' : null;
+      // 入口页离线回退：'/'（数字消除，含 ?preview=candidate）与 '/hanzi.html'、'/hanzi'
+      // （汉字勇者，含 ?nosw）均为清单内入口；查询参数不影响匹配（ignoreSearch）。
+      // '/hanzi' 兜底：生产 Pages 曾把 /hanzi.html 规范化 308 到 /hanzi，旧访客可能
+      // 持有该 URL；两处都回退到缓存的 /hanzi.html。
+      const entryPath = url.pathname === '/' ? '/' : (url.pathname === '/hanzi.html' || url.pathname === '/hanzi') ? '/hanzi.html' : null;
       if (entryPath) {
         const hit = await cache.match(entryPath, { ignoreSearch: true });
         if (hit) return hit;
