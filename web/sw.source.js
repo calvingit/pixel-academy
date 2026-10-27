@@ -94,13 +94,15 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      if (url.pathname === '/') {
-        // 单页应用：入口（含 ?preview=candidate）离线时回退已缓存入口页。
-        const hit = await cache.match('/');
+      // 入口页离线回退：'/'（数字消除，含 ?preview=candidate）与 '/hanzi.html'（汉字勇者，含 ?nosw）
+      // 均为清单内入口；查询参数不影响匹配（ignoreSearch）。
+      const entryPath = url.pathname === '/' ? '/' : url.pathname === '/hanzi.html' ? '/hanzi.html' : null;
+      if (entryPath) {
+        const hit = await cache.match(entryPath, { ignoreSearch: true });
         if (hit) return hit;
         try {
           const response = await fetch(request);
-          if (response.ok) await cache.put('/', response.clone());
+          if (response.ok) await cache.put(entryPath, response.clone());
           return response;
         } catch {
           return offlineFallbackHtml();

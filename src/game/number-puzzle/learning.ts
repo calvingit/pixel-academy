@@ -154,10 +154,10 @@ export function explainTask(task: MathTask): string {
 }
 
 /** 输入必须来自正式 selectExercises；抽取课程范围内三道不同题，不足时显式失败。 */
-export function selectCourseExercises(course: Course, exercises: readonly Exercise[], rng: Rng): readonly Exercise[] {
+export function selectCourseExercises(course: Course, exercises: readonly Exercise<MathTask>[], rng: Rng): readonly Exercise<MathTask>[] {
   const pool = exercises.filter(e => e.review.status === 'approved' && e.mappingIds.some(id => course.mappings.includes(id))
     && (course.questionKinds ? e.task.kind === 'choice' && course.questionKinds.includes(e.task.question.kind) : e.task.kind !== 'choice'));
-  const chosen: Exercise[] = [];
+  const chosen: Exercise<MathTask>[] = [];
   while (chosen.length < 3) {
     if (!pool.length) throw new Error('课程已审核练习不足 3 道');
     chosen.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]!);

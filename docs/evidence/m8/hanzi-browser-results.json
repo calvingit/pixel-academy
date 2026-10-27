@@ -1,0 +1,23 @@
+{
+  "viewport": {
+    "w": 756,
+    "h": 469,
+    "dpr": 1
+  },
+  "overflow": false,
+  "errors": [],
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "v1": {
+    "score": 50,
+    "detail": "first-try 5/5"
+  },
+  "v2": {
+    "restored": true
+  },
+  "v3": {
+    "score": 45,
+    "detail2": "首次答对 4/5 · 答错 1 次"
+  },
+  "records": 2,
+  "snapshotCleared": true
+}

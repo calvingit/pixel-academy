@@ -18,11 +18,11 @@ export const PRODUCTS: readonly Product[] = [
   { id: 'autumn', name: '秋日果园', price: 100, kind: 'skin' }, { id: 'snow', name: '雪地小屋', price: 150, kind: 'skin' },
 ];
 export interface Mistake {
-  exercise: Exercise; grade: Grade; wrongs: number; timeouts: number;
+  exercise: Exercise<MathTask>; grade: Grade; wrongs: number; timeouts: number;
   mastered: boolean; rewarded: boolean; lastAnswer?: SubmittedAnswer;
 }
 export interface Practice {
-  courseId: string | null; reviewId: string | null; exercises: readonly Exercise[];
+  courseId: string | null; reviewId: string | null; exercises: readonly Exercise<MathTask>[];
   index: number; correct: number; revealed: boolean; answered: boolean; passed: boolean;
   selectedIds?: readonly string[]; answer?: SubmittedAnswer;
 }
@@ -70,7 +70,7 @@ export function rename(profile: Profile, input: string): void {
   if (profile.nickname) consume(profile, 'rename');
   profile.nickname = name;
 }
-export function collectMistake(profile: Profile, exercise: Exercise, grade: Grade, reason: 'wrong' | 'timeout', answer?: SubmittedAnswer): void {
+export function collectMistake(profile: Profile, exercise: Exercise<MathTask>, grade: Grade, reason: 'wrong' | 'timeout', answer?: SubmittedAnswer): void {
   const id = taskIdentity(exercise.task);
   const entry = profile.mistakes[id] ?? { exercise, grade, wrongs: 0, timeouts: 0, mastered: false, rewarded: false };
   entry.grade = grade;
@@ -115,7 +115,7 @@ export function settleChallenge(profile: Profile, challenge: SavedChallenge, now
 const object = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 const integer = (x: unknown): x is number => typeof x === 'number' && Number.isSafeInteger(x) && x >= 0;
 const strings = (x: unknown): x is string[] => Array.isArray(x) && x.every(item => typeof item === 'string' && item.length > 0);
-function validExercise(x: unknown): x is Exercise {
+function validExercise(x: unknown): x is Exercise<MathTask> {
   return object(x) && typeof x.id === 'string' && x.subject === 'math' && strings(x.mappingIds)
     && strings(x.gameIds) && parseMathTask(x.task) !== null && object(x.review) && x.review.status === 'approved'
     && typeof x.review.reviewer === 'string' && typeof x.review.reviewedAt === 'string';
@@ -182,7 +182,7 @@ export function parseProfile(value: unknown): Profile {
       || !Array.isArray(p.exercises) || p.exercises.length < 1 || p.exercises.length > 3 || !p.exercises.every(validExercise)
       || !integer(p.index) || p.index >= p.exercises.length || !integer(p.correct) || p.correct > p.exercises.length
       || !['revealed', 'answered', 'passed'].every(k => typeof p[k] === 'boolean')) throw new Error('练习存档损坏');
-    const task = (p.exercises[p.index] as Exercise).task;
+    const task = (p.exercises[p.index] as Exercise<MathTask>).task;
     if (p.selectedIds !== undefined && !validSelection(task, p.selectedIds)
       || p.answer !== undefined && !validAnswer(task, p.answer)) throw new Error('练习答案损坏');
   }

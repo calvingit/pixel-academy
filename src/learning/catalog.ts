@@ -1,4 +1,4 @@
-import type { Catalog, Exercise, ExerciseQuery } from './models.js';
+import type { Catalog, Exercise, ExerciseQuery, MathTask } from './models.js';
 import { validateTask } from './evaluation.js';
 
 /** 校验受 TypeScript 约束的静态数据；不是外部 JSON 的反序列化器。 */
@@ -64,12 +64,12 @@ export function createLearningCore(catalog: Catalog) {
   const mappingGrades = new Map(catalog.mappings.map(mapping => [mapping.id,
     mapping.unitIds.map(id => books.get(units.get(id)!.textbookId)!.grade),
   ]));
-  const select = (query: ExerciseQuery, drafts: boolean): readonly Exercise[] => {
+  const select = (query: ExerciseQuery, drafts: boolean): readonly Exercise<MathTask>[] => {
     if (!query.grades.length || query.grades.some(g => ![1, 2, 3, 4, 5, 6].includes(g))) {
       throw new RangeError('Select at least one grade between 1 and 6');
     }
     if (!query.gameId.trim()) throw new TypeError('gameId is required');
-    return catalog.exercises.filter(exercise =>
+    return catalog.exercises.filter((exercise): exercise is Exercise<MathTask> =>
       (drafts || exercise.review.status === 'approved') &&
       exercise.subject === query.subject && exercise.gameIds.includes(query.gameId) &&
       exercise.mappingIds.some(id => mappingGrades.get(id)!.some(grade => query.grades.includes(grade))),

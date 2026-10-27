@@ -23,13 +23,19 @@ test('main unit IDs do not shift when practice or preparation blocks are inserte
       Array.from({ length: count }, (_, i) => `${book}-U${String(i+1).padStart(2,'0')}`));
   }
 });
-test('production serves all 18 approved exercises across grade selection', () => {
-  assert.equal(catalog.exercises.length, 18);
+test('production serves all approved exercises across grade selection', () => {
+  // 数学静态 18 道（一年级 12、二年级 6）+ 汉字勇者语文 28 道（一年级，gameId hanzi-hero）。
+  assert.equal(catalog.exercises.length, 18 + 28);
   const approved = ids(selectExercises(query([1,2])));
   assert.equal(approved.length, 18);
   assert.equal(selectExercises(query([1])).length, 12);
   assert.equal(selectExercises(query([2])).length, 6);
   assert.equal(previewExercises(query([1,2])).length, 18);
+  const hanziQuery = grades => ({ subject: 'chinese', grades, gameId: 'hanzi-hero' });
+  assert.equal(selectExercises(hanziQuery([1])).length, 28);
+  assert.equal(selectExercises(hanziQuery([2])).length, 0);
+  assert.equal(previewExercises(hanziQuery([1,2])).length, 28);
+  assert.equal(selectExercises({ subject: 'chinese', grades: [1], gameId: 'number-puzzle' }).length, 0);
 });
 test('all 63 grade subsets respect exact membership, including unavailable grades', () => {
   for (let mask = 1; mask < 64; mask++) {
@@ -93,6 +99,8 @@ test('invalid tasks fail rather than executing strings or overflowing silently',
 });
 test('math samples obey the advertised numeric ranges and mapping concepts', () => {
   for (const exercise of catalog.exercises) {
+    // 该断言针对数学数值域；语文任务不支持 answerFor，由 hanzi 判题测试单独覆盖。
+    if (exercise.subject !== 'math') continue;
     const result = answerFor(exercise.task);
     assert.ok(Number.isSafeInteger(result) && result >= 0);
     const mapping = exercise.mappingIds[0];
@@ -131,6 +139,8 @@ test('selectExercises for a single grade equals the approved set derived from co
 test('approved answers stay inside the gameplay numeric range of their grade tier', () => {
   for (const exercise of catalog.exercises) {
     if (exercise.review.status !== 'approved') continue;
+    // 数值范围断言只适用于数学任务；语文任务判题由 hanzi 判题测试覆盖。
+    if (exercise.subject !== 'math') continue;
     const grades = exercise.mappingIds.flatMap(id => [...mappingGrades.get(id)]);
     // 多年级关联的练习按玩法说明取最高档；出现未定档位的年级属文档缺口，应让测试失败。
     const [min, max] = tierRange[Math.max(...grades)];

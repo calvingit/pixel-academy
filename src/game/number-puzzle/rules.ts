@@ -1,7 +1,7 @@
 // 数字消除单局规则；挑战与经济边界见 docs/gameplay-learning-economy.md。
 // 本模块是纯逻辑：不依赖 DOM、Canvas、存储或计时器；动画时长常量仅作登记，
 // 由渲染层读取使用，判题与计分不依赖动画是否完成。
-import type { Exercise, Grade, MathTask } from '../../learning/models.js';
+import type { Exercise, Grade, MathTask, Task } from '../../learning/models.js';
 import { correctOptionIds, isMultiple } from '../../learning/choice.js';
 import { answerFor, evaluateAnswer } from '../../learning/evaluation.js';
 
@@ -73,8 +73,8 @@ export interface RoundState {
 }
 
 export interface RoundSetup {
-  /** 正式题集：对所选年级并集一次 selectExercises（或预览入口 previewExercises）的结果。 */
-  readonly exercises: readonly Exercise[];
+  /** 正式题集：对所选年级并集一次 selectExercises（或预览入口 previewExercises）的结果；仅接受数学练习。 */
+  readonly exercises: readonly Exercise<MathTask>[];
   /** 练习 → 关联年级（经 mappingIds → 单元 → 教材），多年级关联时取最高年级。 */
   readonly gradeOf: (exercise: Exercise) => Grade;
   readonly rng: Rng;

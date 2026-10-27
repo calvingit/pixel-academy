@@ -6,7 +6,7 @@ import { skills, mappings } from '../../content/skills.js';
 import { exercises } from '../../content/exercises.js';
 import { evidence } from '../../content/evidence.js';
 import { createLearningCore } from '../../learning/catalog.js';
-import type { Catalog, Exercise, ExerciseQuery, Grade } from '../../learning/models.js';
+import type { Catalog, Exercise, ExerciseQuery, Grade, MathTask } from '../../learning/models.js';
 import { START_THRESHOLD } from './rules.js';
 import { generateExercises } from './generation.js';
 
@@ -37,9 +37,9 @@ export function createExerciseGradeIndex(catalog: Catalog): (exercise: Exercise)
 
 export interface GameContent {
   /** 正式取题：只返回 approved（createLearningCore(...).selectExercises）。 */
-  readonly select: (grades: readonly Grade[]) => readonly Exercise[];
+  readonly select: (grades: readonly Grade[]) => readonly Exercise<MathTask>[];
   /** 候选预览取题：包含 draft；仅用于显式预览入口，不作为降级路径。 */
-  readonly preview: (grades: readonly Grade[]) => readonly Exercise[];
+  readonly preview: (grades: readonly Grade[]) => readonly Exercise<MathTask>[];
   readonly gradeOf: (exercise: Exercise) => Grade;
 }
 
@@ -76,7 +76,7 @@ export interface AvailabilityReport {
  * select 传入正式或预览取题函数；预览口径下草稿计入可用数，且不适用「默认入口无 approved 内容」。
  */
 export function describeAvailability(
-  select: (grades: readonly Grade[]) => readonly Exercise[],
+  select: (grades: readonly Grade[]) => readonly Exercise<MathTask>[],
   selectedGrades: readonly Grade[],
   options: { readonly preview: boolean },
 ): AvailabilityReport {

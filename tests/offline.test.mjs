@@ -12,7 +12,7 @@ import {
   buildCacheName, decideUpdateAdoption, describeOfflineStatus, planAdoptionExecution, staleCacheNames,
 } from '../dist/game/number-puzzle/offline.js';
 import {
-  SW_ENTRY_MODULE, buildPrecacheUrls, collectDistClosure, computeAssetVersion,
+  SW_ENTRY_MODULES, buildPrecacheUrls, collectDistClosure, computeAssetVersion,
   extractRelativeImports, fileForPrecacheUrl, renderSwSource,
 } from '../scripts/build-sw.mjs';
 
@@ -212,7 +212,7 @@ test('extractRelativeImports: 提取静态相对导入，忽略注释与字符�
 });
 
 test('collectDistClosure: 覆盖入口、游戏、学习核心与内容数据模块', async () => {
-  const modules = await collectDistClosure(SW_ENTRY_MODULE);
+  const modules = await collectDistClosure(SW_ENTRY_MODULES[0]);
   const required = [
     'dist/game/number-puzzle/main.js',
     'dist/game/number-puzzle/offline.js',
@@ -237,10 +237,22 @@ test('collectDistClosure: 覆盖入口、游戏、学习核心与内容数据模
   for (const module of required) {
     assert.ok(modules.includes(module), `预缓存闭包缺少 ${module}`);
   }
+  // 汉字勇者入口闭包：页面主模块、语文判题与内容模块必须随构建进入预缓存。
+  const hanziModules = await collectDistClosure(SW_ENTRY_MODULES[1]);
+  for (const module of [
+    'dist/game/hanzi-hero/main.js',
+    'dist/game/hanzi-hero/rules.js',
+    'dist/game/hanzi-hero/storage.js',
+    'dist/game/hanzi-hero/content.js',
+    'dist/learning/hanzi.js',
+    'dist/content/hanzi-hero.js',
+  ]) {
+    assert.ok(hanziModules.includes(module), `汉字勇者预缓存闭包缺少 ${module}`);
+  }
 });
 
 test('buildPrecacheUrls: 全部为同源路径且对应文件真实存在', async () => {
-  const urls = buildPrecacheUrls(await collectDistClosure(SW_ENTRY_MODULE));
+  const urls = buildPrecacheUrls(await collectDistClosure(SW_ENTRY_MODULES[0]));
   assert.ok(urls.includes('/') && urls.includes('/style.css'));
   for (const url of urls) {
     assert.ok(url.startsWith('/') && !url.startsWith('//'), `非同源路径: ${url}`);
@@ -280,7 +292,7 @@ test('生成的 web/sw.js: 版本格式、缓存名前缀与清单一致性', as
   assert.equal(`${swPrefixMatch[1]}${version}`, buildCacheName(version));
 
   // 清单与构建脚本重算结果一致，且模板占位符已全部替换。
-  const urls = buildPrecacheUrls(await collectDistClosure(SW_ENTRY_MODULE));
+  const urls = buildPrecacheUrls(await collectDistClosure(SW_ENTRY_MODULES[0]));
   for (const url of urls) {
     assert.ok(swSource.includes(JSON.stringify(url)), `sw.js 清单缺少 ${url}`);
   }

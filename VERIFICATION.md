@@ -2,6 +2,12 @@
 
 本文件定义当前工程可执行的检查，以及未来里程碑需要补充的证据。浏览器验证通过人工或代理驱动的浏览器完成，工程内没有自动浏览器测试工具链。
 
+## 汉字勇者首版（M8，2026-10-27）
+
+当前 `npm run check` 98 项通过。新增 `tests/hanzi.test.mjs`（语文判题/非法任务/筛选与草稿隔离）、`tests/hanzi-hero.test.mjs`（抽题/计分/组字/快照恢复/损坏处理）；`tests/offline.test.mjs` 增加 hanzi 入口闭包断言；`tests/learning.test.mjs` 假设更新为静态 approved 18 数学 + 28 语文。
+
+浏览器 V1–V5（完整局/答错重试/暂停刷新恢复/窄屏 390/离线断源刷新）与截图见 [汉字勇者验证记录](docs/evidence/m8/README.md)，桌面无头 Chrome 模拟；真实设备、正式首页导航接入、生产部署与教学效果未验证。验证页面 `?nosw` 参数仅跳过 SW 注册供驱动脚本使用，不是正式入口。
+
 ## 模拟器验证与 Cloudflare 部署（2026-10-27）
 
 用户裁决真机验证以模拟器口径执行、部署定 Cloudflare。Android Chrome 模拟器（Android 14 系统镜像、Chrome 113）经 CDP `Input.dispatchTouchEvent` 真实触摸完成四轮完整 10 题局：localhost 在线（含暂停刷新恢复、重开、弃局）、localhost 断源离线、生产 URL https://pixel-academy.pages.dev 在线与飞行模式离线，均 100/10/0、+30 金币、无溢出无错误、离线提示带版本标记；方法、结果与限制见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)。驱动脚本 `docs/evidence/m7/device-simulators/android-round.mjs` 依赖本机模拟器实例与 adb 转发，不直接重放。

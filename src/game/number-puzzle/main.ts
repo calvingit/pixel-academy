@@ -1,4 +1,4 @@
-import type { Exercise, Grade, ChoiceTask, SubmittedAnswer } from '../../learning/models.js';
+import type { Exercise, Grade, ChoiceTask, MathTask, SubmittedAnswer } from '../../learning/models.js';
 import { correctOptionIds, isMultiple, optionText } from '../../learning/choice.js';
 import { evaluateAnswer } from '../../learning/evaluation.js';
 import { createRound, clickTile, toggleOption, submitChoice, completeResolve, timeoutRound, reviveRound, startQuestion, useHint,
@@ -54,7 +54,7 @@ class NumberPuzzleApp {
   private courseId: string | null = null;
   private animation: { before: RoundState; outcome: Extract<ClickOutcome, { type: 'correct' }>; drawn: boolean } | null = null;
   private reviewFilter = 'pending';
-  private readonly select: (grades: readonly Grade[]) => readonly Exercise[];
+  private readonly select: (grades: readonly Grade[]) => readonly Exercise<MathTask>[];
   private offlinePhase: OfflinePhase = 'preparing';
   private offlineVersion: string | null = null;
   private updateWaiting = false;
@@ -293,13 +293,13 @@ class NumberPuzzleApp {
     });
     this.practiceBoard = null; this.showScreen('game');
   }
-  private currentExercise(c: SavedChallenge): Exercise {
+  private currentExercise(c: SavedChallenge): Exercise<MathTask> {
     const question = c.state.questions[c.state.questionIndex]!;
     const exercise = this.select(c.grades).find(e => e.id === question.exerciseId);
     if (!exercise || taskIdentity(exercise.task) !== taskIdentity(question.task)) throw new Error('题目已不在当前内容范围，无法继续');
     return exercise;
   }
-  private recordInterruption(p: Profile, c: SavedChallenge, reason: 'wrong' | 'timeout', exercise: Exercise, answer?: SubmittedAnswer): void {
+  private recordInterruption(p: Profile, c: SavedChallenge, reason: 'wrong' | 'timeout', exercise: Exercise<MathTask>, answer?: SubmittedAnswer): void {
     if (!this.preview) collectMistake(p, exercise, this.content.gradeOf(exercise), reason, answer);
     c.timerKind = null; c.deadline = null; c.remainingMs = 0;
     if (c.state.phase === 'finished') this.settle(p);
@@ -648,7 +648,7 @@ class NumberPuzzleApp {
   private async canStartPractice(): Promise<boolean> {
     return !this.profile.challenge && !this.profile.practice || await this.confirm('开始练习会放弃当前挑战收益或当前小练习进度，是否继续？');
   }
-  private approvedOriginal(exercise: Exercise, grade: Grade): Exercise | undefined {
+  private approvedOriginal(exercise: Exercise<MathTask>, grade: Grade): Exercise<MathTask> | undefined {
     const id = taskIdentity(exercise.task);
     const approved = this.content.select([grade]).find(e => taskIdentity(e.task) === id);
     return approved ? { ...approved, task: exercise.task } : undefined;

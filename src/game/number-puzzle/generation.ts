@@ -11,7 +11,7 @@ const review: Exercise['review'] = {
 
 /** 穷举有限合法候选；交换加法或乘法的操作数不另建重复题。 */
 export function generateExercises(): readonly Exercise[] {
-  const result: Exercise[] = [];
+  const result: Exercise<MathTask>[] = [];
   const add = (mapping: string, task: MathTask, parameters: string): void => {
     result.push({ id: `${GENERATION_VERSION}:${mapping}:${parameters}`, subject: 'math',
       mappingIds: [mapping], gameIds: ['number-puzzle'], task, review });
@@ -57,18 +57,18 @@ export function generateExercises(): readonly Exercise[] {
 
 /** 按当前题型配额抽题，优先选上一局未出现的候选；不足时才复用。 */
 export function selectRoundExercises(
-  exercises: readonly Exercise[], gradeOf: (exercise: Exercise) => Grade,
+  exercises: readonly Exercise<MathTask>[], gradeOf: (exercise: Exercise<MathTask>) => Grade,
   rng: Rng, previousIds: readonly string[],
-): readonly Exercise[] {
+): readonly Exercise<MathTask>[] {
   const previous = new Set(previousIds);
   const grade1 = exercises.filter(exercise => gradeOf(exercise) === 1);
   const grade2 = exercises.filter(exercise => gradeOf(exercise) === 2);
   if (!grade1.length && !grade2.length) throw new RangeError('No generated exercises for selected grades');
   const mixed = grade1.length > 0 && grade2.length > 0;
-  const result: Exercise[] = [];
+  const result: Exercise<MathTask>[] = [];
   const chosenKeys = new Set<string>();
   const previousKeys = new Set(exercises.filter(e => previous.has(e.id)).map(e => taskIdentity(e.task)));
-  const take = (candidates: readonly Exercise[], count: number): void => {
+  const take = (candidates: readonly Exercise<MathTask>[], count: number): void => {
     const usable = candidates.filter(e => !chosenKeys.has(taskIdentity(e.task)));
     const fresh = usable.filter(e => !previousKeys.has(taskIdentity(e.task)));
     const repeated = usable.filter(e => previousKeys.has(taskIdentity(e.task)));
@@ -81,8 +81,8 @@ export function selectRoundExercises(
       pool.pop();
     }
   };
-  const takeKinds = (candidates: readonly Exercise[], count: number): void => {
-    const families = new Map<string, Exercise[]>();
+  const takeKinds = (candidates: readonly Exercise<MathTask>[], count: number): void => {
+    const families = new Map<string, Exercise<MathTask>[]>();
     for (const e of candidates) {
       if (e.task.kind !== 'choice') throw new TypeError('Expected choice pool');
       const q = e.task.question;

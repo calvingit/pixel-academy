@@ -1,6 +1,6 @@
 # 架构说明
 
-更新日期：2026-10-26。本说明区分当前实现与规划，Learning Core 字段以 [models.ts](../src/learning/models.ts) 为准，游戏侧课程和档案类型见下表。
+更新日期：2026-10-27。本说明区分当前实现与规划，Learning Core 字段以 [models.ts](../src/learning/models.ts) 为准，游戏侧课程和档案类型见下表。
 
 ## 当前实现
 
@@ -26,6 +26,10 @@
 | src/game/number-puzzle/storage.ts | v1 设置、成绩和避重 ID 的只读导入；持久化 MathTask 输入校验；不恢复旧局次，不写入或清理旧键 |
 | src/game/number-puzzle/profile.ts | 纯金币／道具／奖励／错题操作与档案校验；ProfileStore 隔离异步存储，原生 IndexedDB readwrite 事务和修订号检查提供原子提交及跨页面冲突拒绝 |
 | src/game/number-puzzle/learning.ts | 21 节课程、按映射及题型动态抽题、稳定题目身份、题面文本和程序化解题说明；无 DOM 或存储依赖 |
+| src/game/hanzi-hero/rules.ts、content.ts、storage.ts、main.ts | 汉字勇者首版（M8）：纯规则（每局 5 题、首答 10/重试 5、快照恢复）、内容适配（selectExercises 语文筛选）、独立命名空间存储（pixel-academy:hanzi-hero:v1:*）与页面接线；判题走 Learning Core hanzi.ts，无经济/计时规则 |
+| src/learning/hanzi.ts | 语文汉字任务校验与判题（hanzi-choose 单选按字身份、hanzi-parts 多选部件集合）；无 DOM/存储依赖 |
+| src/content/hanzi-hero.ts | 汉字勇者 28 个 approved 通用原创任务（一年级，MAP-001/002）；审核记录 docs/content-review-hanzi-hero.md |
+| web/hanzi.html、web/hanzi.css、web/img/hanzi-hero/*.svg | 汉字勇者独立入口页、样式与 11 张原创几何 SVG 配图；?nosw 仅供验证工具跳过 SW 注册 |
 | src/game/number-puzzle/offline.ts | 离线状态与版本更新纯逻辑（M6）：缓存名前缀与版本标记格式、旧版本缓存清理决策（staleCacheNames）、更新采用时机（decideUpdateAdoption：仅选择屏且无进行中局次 adopt）与执行决策（planAdoptionExecution：waiting 缺失且新版本已接管则刷新、未接管则收敛——waiting 可被浏览器跳过直通激活）、离线状态文案推导（describeOfflineStatus，含更新提示优先）；无 DOM、无 Service Worker 依赖，浏览器接线在 main.ts，SW 侧策略在 web/sw.source.js（两处头注交叉说明） |
 | web/index.html、web/style.css | 静态 H5 入口页面与样式（M5 增加存储提示、恢复提供、练习记录与清除入口；M6 增加离线状态提示行与主模块加载失败的内联兜底脚本） |
 | web/sw.source.js | 离线 Service Worker 模板（M6，跟踪提交）：install 预缓存清单（任一失败不激活）、不自动 skipWaiting、activate 清理同前缀旧缓存并广播 cache-ready、同源 GET 缓存优先 + 未命中回填、导航回退入口页与离线兜底页；由 build 脚本替换占位符后生成 web/sw.js（构建产物，gitignore） |
@@ -75,7 +79,7 @@ flowchart TD
 
 筛选无随机化、分页或数量限制，保持数据顺序。空年级、非法年级或空白 gameId 抛错；未知游戏、没有内容的年级返回空数组。重复年级不造成结果重复。
 
-当前 Exercise.subject 仅为 math，MathTask 包含原整数任务 number、binary、chain，以及保存结构化题意和固定候选的 choice。语文、英语虽然有索引和知识点，但还没有题型及判题实现。支持三科索引不等于支持三科练习。
+Exercise 泛型化（Exercise<T extends Task = Task>）；MathTask 包含原整数任务 number、binary、chain 与 choice；ChineseTask（M8）包含 hanzi-choose（shape/meaning 单选）与 hanzi-parts（部件集合多选），判题在 src/learning/hanzi.ts。英语只有索引和知识点，尚无题型及判题实现。支持三科索引不等于支持三科练习。数字消除的取题与棋盘仅接受 Exercise<MathTask>。
 
 这些 API 面向受信任、经 TypeScript 检查的静态数据。validateCatalog 不是不可信 JSON 的完整 schema 校验器，也不检查全部课程语义、教材真实性或审批权限。
 
@@ -89,7 +93,7 @@ flowchart TD
 | 浏览器界面 | 常规控件使用 DOM，游戏区域按计划使用 Canvas 2D | M3 提供最小实现；M4 完成复古掌机视觉、手机交互（暂停/继续/重新开始/返回、切后台自动暂停、自适应布局）与可关闭合成音效 |
 | 本地存储 | 档案、事务、内容版本与旧数据导入 | 新版由 profile.ts 的 IndexedDB 事务承载；storage.ts 仅保留旧格式读取，旧中断恢复与写入分支已移除 |
 | 离线资源 | 缓存、版本切换与缺失处理 | M6 已落地（web/sw.source.js + scripts/build-sw.mjs 生成 web/sw.js；策略纯逻辑在 src/game/number-puzzle/offline.ts）：缓存名带构建哈希版本、install 全量预缓存（任一失败不激活）、不自动 skipWaiting（页面在非单局中途时机采用）、activate 清理旧版本缓存、缓存优先 + 未命中回填、离线导航兜底页；内容随构建进入产物，无在线内容请求 |
-| 非数学任务 | 按具体游戏增加明确任务类型与判题 | M8–M15 |
+| 非数学任务 | 按具体游戏增加明确任务类型与判题 | M8 已落地语文任务（hanzi-choose/hanzi-parts）；M9–M15 待各款实施 |
 
 M5 的旧 localStorage 档案保留为只读导入来源，新版原子档案和计时版本约束见上文“数据关系”。M6 的资源版本链路继续使用完整静态导入闭包哈希，缓存完成后支持本地学习、挑战、交易与记录；首次未缓存不承诺离线。
 

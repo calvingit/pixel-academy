@@ -69,13 +69,36 @@ export interface ChoiceTask {
   readonly options: readonly ChoiceOption[];
 }
 export type MathTask = ArithmeticTask | ChoiceTask;
+
+/** 语文固定候选任务：目标字识别（shape）/ 图文配对（meaning）为单选，部件组字为多选。 */
+export interface HanziChooseTask {
+  readonly kind: 'hanzi-choose';
+  readonly mode: 'shape' | 'meaning';
+  /** 题面目标字；meaning 模式下配图与该字对应。 */
+  readonly target: string;
+  /** meaning 模式的原创图片路径（构建产物内相对路径）；shape 模式无图。 */
+  readonly image?: string;
+  readonly options: readonly string[];
+}
+/** 语文部件组字任务：多选部件集合判题（无序、无重复），部件互不相同。 */
+export interface HanziPartsTask {
+  readonly kind: 'hanzi-parts';
+  /** 组字结果字（题面不显示，仅用于审核与记录）。 */
+  readonly result: string;
+  /** 原创图片路径（表达部件意象，不含结果字字形）。 */
+  readonly image: string;
+  readonly parts: readonly string[];
+  readonly options: readonly string[];
+}
+export type ChineseTask = HanziChooseTask | HanziPartsTask;
+export type Task = MathTask | ChineseTask;
 export type SubmittedAnswer = number | string | readonly string[];
-export interface Exercise {
+export interface Exercise<T extends Task = Task> {
   id: string;
-  subject: 'math';
+  subject: Subject;
   mappingIds: readonly string[];
   gameIds: readonly string[];
-  task: MathTask;
+  task: T;
   review: { status: 'draft' } | { status: 'approved'; reviewer: string; reviewedAt: string };
 }
 export interface Catalog {

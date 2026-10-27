@@ -1,10 +1,18 @@
 import { correctOptionIds, isMultiple } from './choice.js';
-import type { MathTask } from './models.js';
+import { correctHanziIds, isHanziTask, isHanziMultiple } from './hanzi.js';
+import type { Task } from './models.js';
 
 import { answerFor } from './arithmetic.js';
 export { answerFor } from './arithmetic.js';
 
-export function evaluateAnswer(task: MathTask, answer: unknown): boolean {
+export function evaluateAnswer(task: Task, answer: unknown): boolean {
+  if (isHanziTask(task)) {
+    const expected = correctHanziIds(task);
+    if (!isHanziMultiple(task)) return typeof answer === 'string' && answer === expected[0];
+    return Array.isArray(answer) && answer.every(id => typeof id === 'string')
+      && new Set(answer).size === answer.length && answer.length === expected.length
+      && expected.every(id => answer.includes(id));
+  }
   if (task.kind === 'choice') {
     const expected = correctOptionIds(task);
     if (!isMultiple(task)) return typeof answer === 'string' && answer === expected[0];
@@ -20,7 +28,8 @@ export function evaluateAnswer(task: MathTask, answer: unknown): boolean {
   return Number.isSafeInteger(parsed) && parsed === expected;
 }
 
-export function validateTask(task: MathTask): void {
+export function validateTask(task: Task): void {
+  if (isHanziTask(task)) { correctHanziIds(task); return; }
   if (task.kind === 'choice') correctOptionIds(task);
   else answerFor(task);
 }
