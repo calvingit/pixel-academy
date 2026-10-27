@@ -25,19 +25,19 @@ M7–M15 的执行顺序、逐款任务、验收与阻塞处理见 [Agent 开发
 - 验收条件未满足时记录具体缺口，不以“代码已写完”代替完成。真实设备不可用时明确记为未验证。
 - 每个里程碑只实现其必要能力；接口或数据模型需要调整时，先检查对已有内容和调用方的影响。
 - 练习审核、教材来源核验、教学映射核验分别记录，不能相互代替。自动判题测试通过不等于教学审核通过。
-- 当前工程处于 M6 完成、M7 受阻的阶段：2026-10-27 用户裁决真机验证以模拟器口径执行、部署定 Cloudflare，Android Chrome 模拟器（在线/离线、本地源/生产源）与 Cloudflare Pages 部署环境 SW 行为已验证闭环，**iOS Safari 模拟器验证待补**（需本机开启 Safari 远程自动化）；M8–M15 均为暂缓，未明确要求时不启动。
+- 当前工程状态（2026-10-27）：M1–M7 完成。M7 曾因验收条件④受阻，用户当日裁决真机验证以模拟器口径执行、部署定 Cloudflare；Android Chrome 与 iOS Safari 模拟器验证及 Cloudflare Pages 部署环境 SW 行为验证均已闭环（证据见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)），M7 各验收条件按裁决口径满足。M8–M15 均为暂缓，未明确要求时不启动。
 
 ## 里程碑总览
 
 ### 模拟器验证与 Cloudflare 部署（2026-10-27）
 
-状态：已实现并完成验证；M7 受阻原因收敛为 iOS Safari 模拟器验证待补。
+状态：已完成。M7 依据本节证据与用户裁决收口（见 M7 小节状态）。
 
 - 用户裁决（2026-10-27）：真机验证缺口以**模拟器口径**闭环；部署位置定为 **Cloudflare**；授权推送。该裁决记录于 [模拟器验证证据](docs/evidence/m7/device-simulators/README.md)，模拟器结果不代表物理真机。
 - Android Chrome 模拟器（Android 14 系统镜像、Chrome 113，CDP `Input.dispatchTouchEvent` 真实触摸，答案从档案题面自算）完成四轮完整验证：localhost 在线局（100/10/0、+30 金币、第 5 题暂停→刷新→恢复逐项一致、重开得分清零、弃局无新成绩）、localhost 断源离线局（100/10/0、离线入账）、生产 URL 在线局与飞行模式离线局（均 100/10/0、离线提示带版本 `assets-v1-322cb9f2c400`）。无横向溢出、无 JS 错误。
 - 部署按用户要求走 cf CLI git 集成：Cloudflare Pages 项目 `pixel-academy`（https://pixel-academy.pages.dev）已关联本仓库 main 分支，推送自动构建部署；仓库新增 `npm run build:site`（`scripts/stage-site.mjs` 把 web/ 与 dist/ 合并为单一产物目录 dist-site/）。首次部署 66d1949c 成功，产物 MIME 与版本核对通过，部署环境 SW 注册、接管、离线服务经模拟器 R3/R4 实测。
 - CI `.github/workflows/check.yml` 已随推送实际运行多次且全部成功（最近 40417838804，Node 22）；此前「未实际运行」限制解除。
-- iOS Safari（iPhone 17，iOS 27.0 模拟器）已启动但 Safari WebDriver 被系统开关拦截，需本机一次性 `sudo safaridriver --enable`；iOS 轮待补，M7 条件④的 iOS 部分未闭环。代码与证据已随 5aaa1b8 及后续提交落库。
+- iOS Safari 模拟器验证已完成（用户开启 Safari 远程自动化后）：可驱动运行时为 **iOS 18.6**（iPhone 16 Pro；iOS 27.0 运行时无法被 safaridriver 26.6.2 创建会话，稳定复现）。在线完整局（含第 5 题暂停→刷新→恢复一致、重开、弃局）与受控后断源刷新的离线完整局均 100/10/0、+30 金币、无溢出无错误；UA/触摸点数/视口为真实 iOS Safari。iOS 输入采用页面级合成事件（模拟器 HID 注入不完整，诊断记录见证据目录）；**冷导航离线打开受控源稳定落系统错误页**（WebKit 不唤醒 SW），断源刷新路径正常，按 M6 口径执行并如实记录。
 
 ### 数学题型扩展（2026-10-26）
 
@@ -234,7 +234,7 @@ M7–M15 的执行顺序、逐款任务、验收与阻塞处理见 [Agent 开发
 
 ## M7：第一阶段交付验收
 
-状态：受阻（2026-10-27 更新：用户裁决真机验证以模拟器口径执行、部署定 Cloudflare 并授权推送。Android Chrome 模拟器在线/离线与 Cloudflare Pages 部署环境 SW 行为已验证闭环，CI 已实际运行；**剩余唯一缺口为 iOS Safari 模拟器可玩性验证**——iPhone 17（iOS 27.0）模拟器已就绪，但 Safari WebDriver 需本机一次性开启「允许远程自动化」（`sudo safaridriver --enable`），该操作无法由实现者完成，开启后按 [模拟器验证证据](docs/evidence/m7/device-simulators/README.md) 同套方法补验。模拟器结果不代表物理真机，系用户裁决口径；是否以「模拟器 + 如实记录」认定本里程碑完成仍待用户裁决）。
+状态：已完成（2026-10-27）。验收条件①②③⑤⑥此前已逐条满足并留证；条件④原要求 iOS Safari / Android Chrome 真机验证，用户当日裁决以**模拟器口径**执行——Android Chrome 14/Chrome 113 模拟器四轮（本地源/生产源 × 在线/离线）与 iOS Safari 模拟器（iPhone 16 Pro / iOS 18.6）两轮（在线含暂停恢复、断源刷新离线）全部通过并留证；条件②的部署位置确认为 Cloudflare Pages（https://pixel-academy.pages.dev，git 集成自动部署）且部署环境 SW 行为实测通过。物理真机始终未测（裁决口径的如实记录，见已知限制 1）；完成认定如用户另有意见可复议。
 
 ### 交付物（原验收基线）
 
@@ -275,7 +275,7 @@ M7–M15 的执行顺序、逐款任务、验收与阻塞处理见 [Agent 开发
 - 受阻复核确认（2026-10-26，代理执行的记录轮；非真机验证）：独立复核认定验收条件④为未解决的中严重度缺口（复核依据：条件④原文与上方逐条核对「未满足」结论、真机证据缺失、需路由用户而非返工实现）。本记录轮在同一工作区真实重跑核对：`git log --oneline -1` → 93ce007（M6 提交，零新提交）；`git status --short` → 与上一轮完全相同（M AGENTS.md、M PLAN.md、M README.md、M VERIFICATION.md，未跟踪 .github/ 与 docs/evidence/m7/）；docs/evidence/m7/ 无新增文件（最新 mtime 2026-10-25 23:55）；`npm run check`（内含生产构建）通过，tests 73 / pass 73 / fail 0；构建产物 web/sw.js 实测版本 `assets-v1-ce9e1f843c3c`、预缓存 18 个资源；dist 产物取题核查 PASS（临时脚本从 dist/index.js 导入真实产物，方法同 docs/evidence/m7/README.md「验收员第 1 轮」：`selectExercises` 对 [1]=12、[2]=6、[1,2]=18、全年级=18 全部 approved 无混入，[3]–[6]=0；`previewExercises`[1,2]=18，现有题库无草稿）。结论：本小节受阻状态、上述 6 条逐条核对与条件④「未满足」记录经复核仍准确；验收条件④仍无任何真实设备证据，全部浏览器证据为桌面无头 Chrome 模拟，M7 维持受阻，不因其余条件满足而改判。
 - 交付物未闭环项（与状态「受阻」对应）：①「对应源码提交」——已闭环：本批变更已随 658af62 提交，其后 c97f093、b7bc7f9、d51ffec、6ff89af、4e3f72c、5aaa1b8 均已落库并推送；②「部署位置确认」——已闭环（2026-10-27）：正式部署为 Cloudflare Pages https://pixel-academy.pages.dev（git 集成，main 推送自动构建部署，构建命令 `npm run build:site`，首次部署 66d1949c 成功，部署环境 SW 行为经 Android 模拟器在线/离线实测）。剩余待办：iOS Safari 模拟器可玩性验证（待用户开启 Safari 远程自动化）。
 - 已知限制（如实记录，不以下一轮「应该可以」填补）：
-  1. **iOS Safari 与 Android Chrome 真实设备未测**：2026-10-27 用户裁决以模拟器口径执行验收条件④。Android Chrome 模拟器已验证（在线/离线、本地源/生产源，见 [docs/evidence/m7/device-simulators/README.md](docs/evidence/m7/device-simulators/README.md)）；iOS Safari 模拟器待本机开启 Safari 远程自动化后补验。物理真机始终未测，模拟器证据不等同真机证据。
+  1. **物理真机未测（按用户裁决以模拟器口径闭环）**：Android Chrome（Android 14/Chrome 113）与 iOS Safari（iOS 18.6）模拟器验证均通过并留证（[docs/evidence/m7/device-simulators/README.md](docs/evidence/m7/device-simulators/README.md)）；iOS 输入为页面级合成事件（模拟器 HID 注入不完整）、iOS 27.0 运行时暂不可驱动；iOS 冷导航离线打开受控源落系统错误页（断源刷新正常）。模拟器证据不等同真机证据。
   2. **部署已确认（2026-10-27）**：Cloudflare Pages（https://pixel-academy.pages.dev，git 集成自动部署）。部署环境 SW 注册/接管/离线服务经 Android 模拟器实测；「版本更新自动采用」在生产环境未以真实内容变更演练（机制与 M6 同代码，localhost 桌面环境多轮验证）；自定义域名未配置。
   3. **CI 已实际运行（2026-10-27 更新）**：`.github/workflows/check.yml` 随多次推送在 GitHub Actions 运行且全部成功（最近 40417838804，commit 4e3f72c，ubuntu-latest Node 22）；此前「未实际运行」限制解除。
   4. **题库审核为代理审核**（zcode-agent，2026-10-25）：未经具备教学资质者复核；教材版次对齐、来源核对、地区选用与映射核验均为 pending；18 道 approved 不宣称与特定教材版次对齐。
@@ -459,6 +459,6 @@ M8–M15 是此前讨论方向的具体规划，游戏名称与玩法仍可在�
 
 正式数字消除已使用动态题库与 17 类扩展题型；下文第一阶段静态交付口径及 HEAD 描述为此前验收背景，不能作为当前 Git 状态证明。
 
-2026-10-27 用户裁决后的当前状态：源码已推送 GitHub（main），CI（`npm ci` + `npm run check`）多次运行成功；正式部署已上线 Cloudflare Pages **https://pixel-academy.pages.dev**（main 推送自动构建部署）；Android Chrome 模拟器在本地源与生产源、在线与离线四轮完整可玩性验证全部通过（[模拟器验证证据](docs/evidence/m7/device-simulators/README.md)）。
+第一阶段（M1–M7）已于 2026-10-27 按用户裁决口径完成收口：源码推送 GitHub（main）且 CI 多次运行成功；正式部署上线 Cloudflare Pages **https://pixel-academy.pages.dev**（main 推送自动构建部署）；Android Chrome 模拟器四轮（本地源/生产源 × 在线/离线）与 iOS Safari 模拟器（iOS 18.6）两轮完整可玩性验证全部通过（[模拟器验证证据](docs/evidence/m7/device-simulators/README.md)）。
 
-**M7 剩余唯一缺口：iOS Safari 模拟器可玩性验证。** iPhone 17（iOS 27.0）模拟器已就绪，但 Safari WebDriver 需要本机一次性开启「允许远程自动化」——由用户执行 `sudo safaridriver --enable`（或在 Safari 设置 → 开发中允许），实现者无法代为完成。开启后按同套方法补验，通过即可提请 M7 完成认定（最终认定权在用户）。持续未决缺口：物理真机验证（已按裁决以模拟器口径替代）、「点阵呈现教学有效性」与教学效果观察、生产环境版本更新自动采用的真实变更演练。M8–M15 仍为暂缓，启动任何一款前需先准备并审核对应学科的任务类型与内容。
+持续未决缺口（不阻塞 M7 完成认定，如实记录）：物理真机验证（裁决以模拟器口径替代）、「点阵呈现教学有效性」与教学效果观察、音效真人试听、生产环境版本更新自动采用的真实变更演练、iOS 冷导航离线打开受控源落系统错误页的 WebKit 行为（断源刷新正常）。M8–M15 仍为暂缓，启动任何一款前需先准备并审核对应学科的任务类型与内容。

@@ -5,7 +5,7 @@
 ## 环境与版本
 
 - Android 模拟器（复用本机已在运行的实例 emulator-5556）：`sdk_gphone64_arm64`，Android 14（API 34），Chrome 113.0.5672.136（UA 上报 Android 10，系统镜像行为）；视口 412×790 CSS px（devicePixelRatio 2.625，物理 1080×2400）。
-- iOS：iPhone 17（iOS 27.0）模拟器已启动，但 Safari WebDriver 会话被拒——需本机执行 `sudo safaridriver --enable`（或 Safari 设置 → 开发 → 允许远程自动化）。尝试过的无 sudo 路径（defaults 直写、容器 plist 写入、osascript 菜单脚本）均被 macOS 系统保护拦截。iOS 轮待用户开启后执行。
+- iOS：用户开启 Safari 远程自动化（`sudo safaridriver --enable`）后，实际可驱动的模拟器为 **iPhone 16 Pro（iOS 18.6）**——系统 safaridriver 26.6.2 对 **iOS 27.0 运行时无法创建会话**（"Could not find any session hosts"，稳定复现），对 iOS 18.6 正常；会话能力必须含 `platformName: iOS` + `safari:useSimulator: true`，否则静默回退到 macOS Safari（首轮曾因此误跑桌面 Safari，产物已删除重跑）。safaridriver 的模拟器 HID 输入注入不完整（实测 pointerdown/touchstart 送达但无 pointerup/touchend/click，后续输入整体丢失；element click 与 Actions touch/mouse 均无效），故 iOS 轮输入采用页面级合成事件（与 M3–M7 桌面证据同方法）。safaridriver 单会话配对残留会持续阻断新会话（"already paired"），需重启宿主 Safari 与模拟器内 Safari 才能恢复。
 - 驱动：Node 24 直连 CDP（adb forward `tcp:9333 → chrome_devtools_remote`）；输入全部为 `Input.dispatchTouchEvent` 真实触摸事件（棋盘坐标按 `render.ts boardLayout` + `main.ts fitBoard` 测量口径换算，DOM 控件按元素中心点击）；答案一律从页面档案（IndexedDB `pixel-academy/profiles/local`）中的题面经 `/dist/learning/choice.js`（`correctOptionIds`）与 `/dist/learning/evaluation.js`（`answerFor`）自行计算；未注入金币／道具、未篡改状态，仅只读档案作核对。
 - 构建版本：`assets-v1-322cb9f2c400`（本地与生产部署产物一致）。
 - 驱动脚本与结果：本目录 `android-round.mjs`、`android-*-results.json`；截图每场景双份（页面截图 + `adb screencap` 设备实帧 `-frame.png`）。
@@ -31,14 +31,25 @@
 
 `.github/workflows/check.yml` 已随多次推送实际运行且全部成功：40244249280、40294867768（历史）与本轮 40417838804（commit 4e3f72c，ubuntu-latest Node 22，`npm ci` + `npm run check` 全绿）。此前「未在 GitHub Actions 实际运行」的限制已解除。
 
-## iOS 状态（待补）
+## iOS 验证结果（2026-10-27，全部通过）
 
-- iPhone 17（iOS 27.0）模拟器已 `simctl boot` 就绪；Safari（Safari 26.6.2 同版本 safaridriver）WebDriver 会话创建被拒，唯一开启方式为本机 `sudo safaridriver --enable` 或 Safari 设置中允许远程自动化，属用户侧一次性操作。
-- 开启后即可按本目录同套方法（safaridriver + `safari:deviceUDID`，坐标点选、真实手势）对 iOS Safari 执行 R1/R2 同款验证；在此之前 M7 验收条件④的 iOS 部分保持待补。
+| # | 场景 | 结果 |
+| --- | --- | --- |
+| I1 | 在线完整局 + 暂停刷新恢复 + 重开 + 弃局 | 混选 10 题全对；结算「通关！★★★ · 100 · 首次答对 10/10 · +30 金币」（records 0→1、金币 20→50）；第 5 题暂停→刷新→恢复一致；重开得分清零；弃局无新成绩（`ios-online-*`、`ios-a-paused/-restored`） |
+| I2 | 离线完整局（受控后断源刷新口径） | 页面与档案由 SW 缓存服务（controller true、提示带版本），离线 10 题局 100/10/0、+30 金币离线入账（records 0→1）（`ios-offline-*`） |
+
+环境：iPhone 16 Pro 模拟器（iOS 18.6），Safari UA `iPhone OS 18_6`，视口 402×678 @3x，`maxTouchPoints=5`；结算与恢复截图已目视核对。脚本 `ios-round.mjs`。
+
+### iOS 特有的发现与限制
+
+1. **冷导航离线打开受控源稳定失败**：新会话/新标签页直接导航到已缓存源，iOS Safari 落到系统错误页（「Safari 浏览器打不开该页面，因为无法连接服务器」），SW 不被唤醒（重试仍如此）；而**同一标签页在受控后断源刷新则完全正常**（页面、模块、档案、金币全部由缓存服务）。故 I2 采用与 M6 相同的断源刷新口径。用户「关闭 Safari 后离线重开」的冷启动路径在 iOS 上受此 WebKit 行为限制，如实记录。
+2. 一次观察到离线刷新后应用停在「正在读取本机档案…」（IndexedDB 打开未返回，>30 秒），随后同路径复测未再复现且 IDB 探测 1ms 正常；按瞬态记录，未改代码。
+3. `navigator.onLine` 在源站连接拒绝时仍为 true（iOS 行为），离线口径以「源站不可达 + SW 服务」为准，与 M6 断源口径一致。
+4. iOS 27.0 运行时（iPhone 17 / iPhone 18 Pro 模拟器）当前无法被 safaridriver 驱动，待 WebKit/Xcode 更新；本验证以 iOS 18.6 模拟器为 iOS Safari 证据。
 
 ## 限制与如实记录
 
-1. 模拟器结果**不代表物理真机**；按用户 2026-10-27 裁决以模拟器口径执行验收条件④（已记录于 PLAN.md）。iOS 模拟器尚未执行。
+1. 模拟器结果**不代表物理真机**；按用户 2026-10-27 裁决以模拟器口径执行验收条件④（已记录于 PLAN.md）。Android 与 iOS 模拟器均已完成，iOS 为 18.6（27.0 不可驱动）。
 2. 模拟器为本机常驻实例（含用户其他网站的标签页与档案数据）：本轮仅在 `10.0.2.2:4173`、`localhost:4173`、`pixel-academy.pages.dev` 三个自有源读写档案，未清理或触碰其他数据；`10.0.2.2:4173` 源曾生成一个测试档案（勾选了年级、未产生成绩，该源因非安全上下文不支持 SW 与 `crypto.randomUUID`，已弃用并改走 adb reverse 的 localhost 源）。
 3. `prod-online` 轮的「再来一局／放弃」截图沿用了 `android-online-05-again/06-records` 文件名，覆盖了 R1 同名截图；两轮该路径断言均通过（见两份 results JSON 的 records/coins 差量），被覆盖的仅为图片证据。
 4. 生产环境的「版本更新自动采用」流程未以真实内容变更演练（SW 更新机制与 M6 同代码，localhost 桌面环境已多轮验证；本轮两次 Pages 部署间 SW 版本未变，不构成更新场景）。

@@ -6,7 +6,7 @@
 
 用户裁决真机验证以模拟器口径执行、部署定 Cloudflare。Android Chrome 模拟器（Android 14 系统镜像、Chrome 113）经 CDP `Input.dispatchTouchEvent` 真实触摸完成四轮完整 10 题局：localhost 在线（含暂停刷新恢复、重开、弃局）、localhost 断源离线、生产 URL https://pixel-academy.pages.dev 在线与飞行模式离线，均 100/10/0、+30 金币、无溢出无错误、离线提示带版本标记；方法、结果与限制见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)。驱动脚本 `docs/evidence/m7/device-simulators/android-round.mjs` 依赖本机模拟器实例与 adb 转发，不直接重放。
 
-部署：Cloudflare Pages 项目 `pixel-academy` 以 git 集成关联本仓库 main 分支（cf CLI `cf pages create`），构建命令 `npm run build:site`（= `npm run build` + `scripts/stage-site.mjs` 合并 web/ 与 dist/ 为单一产物目录 `dist-site/`），推送自动构建部署。生产 URL 的产物 MIME、SW 注册/接管/离线服务已经模拟器实测；生产环境「版本更新自动采用」未以真实内容变更演练。iOS Safari 模拟器验证待补（需本机 `sudo safaridriver --enable` 开启 Safari 远程自动化）。模拟器证据不代表物理真机。
+部署：Cloudflare Pages 项目 `pixel-academy` 以 git 集成关联本仓库 main 分支（cf CLI `cf pages create`），构建命令 `npm run build:site`（= `npm run build` + `scripts/stage-site.mjs` 合并 web/ 与 dist/ 为单一产物目录 `dist-site/`），推送自动构建部署。生产 URL 的产物 MIME、SW 注册/接管/离线服务已经模拟器实测；生产环境「版本更新自动采用」未以真实内容变更演练。iOS Safari 模拟器（iPhone 16 Pro / iOS 18.6；iOS 27.0 运行时暂不可被 safaridriver 驱动）同日完成在线与断源刷新离线两轮；iOS 模拟器 HID 触摸注入不完整，输入为页面级合成事件（与 M3–M7 桌面证据同方法）；iOS 冷导航离线打开受控源落系统错误页、断源刷新正常，均已如实记录。模拟器证据不代表物理真机。
 
 ## 数学题型扩展（2026-10-26）
 

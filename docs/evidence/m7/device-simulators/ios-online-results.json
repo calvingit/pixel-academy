@@ -1,0 +1,27 @@
+{
+  "phase": "online",
+  "resultJson": {
+    "resultText": "通关！★★★ | 总分 100 · 已完成 10/10 | 首次答对 10/10 · 辅助完成 0 | 答错 0 次 · 超时 0 次 · 复活 0 次 | 本局 +30 金币：答题 20，通关 5，全首次答对 5。",
+    "records": [
+      0,
+      1
+    ],
+    "coins": [
+      20,
+      50
+    ]
+  },
+  "viewport": {
+    "w": 402,
+    "h": 678,
+    "dpr": 3
+  },
+  "offlineNotice": "离线缓存已就绪（版本 assets-v1-322cb9f2c400），断网也能游玩。",
+  "overflow": false,
+  "notice": "",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "finalRecords": 1,
+  "finalCoins": 50,
+  "swControlled": true,
+  "onLine": true
+}
