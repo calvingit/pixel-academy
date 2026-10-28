@@ -10,9 +10,9 @@
 
 ## 模拟器验证与 Cloudflare 部署（2026-10-27）
 
-用户裁决真机验证以模拟器口径执行、部署定 Cloudflare。Android Chrome 模拟器（Android 14 系统镜像、Chrome 113）经 CDP `Input.dispatchTouchEvent` 真实触摸完成四轮完整 10 题局：localhost 在线（含暂停刷新恢复、重开、弃局）、localhost 断源离线、生产 URL https://pixel-academy.pages.dev 在线与飞行模式离线，均 100/10/0、+30 金币、无溢出无错误、离线提示带版本标记；方法、结果与限制见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)。驱动脚本 `docs/evidence/m7/device-simulators/android-round.mjs` 依赖本机模拟器实例与 adb 转发，不直接重放。
+用户裁决真机验证以模拟器口径执行、部署定 Cloudflare；2026-10-28 追加裁决：真机验证正式豁免，模拟器验证即最终验收口径，后续不再把真机列为待验项或缺口。Android Chrome 模拟器（Android 14 系统镜像、Chrome 113）经 CDP `Input.dispatchTouchEvent` 真实触摸完成四轮完整 10 题局：localhost 在线（含暂停刷新恢复、重开、弃局）、localhost 断源离线、生产 URL https://pixel-academy.pages.dev 在线与飞行模式离线，均 100/10/0、+30 金币、无溢出无错误、离线提示带版本标记；方法、结果与限制见 [模拟器验证记录](docs/evidence/m7/device-simulators/README.md)。驱动脚本 `docs/evidence/m7/device-simulators/android-round.mjs` 依赖本机模拟器实例与 adb 转发，不直接重放。
 
-部署：Cloudflare Pages 项目 `pixel-academy` 以 git 集成关联本仓库 main 分支（cf CLI `cf pages create`），构建命令 `npm run build:site`（= `npm run build` + `scripts/stage-site.mjs` 合并 web/ 与 dist/ 为单一产物目录 `dist-site/`），推送自动构建部署。生产 URL 的产物 MIME、SW 注册/接管/离线服务已经模拟器实测；生产环境「版本更新自动采用」未以真实内容变更演练。iOS Safari 模拟器（iPhone 16 Pro / iOS 18.6；iOS 27.0 运行时暂不可被 safaridriver 驱动）同日完成在线与断源刷新离线两轮；iOS 模拟器 HID 触摸注入不完整，输入为页面级合成事件（与 M3–M7 桌面证据同方法）；iOS 冷导航离线打开受控源落系统错误页、断源刷新正常，均已如实记录。模拟器证据不代表物理真机。
+部署：Cloudflare Pages 项目 `pixel-academy` 以 git 集成关联本仓库 main 分支（cf CLI `cf pages create`），构建命令 `npm run build:site`（= `npm run build` + `scripts/stage-site.mjs` 合并 web/ 与 dist/ 为单一产物目录 `dist-site/`），推送自动构建部署。生产 URL 的产物 MIME、SW 注册/接管/离线服务已经模拟器实测；生产环境「版本更新自动采用」未以真实内容变更演练。iOS Safari 模拟器（iPhone 16 Pro / iOS 18.6；iOS 27.0 运行时暂不可被 safaridriver 驱动）同日完成在线与断源刷新离线两轮；iOS 模拟器 HID 触摸注入不完整，输入为页面级合成事件（与 M3–M7 桌面证据同方法）；iOS 冷导航离线打开受控源落系统错误页、断源刷新正常，均已如实记录。模拟器证据不代表物理真机；真机验证经 2026-10-28 裁决豁免，不再作为缺口跟踪。
 
 ## 数学题型扩展（2026-10-26）
 
@@ -66,7 +66,7 @@ npm run check
 | 数字消除生成规则 | npm run check；穷举候选及映射、全部年级组合、配额与去重、多种子完整局、保存恢复一致性；浏览器验证三种 10 题局、刷新与旧存档恢复、再玩及重开、断网重开和样本题面截图；教学有效性单独记录 |
 | Core 筛选与判题 | npm run check；围绕变化补充边界或回归测试，不只复述实现 |
 | 游戏规则（rules.ts） | npm run check（tests/number-puzzle.test.mjs 覆盖状态转换、可完成局次、重复输入与计分、无解局面排除、随机源确定性）；`npm run serve` 后完整浏览器流程 |
-| 浏览器界面与输入（web/、render.ts、main.ts） | 实际浏览器截图或录屏、关键流程结果核对；手机尺寸与触摸操作的完整验收按 M4 执行，设备与模拟结果分开 |
+| 浏览器界面与输入（web/、render.ts、main.ts） | 实际浏览器截图或录屏、关键流程结果核对；手机尺寸与触摸操作的完整验收按 M4 执行，模拟器与桌面模拟结果分开 |
 | 本地记录与恢复（storage.ts、main.ts 接线、web/） | npm run check（tests/storage.test.mjs 覆盖损坏数据、版本不兼容、重复写入与中断恢复一致性）；`npm run serve` 后浏览器验证：设置与成绩刷新后仍可读取、中断局次恢复一致且不重复计分、内容版本不兼容安全放弃且不误删历史、存储不可用仍可玩并提示、清除记录有确认。离线（M6）：缓存完成后断网重开并完成一局 |
 | 离线资源与版本更新（web/sw.source.js、scripts/build-sw.mjs、offline.ts、main.ts 离线接线、web/） | npm run check（tests/offline.test.mjs 覆盖旧缓存清理决策、更新采用时机与执行决策 planAdoptionExecution（waiting 被浏览器跳过时的刷新/收敛防御）、离线状态文案、预缓存清单与真实 dist 产物及生成的 web/sw.js 的一致性）；`npm run serve` 后浏览器验证：缓存就绪提示带版本标记、断网重开完成整局并保存记录、离线刷新与重复启动、选择屏更新自动生效并清理旧缓存、单局中途更新被推迟且局次不受影响、预缓存失败与资源缺失有可理解提示、离线且缓存缺失回退兜底页（证据 docs/evidence/m6/）；waiting 直通激活的时序差异需浏览器复验（复核第 1 轮已修复并复验，见 docs/evidence/m6/README.md「独立复核第 1 轮修复复验」）；部署环境需支持 Service Worker（localhost/127.0.0.1 即安全上下文），真实设备与部署环境属 M7 汇总 |
 
@@ -92,7 +92,7 @@ M4 已执行的浏览器验收路径（代理驱动，证据见 docs/evidence/m4
 
 证据记录至少包含：对应提交、构建或访问入口、设备/系统/浏览器及版本、模拟或真实设备、操作步骤、预期与实际结果、截图或录屏位置。当前没有工程内浏览器自动化工具链；M3 的浏览器证据由代理驱动的浏览器（无头 Chrome，DOM 控件为真实点击，棋盘点选经页面 pointerdown 事件）产生，截图保存于 docs/evidence/m3/。
 
-iOS Safari 与 Android Chrome 真实设备未测则保留缺口。截图能证明布局，不能单独证明判题、记录恢复或离线正确；这些需要实际流程结果。
+真机（iOS Safari / Android Chrome）验证经 2026-10-28 用户裁决豁免，以模拟器验证为最终口径，不再保留缺口。截图能证明布局，不能单独证明判题、记录恢复或离线正确；这些需要实际流程结果。
 
 ## 数字花园视觉回归
 
