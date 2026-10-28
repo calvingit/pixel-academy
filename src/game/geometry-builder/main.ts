@@ -390,9 +390,11 @@ async function applyOutcome(outcome: ReturnType<typeof submitClassify> | ReturnT
     await advance();
     return;
   }
-  // 分步反馈：build 逐槽状态 / classify 错块定位 / choose 答案错误。
+  // 分步反馈：classify 错块定位 / build 槽位不合适 / choose 答案错误（文案按模式区分）。
   const question = state.round!.questions[state.round!.questionIndex]!;
-  if (question.task.kind === 'shape-place' && question.task.mode === 'classify' && outcome.wrongBlocks.length > 0) {
+  if (question.task.kind === 'shape-choose') {
+    showFeedback('wrong', '不对哦，再想一想');
+  } else if (question.task.mode === 'classify' && outcome.wrongBlocks.length > 0) {
     const ordinal = (index: number): string => `第 ${index + 1} 块`;
     showFeedback('wrong', `${outcome.wrongBlocks.map(ordinal).join('、')}放错了格子，撤回换一格试试`);
   } else {

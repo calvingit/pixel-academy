@@ -1,0 +1,149 @@
+{
+  "scenarios": [
+    {
+      "name": "V1 入口与年级筛选",
+      "pass": true,
+      "result": "年级卡 6（禁用 5）· 禁用卡不可选（提示「请先选择年级」）· 开始禁用=true",
+      "v1": {
+        "bootFail": true,
+        "gradeCards": 6,
+        "disabledGrades": 5,
+        "title": "几何建筑师 · Pixel Academy"
+      },
+      "v1empty": {
+        "status": "请先选择年级",
+        "startDisabled": true
+      }
+    },
+    {
+      "name": "V2 完整局（点选路径）",
+      "pass": true,
+      "result": "总分 50 · 完成 5 个任务 · 首次一次完成 5 · 错判 0 次 · records=1",
+      "v2": {
+        "resultVisible": true,
+        "score": "总分 50",
+        "answer": "完成 5 个任务 · 首次一次完成 5 · 错判 0 次",
+        "modes": "辨认 3/3 首答 · 分类 1/1 首答 · 搭建 1/1 首答 · 点选 7 拖拽 0 撤回 0"
+      },
+      "v2records": 1
+    },
+    {
+      "name": "V3 辨认错误反馈与重试档",
+      "pass": true,
+      "result": "反馈「✗ 不对哦，再想一想」· 重试后得分 5（首答错入重试档 5 分）",
+      "fb": {
+        "hidden": false,
+        "text": "✗ 不对哦，再想一想",
+        "kind": "wrong"
+      },
+      "score": 5
+    },
+    {
+      "name": "V4 分类错块反馈/撤回/重排",
+      "pass": true,
+      "result": "反馈「✗ 第 1 块放错了格子，撤回换一格试试」· 撤回重排后再提交完成（本题入重试档：true，累计分 15）",
+      "fb": {
+        "hidden": false,
+        "text": "✗ 第 1 块放错了格子，撤回换一格试试",
+        "kind": "wrong"
+      },
+      "score": 15,
+      "submitQi": 1
+    },
+    {
+      "name": "V5 搭建等价多解与干扰块拒收",
+      "pass": true,
+      "result": "{\"dudDragged\":true,\"dudRejected\":true,\"dudFeedback\":\"✗ 有格子放得不对，撤回再试\",\"consumed\":[\"cuboid\",\"cylinder\",\"cylinder\"],\"sol1Done\":true}",
+      "dudDragged": true,
+      "dudRejected": true,
+      "dudFeedback": "✗ 有格子放得不对，撤回再试",
+      "consumed": [
+        "cuboid",
+        "cylinder",
+        "cylinder"
+      ],
+      "sol1Done": true
+    },
+    {
+      "0": {
+        "name": "320x568",
+        "overflowX": false,
+        "smallCount": 0,
+        "small": []
+      },
+      "1": {
+        "name": "390x844",
+        "overflowX": false,
+        "smallCount": 0,
+        "small": []
+      },
+      "2": {
+        "name": "412x915",
+        "overflowX": false,
+        "smallCount": 0,
+        "small": []
+      },
+      "3": {
+        "name": "568x320-landscape",
+        "overflowX": false,
+        "smallCount": 0,
+        "small": []
+      },
+      "4": {
+        "name": "1280x800-desktop",
+        "overflowX": false,
+        "smallCount": 0,
+        "small": []
+      },
+      "name": "V7 视口五档与触摸目标",
+      "pass": true,
+      "result": "320x568: 溢出=false 小目标=0 · 390x844: 溢出=false 小目标=0 · 412x915: 溢出=false 小目标=0 · 568x320-landscape: 溢出=false 小目标=0 · 1280x800-desktop: 溢出=false 小目标=0"
+    },
+    {
+      "name": "V8 暂停/刷新恢复布局一致",
+      "pass": true,
+      "result": "恢复提供=true 布局一致=true（score 0→0）",
+      "offered": true,
+      "same": true
+    },
+    {
+      "name": "V10 首页导航与六入口回归",
+      "pass": true,
+      "result": "geometry 入口=true · /hanzi.html:OK /dungeon.html:OK /pinyin.html:OK /english.html:OK /geometry.html:OK",
+      "navLinks": [
+        "/hanzi.html",
+        "/dungeon.html",
+        "/pinyin.html",
+        "/english.html",
+        "/geometry.html"
+      ],
+      "entryOk": {
+        "/hanzi.html": {
+          "boot": true,
+          "title": "数字消除 · Pixel Academy"
+        },
+        "/dungeon.html": {
+          "boot": true,
+          "title": "数字消除 · Pixel Academy"
+        },
+        "/pinyin.html": {
+          "boot": true,
+          "title": "数字消除 · Pixel Academy"
+        },
+        "/english.html": {
+          "boot": true,
+          "title": "数字消除 · Pixel Academy"
+        },
+        "/geometry.html": {
+          "boot": true,
+          "title": "数字消除 · Pixel Academy"
+        }
+      }
+    }
+  ],
+  "passed": 8,
+  "total": 8,
+  "errors": [],
+  "at": "2026-10-28T03:26:46.543Z",
+  "origin": "http://127.0.0.1:4473/"
+}
