@@ -16,4 +16,5 @@ export const { selectExercises, previewExercises } = createLearningCore(catalog)
 export { createLearningCore, validateCatalog } from './learning/catalog.js';
 export { answerFor, evaluateAnswer, validateTask } from './learning/evaluation.js';
 export { correctHanziIds, isHanziTask, hanziPrompt } from './learning/hanzi.js';
+export { SHAPES_3D, SHAPE_LABELS, isShapeTask, validateShapeTask, shapePlaceResult, correctShapeAnswer } from './learning/shapes.js';
 export type * from './learning/models.js';

@@ -5,13 +5,13 @@ const query = grades => ({ subject: 'math', grades, gameId: 'number-puzzle' });
 const ids = rows => rows.map(row => row.id).sort();
 const changed = changes => ({ ...structuredClone(catalog), ...changes });
 
-test('36 unique textbook slots, four candidate directories, 23 skills and 29 mappings', () => {
+test('36 unique textbook slots, four candidate directories, 24 skills and 30 mappings', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(catalog.textbooks.length, 36);
   assert.equal(new Set(catalog.textbooks.map(b => `${b.subject}/${b.grade}/${b.term}`)).size, 36);
   assert.equal(catalog.textbooks.filter(b => b.directoryStatus === 'candidate').length, 4);
-  assert.equal(catalog.skills.length, 23);
-  assert.equal(catalog.mappings.length, 29);
+  assert.equal(catalog.skills.length, 24);
+  assert.equal(catalog.mappings.length, 30);
   for (const b of catalog.textbooks) {
     assert.equal(b.isbn, null);
     assert.equal(b.localAdoptionVerification, 'pending');

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="正方体积木">
+  <!-- 正方体等轴测示意：三面等宽，暖红玩具色 -->
+  <g stroke="#2d3a3a" stroke-width="2.5" stroke-linejoin="round">
+    <polygon points="36,48 66,36 96,48 66,60" fill="#e59a8a"/>
+    <polygon points="36,48 66,60 66,96 36,84" fill="#cf7362"/>
+    <polygon points="66,60 96,48 96,84 66,96" fill="#a94f3f"/>
+  </g>
+</svg>

@@ -24,6 +24,7 @@ export const SW_ENTRY_MODULES = [
   'dist/game/arithmetic-dungeon/main.js',
   'dist/game/pinyin-adventure/main.js',
   'dist/game/english-courier/main.js',
+  'dist/game/geometry-builder/main.js',
 ];
 
 /**
@@ -40,6 +41,7 @@ export const PINYIN_AUDIO_URLS = pinyinAudioFiles.map(name => `/audio/pinyin/${n
 export const STATIC_PRECACHE_URLS = [
   '/', '/style.css', '/hanzi.html', '/hanzi.css', '/dungeon.html', '/dungeon.css',
   '/pinyin.html', '/pinyin.css', '/english.html', '/english.css',
+  '/geometry.html', '/geometry.css',
   ...PINYIN_AUDIO_URLS,
   ...['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => `/img/hanzi-hero/${name}.svg`),
@@ -47,6 +49,9 @@ export const STATIC_PRECACHE_URLS = [
   ...['mum', 'dad', 'grandma', 'grandpa', 'brother', 'sister',
     'happy', 'sad', 'tired', 'hungry', 'thirsty', 'sleepy']
     .map(name => `/img/english-courier/${name}.svg`),
+  // 几何建筑师立体图形原创配图（等轴测示意，判题按形状身份）。
+  ...['cuboid', 'cube', 'cylinder', 'sphere', 'cylinder-flat', 'cuboid-tall']
+    .map(name => `/img/geometry-builder/${name}.svg`),
 ];
 /** 静态 URL → 仓库内文件路径映射；dist 模块之外的 URL 必须在此登记。 */
 const STATIC_FILE_FOR_URL = Object.freeze({
@@ -60,12 +65,17 @@ const STATIC_FILE_FOR_URL = Object.freeze({
   '/pinyin.css': 'web/pinyin.css',
   '/english.html': 'web/english.html',
   '/english.css': 'web/english.css',
+  '/geometry.html': 'web/geometry.html',
+  '/geometry.css': 'web/geometry.css',
   ...Object.fromEntries(PINYIN_AUDIO_URLS.map(url => [url, `web${url}`])),
   ...Object.fromEntries(['tree', 'mountain', 'sun', 'moon', 'river', 'fire', 'mouth', 'ear', 'ming', 'xiu', 'kan']
     .map(name => [`/img/hanzi-hero/${name}.svg`, `web/img/hanzi-hero/${name}.svg`])),
   ...Object.fromEntries(['mum', 'dad', 'grandma', 'grandpa', 'brother', 'sister',
     'happy', 'sad', 'tired', 'hungry', 'thirsty', 'sleepy']
     .map(name => [`/img/english-courier/${name}.svg`, `web/img/english-courier/${name}.svg`])),
+  // 几何建筑师立体图形原创配图（等轴测示意，判题按形状身份）。
+  ...Object.fromEntries(['cuboid', 'cube', 'cylinder', 'sphere', 'cylinder-flat', 'cuboid-tall']
+    .map(name => [`/img/geometry-builder/${name}.svg`, `web/img/geometry-builder/${name}.svg`])),
 });
 export const SW_TEMPLATE_PATH = 'web/sw.source.js';
 export const SW_OUTPUT_PATH = 'web/sw.js';

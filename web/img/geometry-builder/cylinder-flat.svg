@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="横放的圆柱积木">
+  <!-- 圆柱横放姿态变体：顶面椭圆朝右，柱身横卧 -->
+  <g stroke="#2d3a3a" stroke-width="2.5">
+    <path d="M30 44 A12 22 0 0 0 30 88 L78 88 A12 22 0 0 0 78 44 Z" fill="#e8c76a" transform="rotate(90 60 66)"/>
+    <ellipse cx="82" cy="66" rx="12" ry="22" fill="#f4dd94"/>
+  </g>
+</svg>

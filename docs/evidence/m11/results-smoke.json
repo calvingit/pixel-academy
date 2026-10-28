@@ -1,0 +1,113 @@
+{
+  "scenarios": [
+    {
+      "name": "G1 入口页打开",
+      "pass": true,
+      "result": "title=几何建筑师 · Pixel Academy 年级卡=6 错误=0",
+      "title": "几何建筑师 · Pixel Academy",
+      "bootFail": true,
+      "gradeGrid": 6,
+      "errors": []
+    },
+    {
+      "name": "G2 开局",
+      "pass": true,
+      "result": "{\"progress\":\"第 1/5 个任务\",\"mode\":\"图形辨认\",\"gameVisible\":true}",
+      "progress": "第 1/5 个任务",
+      "mode": "图形辨认",
+      "gameVisible": true
+    },
+    {
+      "name": "G3 完整一局",
+      "pass": true,
+      "result": "{\"resultVisible\":true,\"score\":\"总分 50\",\"answer\":\"完成 5 个任务 · 首次一次完成 5 · 错判 0 次\",\"modes\":\"辨认 3/3 首答 · 分类 1/1 首答 · 搭建 1/1 首答 · 点选 6 拖拽 0 撤回 0\"}",
+      "resultVisible": true,
+      "score": "总分 50",
+      "answer": "完成 5 个任务 · 首次一次完成 5 · 错判 0 次",
+      "modes": "辨认 3/3 首答 · 分类 1/1 首答 · 搭建 1/1 首答 · 点选 6 拖拽 0 撤回 0"
+    },
+    {
+      "name": "G4 记录入库",
+      "pass": true,
+      "result": "records=1",
+      "records": 1
+    },
+    {
+      "name": "G5 刷新恢复布局一致",
+      "pass": true,
+      "result": "一致=true",
+      "before": {
+        "qi": 0,
+        "question": {
+          "task": {
+            "kind": "shape-choose",
+            "shape": "cylinder",
+            "image": "/img/geometry-builder/cylinder.svg",
+            "options": [
+              "长方体",
+              "正方体",
+              "圆柱",
+              "球"
+            ],
+            "answer": "圆柱"
+          },
+          "blocks": [],
+          "zones": [],
+          "options": [
+            "圆柱",
+            "长方体",
+            "球",
+            "正方体"
+          ]
+        },
+        "placement": {
+          "byBlock": [],
+          "inSlot": []
+        },
+        "phase": "asking"
+      },
+      "after": {
+        "qi": 0,
+        "question": {
+          "task": {
+            "kind": "shape-choose",
+            "shape": "cylinder",
+            "image": "/img/geometry-builder/cylinder.svg",
+            "options": [
+              "长方体",
+              "正方体",
+              "圆柱",
+              "球"
+            ],
+            "answer": "圆柱"
+          },
+          "blocks": [],
+          "zones": [],
+          "options": [
+            "圆柱",
+            "长方体",
+            "球",
+            "正方体"
+          ]
+        },
+        "placement": {
+          "byBlock": [],
+          "inSlot": []
+        },
+        "phase": "asking"
+      }
+    },
+    {
+      "name": "G6 SVG 加载",
+      "pass": true,
+      "result": "页面img=true 六图fetch=true 错误=0",
+      "svgOk": true,
+      "svgFetch": true,
+      "errors": 0
+    }
+  ],
+  "passed": 6,
+  "total": 6,
+  "at": "2026-10-28T03:07:34.369Z",
+  "origin": "http://127.0.0.1:4473/"
+}

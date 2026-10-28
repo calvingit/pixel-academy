@@ -86,6 +86,11 @@ export const skills: readonly Skill[] = [
     "id": "english.emotions.basic",
     "subject": "english",
     "title": "状态和感受表达"
+  },
+  {
+    "id": "math.geometry.solids",
+    "subject": "math",
+    "title": "立体图形的认识"
   }
 ];
 export const mappings: readonly Mapping[] = [
@@ -289,6 +294,18 @@ export const mappings: readonly Mapping[] = [
     "skillId": "english.emotions.basic",
     "unitIds": [
       "EN-01A-U02"
+    ],
+    "sourceVerification": "pending",
+    "curriculumVerification": "pending",
+    "evidenceIds": [
+      "handoff-2026-10-25"
+    ]
+  },
+  {
+    "id": "MAP-030",
+    "skillId": "math.geometry.solids",
+    "unitIds": [
+      "MA-01A-U05"
     ],
     "sourceVerification": "pending",
     "curriculumVerification": "pending",

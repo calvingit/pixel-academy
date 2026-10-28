@@ -132,7 +132,31 @@ export interface EnglishDeliveryTask {
   readonly recipientAnswers: readonly string[];
 }
 export type EnglishTask = EnglishDeliveryTask;
-export type Task = MathTask | ChineseTask | PinyinTask | EnglishTask;
+/** 立体图形辨认任务：呈现图形渲染图，从中文名称候选中选认（单选；判题按形状身份）。 */
+export interface ShapeChooseTask {
+  readonly kind: 'shape-choose';
+  /** 目标形状身份（SHAPES_3D 内）。 */
+  readonly shape: string;
+  /** 题面渲染图路径（web 根内相对路径，随构建预缓存）。 */
+  readonly image: string;
+  /** 中文名称候选（含正确名与干扰名，取自 SHAPE_LABELS）。 */
+  readonly options: readonly string[];
+  /** 正确答案中文名；判题按形状身份，与候选排列无关。 */
+  readonly answer: string;
+}
+/** 立体图形放置任务：把积木放入分类区（classify，整组提交）或搭建槽位（build，逐槽即时判定）。 */
+export interface ShapePlaceTask {
+  readonly kind: 'shape-place';
+  readonly mode: 'classify' | 'build';
+  /** 中文题面。 */
+  readonly prompt: string;
+  /** 积木形状身份序列（语义序；渲染排列由组卷洗牌决定）。 */
+  readonly blocks: readonly string[];
+  /** classify：分类区（accept 恰一个形状）；build：按序槽位（accept 为可接受形状集合，等价解来源）。 */
+  readonly zones: readonly { readonly id: string; readonly accept: readonly string[] }[];
+}
+export type ShapeTask = ShapeChooseTask | ShapePlaceTask;
+export type Task = MathTask | ChineseTask | PinyinTask | EnglishTask | ShapeTask;
 export type SubmittedAnswer = number | string | readonly string[];
 export interface Exercise<T extends Task = Task> {
   id: string;

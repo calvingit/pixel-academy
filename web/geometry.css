@@ -1,0 +1,148 @@
+/* 几何建筑师首版样式：沿用数字花园视觉方向（暖纸色、奶油卡、清晰对比），
+   以积木工坊木青色表达搭建主题；独立命名空间，不复用其他游戏的选择器行为。
+   图形名称用大号清晰字体（不做像素化变形）；积木为原创等轴测 SVG 配图，
+   立体特征可辨（球带高光、正方体/长方体三面、圆柱顶面椭圆）。 */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #f4f1e6;
+  color: #2d3a3a;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  min-height: 100dvh;
+}
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px calc(env(safe-area-inset-bottom, 0px) + 24px);
+}
+.app-title { font-size: 30px; margin: 4px 0 14px; letter-spacing: 1px; }
+.app-title-dot { color: #3d7a68; }
+.screen { display: block; }
+.screen[hidden] { display: none; }
+.card {
+  background: #fbf8ee;
+  border: 1px solid #d6d9c8;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h2 { margin: 2px 0 10px; font-size: 20px; }
+.hint { color: #68766f; font-size: 14px; margin: 4px 0 10px; }
+.profile-bar {
+  background: #fbf8ee; border: 1px solid #d6d9c8; border-radius: 999px;
+  padding: 10px 16px; margin-bottom: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+a.btn-ghost { text-decoration: none; }
+.storage-notice { font-size: 13px; color: #a05a2c; margin: 8px 0; }
+.grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 14px; }
+.grade-card {
+  border: 2px solid #d6d9c8; border-radius: 12px; background: #fff;
+  padding: 12px 6px; text-align: center; font-size: 15px; cursor: pointer;
+}
+.grade-card[aria-pressed="true"] { border-color: #3d7a68; background: #e4f0ea; font-weight: 700; }
+.grade-card:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary {
+  display: block; width: 100%; border: 0; border-radius: 12px;
+  background: #3d7a68; color: #fff; font-size: 17px; font-weight: 700;
+  padding: 14px; cursor: pointer;
+}
+.btn-primary:disabled { background: #a3c4b8; cursor: not-allowed; }
+.btn-ghost {
+  border: 2px solid #3d7a68; background: transparent; color: #2c5a4c;
+  border-radius: 12px; font-size: 15px; font-weight: 600; padding: 10px 14px; cursor: pointer;
+}
+.availability { font-size: 14px; color: #2c5a4c; min-height: 18px; margin: 10px 0 0; }
+.restore { border-color: #3d7a68; }
+.restore-actions { display: flex; gap: 10px; }
+.restore-actions .btn-primary, .restore-actions .btn-ghost { flex: 1; }
+.records { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.records li { padding: 8px 2px; border-bottom: 1px dashed #d6d9c8; }
+.records li:last-child { border-bottom: 0; }
+/* 局内 */
+.game-hud { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.hud-progress { font-weight: 700; }
+.hud-score { flex: 1; text-align: right; font-weight: 700; color: #2c5a4c; }
+.q-head { margin: 0 0 6px; }
+.mode-chip {
+  display: inline-block; font-size: 13px; font-weight: 700; color: #2c5a4c;
+  background: #e4f0ea; border: 1px solid #9ec3b4; border-radius: 999px; padding: 3px 10px;
+}
+.q-prompt { font-size: 19px; font-weight: 700; margin: 6px 0 10px; line-height: 1.4; }
+.group-label { font-size: 13px; font-weight: 700; color: #68766f; margin: 6px 0 8px; }
+/* 辨认：渲染图大图 + 名称候选 */
+.choose-figure { display: block; width: 132px; height: 132px; margin: 4px auto 10px; }
+.choose-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.option-card {
+  border: 2px solid #d6d9c8; border-radius: 12px; background: #fff;
+  font-size: 22px; font-weight: 700; padding: 14px 6px; cursor: pointer; min-height: 52px;
+  color: #2d3a3a;
+}
+.option-card:disabled { opacity: .55; cursor: not-allowed; }
+/* 积木栏：积木卡 + 选中/已放状态 */
+.blocks-shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.block-holder { display: flex; justify-content: center; }
+.block-card {
+  border: 2px solid #d6d9c8; border-radius: 12px; background: #fff;
+  padding: 6px; cursor: grab; touch-action: none;
+  display: flex; align-items: center; justify-content: center; min-height: 56px; min-width: 56px;
+}
+.block-card img { width: 44px; height: 44px; display: block; pointer-events: none; }
+.block-card:disabled { opacity: .5; cursor: not-allowed; }
+.block-selected { border-color: #3d7a68; box-shadow: inset 0 0 0 2px #3d7a68; background: #e4f0ea; }
+.block-placed { opacity: .35; }
+.drag-ghost {
+  position: fixed; width: 56px; height: 56px; pointer-events: none; z-index: 30;
+  filter: drop-shadow(0 4px 4px rgba(45, 58, 58, .35));
+}
+/* 分区/槽位：标签 accept 名称集合（等价解可见）+ 已放积木缩略图（点击撤回） */
+.zones { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.zone-card {
+  border: 2px dashed #9ec3b4; border-radius: 12px; background: #f2f7f3;
+  padding: 10px 8px; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 6px; min-height: 72px; justify-content: center;
+}
+.zone-card:disabled { opacity: .6; cursor: not-allowed; }
+.zone-label { font-size: 15px; font-weight: 700; color: #2c5a4c; width: 100%; text-align: center; }
+.zone-chip {
+  border: 2px solid #3d7a68; border-radius: 10px; background: #fff;
+  padding: 3px; cursor: pointer; line-height: 0;
+}
+.zone-chip img { width: 34px; height: 34px; display: block; pointer-events: none; }
+.zone-chip:disabled { opacity: .55; cursor: not-allowed; }
+.zone-target { border-style: solid; border-color: #3d7a68; }
+#btn-submit { margin-top: 12px; }
+.feedback { text-align: center; font-size: 17px; font-weight: 700; padding: 8px; border-radius: 10px; margin-top: 12px; }
+.feedback[data-kind="correct"] { color: #2d7a37; background: #e8f4e4; }
+.feedback[data-kind="wrong"] { color: #b03a2e; background: #f9e8e4; }
+.feedback[data-kind="info"] { color: #7a5a22; background: #fdf6e4; }
+/* 结算 */
+.result-score { font-size: 34px; font-weight: 800; color: #2c5a4c; margin: 6px 0 10px; }
+.result-line { font-size: 14px; line-height: 1.6; margin: 4px 0; color: #2d3a3a; }
+.result .restore-actions { margin-top: 14px; }
+/* 暂停与确认 */
+.pause-overlay {
+  position: fixed; inset: 0; background: rgba(45, 58, 58, .45);
+  display: flex; align-items: center; justify-content: center;
+}
+.pause-overlay[hidden] { display: none; }
+.pause-card, .confirm-dialog {
+  background: #fbf8ee; border-radius: 16px; padding: 22px 26px; text-align: center;
+  border: 1px solid #d6d9c8;
+}
+.pause-card p { font-size: 20px; font-weight: 700; margin: 0 0 14px; }
+.confirm-dialog::backdrop { background: rgba(45, 58, 58, .45); }
+.confirm-dialog p { margin: 0 0 14px; }
+.boot-fail {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: #f4f1e6; color: #b03a2e; font-size: 16px;
+}
+.boot-fail[hidden] { display: none; }
+@media (min-width: 720px) {
+  .blocks-shelf { grid-template-columns: repeat(6, 1fr); }
+  .zones, .choose-options { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .blocks-shelf { grid-template-columns: repeat(6, 1fr); }
+  .zones, .choose-options { grid-template-columns: repeat(3, 1fr); }
+}

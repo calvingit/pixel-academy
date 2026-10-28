@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="竖放的长方体积木">
+  <!-- 长方体竖放姿态变体：高瘦三面 -->
+  <g stroke="#2d3a3a" stroke-width="2.5" stroke-linejoin="round">
+    <polygon points="40,26 74,16 92,24 58,34" fill="#8fb7d9"/>
+    <polygon points="40,26 58,34 58,102 40,94" fill="#5d8cb5"/>
+    <polygon points="58,34 92,24 92,92 58,102" fill="#3f6b95"/>
+  </g>
+</svg>

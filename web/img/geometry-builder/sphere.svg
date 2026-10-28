@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="球形积木">
+  <!-- 球体：圆形 + 高光 + 投影，暖绿玩具色；与平面圆的区分靠立体光影 -->
+  <g stroke="#2d3a3a" stroke-width="2.5">
+    <ellipse cx="60" cy="100" rx="30" ry="7" fill="#cdd8cd" opacity=".7"/>
+    <circle cx="60" cy="58" r="32" fill="#7cb98a"/>
+    <path d="M40 48 A26 26 0 0 1 58 36 A34 30 0 0 0 44 62 Z" fill="#a8d8b2" stroke="none"/>
+    <ellipse cx="50" cy="46" rx="9" ry="6" fill="#d7efdb" stroke="none"/>
+  </g>
+</svg>
