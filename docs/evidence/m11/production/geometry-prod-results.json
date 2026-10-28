@@ -1,0 +1,169 @@
+{
+  "generatedAt": "2026-10-28T04:20:32.632Z",
+  "origin": "https://pixel-academy.pages.dev",
+  "version": "assets-v1-525bbb0f452d",
+  "scenarios": [
+    {
+      "name": "P1 首页第六入口（生产）",
+      "pass": true,
+      "result": "菜单链接=true · path=/geometry.html · 年级卡=6 · 版本=assets-v1-525bbb0f452d",
+      "p1": {
+        "path": "/geometry.html",
+        "boot": true,
+        "grades": 6
+      },
+      "version": "assets-v1-525bbb0f452d",
+      "p1linkExists": true
+    },
+    {
+      "name": "P2 生产完整局",
+      "pass": true,
+      "result": "总分 50 · gameId=geometry-builder",
+      "p2": {
+        "resultVisible": true,
+        "score": "总分 50",
+        "answer": "完成 5 个任务 · 首次一次完成 5 · 错判 0 次"
+      },
+      "rec": {
+        "schemaVersion": 1,
+        "recordId": "cc291fc6-1399-4512-b22a-265e81557237",
+        "gameId": "geometry-builder",
+        "finishedAt": "2026-10-28T04:20:04.566Z",
+        "grades": [
+          1
+        ],
+        "contentVersion": "geometry-static-v1",
+        "score": 50,
+        "answer": {
+          "tasks": [
+            {
+              "exerciseId": "MA-G-003",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-011",
+              "mode": "classify",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-017",
+              "mode": "build",
+              "attempts": 2,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-006",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-004",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            }
+          ],
+          "operations": {
+            "clicks": 7,
+            "drags": 0,
+            "retractions": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "P3 离线完整局（生产）",
+      "pass": true,
+      "result": "断源刷新首页由缓存打开=true · /geometry.html 缓存打开=true · 总分 50 · 配图离线加载=true",
+      "p3home": {
+        "path": "/",
+        "select": true
+      },
+      "p3entry": {
+        "path": "/geometry.html",
+        "boot": true,
+        "grades": 6
+      },
+      "p3": {
+        "resultVisible": true,
+        "score": "总分 50"
+      },
+      "rec": {
+        "schemaVersion": 1,
+        "recordId": "258b2458-d7c7-4c2d-904a-cca3d61e5db8",
+        "gameId": "geometry-builder",
+        "finishedAt": "2026-10-28T04:20:29.576Z",
+        "grades": [
+          1
+        ],
+        "contentVersion": "geometry-static-v1",
+        "score": 50,
+        "answer": {
+          "tasks": [
+            {
+              "exerciseId": "MA-G-004",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-011",
+              "mode": "classify",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-015",
+              "mode": "build",
+              "attempts": 3,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-001",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            },
+            {
+              "exerciseId": "MA-G-002",
+              "mode": "choose",
+              "attempts": 1,
+              "wrongs": 0,
+              "firstTry": true
+            }
+          ],
+          "operations": {
+            "clicks": 8,
+            "drags": 0,
+            "retractions": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "P4 无扩展名路径兜底",
+      "pass": true,
+      "result": "/geometry（308 规范化后）由 SW re-wrap 正常打开 · boot=true",
+      "p4": {
+        "finalUrl": "/geometry",
+        "boot": true,
+        "grades": 6
+      }
+    }
+  ],
+  "passed": 4,
+  "total": 4
+}
