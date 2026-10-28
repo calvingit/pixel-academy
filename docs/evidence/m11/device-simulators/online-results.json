@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-10-28T03:55:07.388Z",
+  "phase": "online",
+  "origin": "http://localhost:4373/",
+  "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S1a 辨认错误反馈",
+      "pass": true,
+      "result": "「✗ 不对哦，再想一想」"
+    },
+    {
+      "name": "S1b 在线完整局",
+      "pass": true,
+      "result": "总分 45 · 完成 5 个任务 · 首次一次完成 4 · 错判 1 次 · gameId=geometry-builder · 模式分列=辨认 2/3 首答 · 分类 1/1 首答 · 搭建 1/1 首答 · 点选 6 拖拽 0 撤回 0"
+    },
+    {
+      "name": "S2 返回路径与六入口并存",
+      "pass": true,
+      "result": "回首页=true · 几何入口=true · 入口数=5"
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S1-几何选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S1-结算屏",
+      "overflow": false
+    },
+    {
+      "where": "S2-首页回归",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}

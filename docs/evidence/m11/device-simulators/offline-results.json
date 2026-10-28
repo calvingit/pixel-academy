@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-10-28T04:07:43.507Z",
+  "phase": "offline",
+  "origin": "http://localhost:4373",
+  "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Mobile/15E148 Safari/604.1",
+  "scenarios": [
+    {
+      "name": "S3 断网完整局",
+      "pass": true,
+      "result": "总分 50 · gameId=geometry-builder · 配图断网加载=true · SW=pixel-academy:number-puzzle:assets-v1-525bbb0f452d 配图 6 张 · 杀 serve 4373 后刷新由缓存打开（题库模块断网 import 18 任务）",
+      "poolCount": 18
+    }
+  ],
+  "errorLedger": [],
+  "overflowLedger": [
+    {
+      "where": "S3-SW就绪首页(在线)",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线首页",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线选择屏",
+      "overflow": false
+    },
+    {
+      "where": "S3-离线结算屏",
+      "overflow": false
+    }
+  ],
+  "allPassed": true
+}
