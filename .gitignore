@@ -9,3 +9,4 @@ dist-site/
 
 # 浏览器驱动工具本地日志
 .playwright-cli/
+docs/evidence/
